@@ -30,7 +30,7 @@ namespace CFP.Provider.Provider
         public DatatablePageResponseModel<AgentMasterModel> GetUserList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel)
         {
             DatatablePageResponseModel<AgentMasterModel> list = new DatatablePageResponseModel<AgentMasterModel>()
-            {
+            {   
                 data = new List<AgentMasterModel>(),
                 draw = requestModel.Draw
             };
