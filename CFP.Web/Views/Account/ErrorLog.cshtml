@@ -1,0 +1,16 @@
+﻿@model List<string>
+@{
+    Layout = null;
+}
+
+@if (Model != null && Model.Count > 0)
+{
+    @foreach (var item in Model)
+    {
+        <h4><a href="/LogFiles/@item" target="_blank">@item</a></h4>
+    }
+}
+else
+{
+    <h3>No Logfiles Available</h3>
+}

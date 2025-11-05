@@ -1,0 +1,29 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+
+    // ViewBag.ParentPageName = "<i class='ri-home-2-line'></i> Home";
+    // ViewBag.PageName = "<i class='ri-home-4-line'></i> Dashboard";
+}
+
+
+
+@section Scripts {
+    <script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
+    <script src="/assets/libs/swiper/swiper-bundle.min.js"></script>
+    <script src="/assets/js/pages/dashboard-crypto.init.js"></script>
+    <script src="/assets/js/pages/dashboard-projects.init.js"></script>
+    <script src="~/lib/js/custom/CFP.Dashboard.js" asp-append-version="true"></script>
+
+    <script>
+        $(document).ready(function () {
+            CFP.Common.MenuLink("/Order/Dashboard");
+            CFP.Dashboard.Init('@Model.RoleId');
+            $("#txtSearch").on("keyup", function () {
+                CFP.Dashboard.Search();
+            });
+        });
+    </script>
+}
+
+

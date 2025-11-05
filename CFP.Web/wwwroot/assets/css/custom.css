@@ -1,0 +1,54 @@
+
+.pull-right{
+float: right !important;
+}
+
+.mr-1 {
+    margin-right: 0.25rem  !important;
+}
+.ml-1{
+    margin-left:0.25rem  !important;
+}
+
+.mt-1 {
+    margin-top: 0.25rem  !important;
+}
+
+.mb-1 {
+    margin-bottom: 0.25rem  !important;
+}
+.req-border {
+    border-left: 3px solid red;
+}
+
+.nav-link.active {
+    background-color: #695eef !important;
+    color: white !important;
+    padding-left: 10px !important;
+}
+
+.nav-link.active[data-bs-toggle="collapse"]::after {
+    color: white !important;
+}
+
+.hide{
+    display:none !important;
+}
+.font-14{
+    font-size:14px !important;
+}
+.font-15{
+    font-size:15px !important;
+}
+
+.text-right{
+    text-align:right !important;
+}
+.text-left{
+    text-align:left !important;
+}
+
+
+.font-16{
+    font-size:16px !important;
+}

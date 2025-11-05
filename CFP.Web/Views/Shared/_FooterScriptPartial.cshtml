@@ -1,0 +1,185 @@
+﻿<!-- JAVASCRIPT -->
+
+
+<script src="~/assets/js/jquery.min.js"></script>
+
+<script src="/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="/assets/libs/node-waves/waves.min.js"></script>
+<script src="/assets/libs/feather-icons/feather.min.js"></script>
+<script src="/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+<script src="/assets/js/plugins.js"></script>
+
+<!-- prismjs plugin -->
+<script src="/assets/libs/prismjs/prism.js"></script>
+
+<!-- init js -->
+<script src="~/assets/js/pages/form-pickers.init.js"></script>
+
+
+<!-- App js -->
+<script src="/assets/js/app.js"></script>
+
+<script src="~/assets/js/jquery.validate.min.js"></script>
+<script src="~/assets/js/jquery.validate.unobtrusive.js"></script>
+
+<script src="~/assets/js/jquery.inputmask.bundle.js"></script>
+<script src="~/assets/js/jquery.inputmask.bundle.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+<!--datatable js-->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="~/assets/js/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="~/assets/libs/flatpickr/flatpickr.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+<script src="~/lib/js/custom/CFP.js" asp-append-version="true"></script>
+<script src="~/lib/js/custom/CFP.common.js" asp-append-version="true"></script>
+<script src="~/lib/js/custom/CFP.Enum.js" asp-append-version="true"></script>
+
+<script>
+    function UrlContent(url) {
+        return "@Url.Content("~/")" + url
+    }
+    $(".pwd").click(function () {
+        if ($(this).children().hasClass("fa fa-eye")) {
+            $(this).children().removeClass().addClass("fa fa-eye-slash");
+            $(this).parent().next().attr("type", "text");
+        }
+        else {
+            $(this).children().removeClass().addClass("fa fa-eye");
+            $(this).parent().next().attr("type", "password");
+        }
+    });
+    $(document).ready(function () {
+        $(".preloader").hide();
+        initActiveMenu();
+
+        $("#topnav-hamburger-icon").click(function (e) {
+
+            var windowSize = document.documentElement.clientWidth;
+
+            if (windowSize > 767)
+                document.querySelector(".hamburger-icon").classList.toggle("open");
+
+            //For collapse horizontal menu
+            if (document.documentElement.getAttribute("data-layout") === "horizontal") {
+                document.body.classList.contains("menu") ? document.body.classList.remove("menu") : document.body.classList.add("menu");
+            }
+
+        });
+    })
+    $(document).ajaxError(function (event, request, settings) {
+        if (request.status == 401) {
+            window.top.location.href = UrlContent("Account/Logout");
+        }
+        else if (request.status == 403) { //|| request.status == 500
+            window.top.location.href = UrlContent("Account/Logout");
+        }
+    });
+
+    function initActiveMenu() {
+        var currentPath = location.pathname == "/" ? "/Dashboard/Index" : location.pathname.substring(1);
+        if (currentPath) {
+            // navbar-nav
+            var a = document.getElementById("navbar-nav").querySelector('[href="' + "/" + currentPath + '"]');
+            if (a) {
+                a.classList.add("active");
+                var parentCollapseDiv = a.closest(".collapse.menu-dropdown");
+                if (parentCollapseDiv) {
+                    parentCollapseDiv.classList.add("show");
+                    parentCollapseDiv.parentElement.children[0].classList.add("active");
+                    parentCollapseDiv.parentElement.children[0].setAttribute("aria-expanded", "true");
+                    if (parentCollapseDiv.parentElement.closest(".collapse.menu-dropdown")) {
+                        parentCollapseDiv.parentElement.closest(".collapse").classList.add("show");
+                        if (parentCollapseDiv.parentElement.closest(".collapse").previousElementSibling)
+                            parentCollapseDiv.parentElement.closest(".collapse").previousElementSibling.classList.add("active");
+
+                        if (parentCollapseDiv.parentElement.parentElement.parentElement.parentElement.closest(".collapse.menu-dropdown")) {
+                            parentCollapseDiv.parentElement.parentElement.parentElement.parentElement.closest(".collapse").classList.add("show");
+                            if (parentCollapseDiv.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling) {
+
+                                parentCollapseDiv.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling.classList.add("active");
+                                if ((document.documentElement.getAttribute("data-layout") == "horizontal") && parentCollapseDiv.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.closest(".collapse")) {
+                                    parentCollapseDiv.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.closest(".collapse").previousElementSibling.classList.add("active")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function flatpicker() {
+        var flatpickrExamples = document.querySelectorAll("[data-provider]");
+        Array.from(flatpickrExamples).forEach(function (item) {
+            if (item.getAttribute("data-provider") == "flatpickr") {
+                var dateData = {};
+                var isFlatpickerVal = item.attributes;
+                dateData.disableMobile = "true";
+                if (isFlatpickerVal["data-date-format"])
+                    dateData.dateFormat = isFlatpickerVal["data-date-format"].value.toString();
+                if (isFlatpickerVal["data-enable-time"]) {
+                    (dateData.enableTime = true),
+                        (dateData.dateFormat = isFlatpickerVal["data-date-format"].value.toString() + " H:i");
+                }
+                if (isFlatpickerVal["data-altFormat"]) {
+                    (dateData.altInput = true),
+                        (dateData.altFormat = isFlatpickerVal["data-altFormat"].value.toString());
+                }
+                if (isFlatpickerVal["data-minDate"]) {
+                    dateData.minDate = isFlatpickerVal["data-minDate"].value.toString();
+                    dateData.dateFormat = isFlatpickerVal["data-date-format"].value.toString();
+                }
+                if (isFlatpickerVal["data-maxDate"]) {
+                    dateData.maxDate = isFlatpickerVal["data-maxDate"].value.toString();
+                    dateData.dateFormat = isFlatpickerVal["data-date-format"].value.toString();
+                }
+                if (isFlatpickerVal["data-deafult-date"]) {
+                    dateData.defaultDate = isFlatpickerVal["data-deafult-date"].value.toString();
+                    dateData.dateFormat = isFlatpickerVal["data-date-format"].value.toString();
+                }
+                if (isFlatpickerVal["data-multiple-date"]) {
+                    dateData.mode = "multiple";
+                    dateData.dateFormat = isFlatpickerVal["data-date-format"].value.toString();
+                }
+                if (isFlatpickerVal["data-range-date"]) {
+                    dateData.mode = "range";
+                    dateData.dateFormat = isFlatpickerVal["data-date-format"].value.toString();
+                }
+                if (isFlatpickerVal["data-inline-date"]) {
+                    (dateData.inline = true),
+                        (dateData.defaultDate = isFlatpickerVal["data-deafult-date"].value.toString());
+                    dateData.dateFormat = isFlatpickerVal["data-date-format"].value.toString();
+                }
+                if (isFlatpickerVal["data-disable-date"]) {
+                    var dates = [];
+                    dates.push(isFlatpickerVal["data-disable-date"].value);
+                    dateData.disable = dates.toString().split(",");
+                }
+                if (isFlatpickerVal["data-week-number"]) {
+                    var dates = [];
+                    dates.push(isFlatpickerVal["data-week-number"].value);
+                    dateData.weekNumbers = true
+                }
+                flatpickr(item, dateData);
+            } 
+        });
+    }
+</script>

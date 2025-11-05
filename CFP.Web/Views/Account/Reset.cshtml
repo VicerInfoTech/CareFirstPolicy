@@ -1,0 +1,82 @@
+﻿@using CFP.Common.Business_Entities;
+@using CFP.Common.Utility;
+@model ResetPasswordModel
+
+@{
+    ViewData["Title"] = "Reset Password";
+    Layout = "_GoRevLoginLayout";
+}@{
+    string loaderImage = "admin-loading.gif";
+    //string loaderImage = AppCommon.Portal_Type == (short)Enumeration.PortalType.Admin || AppCommon.Portal_Type == (short)Enumeration.PortalType.Provider ? "admin-loading.gif" : "loading.gif";
+}
+<div class="login-form login-signin" id="pnlSignIn">
+
+    <form method="post" asp-action="Reset" asp-controller="Account" id="form">
+        <div class="col-12 text-center">
+            <img src="~/lib/images/login-logo.png" id="clientLogo" class="mb-20" style="object-fit: contain;  width:400px" />
+        </div>
+        <div class="col-12 text-center">
+            @if (TempData[AppCommon.ErrorTempKeyName] != null)
+            {
+                <div class="v-stack">
+                    <div class="alert alert-danger" role="alert">
+                        @TempData[AppCommon.ErrorTempKeyName]
+                    </div>
+                </div>
+            }
+            else if (TempData[AppCommon.SuccessTempKeyName] != null)
+            {
+                <div class="v-stack">
+                    <div class="alert alert-success" role="alert">
+                        @TempData[AppCommon.SuccessTempKeyName]
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-12 text-center">
+            <img src="~/lib/images/@(loaderImage)" height="150" id="loadingIMG" style="display:none" />
+        </div>
+        <input type="hidden" asp-for="EncId" />
+        <div class="pb-lg-0 pb-5 text-center">
+            <h4><span>Username: </span><span class="text-success">@Model.Username</span></h4>
+        </div>
+        <div class="form-group">
+            <label asp-for="Password" class="font-size-h6 font-weight-bolder text-dark"></label>
+            <input asp-for="Password" type="password" style="border: 1px solid silver;" class="form-control form-control-solid h-auto py-5 px-5 rounded-lg gorev-framework-username" autocomplete="off" />
+            <span class="text-danger text-align-left" asp-validation-for="Password"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ConfirmPassword" class="font-size-h6 font-weight-bolder text-dark"></label>
+            <input asp-for="ConfirmPassword" type="password" style="border: 1px solid silver;" class="form-control form-control-solid h-auto py-5 px-5 rounded-lg gorev-framework-username" autocomplete="off" />
+            <span class="text-danger text-align-left" asp-validation-for="ConfirmPassword"></span>
+        </div>
+
+        <div class="pb-lg-0 pb-5 text-center">
+            <button type="button" id="submitButton" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 btn-shadow mr-3 gorev-framework-login-btn mt-ladda-btn ladda-button" style="display: block;">Reset Password</button>
+        </div>
+        <div class="form-group">
+
+            <a asp-action="Index" asp-controller="Account" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5" id="kt_login_forgot">Back to login</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script src="~/lib/js/theme/aes.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $("#loadingIMG").hide();
+        })
+        $("#submitButton").on("click", function () {
+            if ($("#form").valid()) {
+                $("#submitButton").attr("disabled", true);
+                $("#loadingIMG").show();
+                $("#form").submit();
+            } else {
+                $("#loadingIMG").hide();
+                $("#submitButton").removeAttr("disabled");
+            }
+        })
+    </script>
+}

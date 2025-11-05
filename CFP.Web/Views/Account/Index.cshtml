@@ -1,0 +1,91 @@
+﻿@using CFP.Common.Business_Entities;
+@using CFP.Common.Utility;
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_GoRevLoginLayout";
+}
+@{
+    string loaderImage = "admin-loading.gif";
+    //string loaderImage = AppCommon.Portal_Type == (short)Enumeration.PortalType.Admin || AppCommon.Portal_Type == (short)Enumeration.PortalType.Provider ? "admin-loading.gif" : "loading.gif";
+}
+<div class="login-form login-signin" id="pnlSignIn">
+
+    <form method="post" asp-action="Index" asp-controller="Account" class="needs-validation" onsubmit="return encryptPwd();" id="form">
+        <div class="col-12 text-center " style="margin-top:100px">
+            <img src="~/lib/images/login-logo.png" id="clientLogo" class="mb-20" style="object-fit: contain;  width:400px" />
+        </div>
+        <div class="col-12 text-center">
+            @if (TempData[AppCommon.ErrorTempKeyName] != null)
+            {
+                <div class="v-stack">
+                    <div class="alert alert-danger" role="alert">
+                        @TempData[AppCommon.ErrorTempKeyName]
+                    </div>
+                </div>
+            }
+            else if (TempData[AppCommon.SuccessTempKeyName] != null)
+            {
+                <div class="v-stack">
+                    <div class="alert alert-success" role="alert">
+                        @TempData[AppCommon.SuccessTempKeyName]
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-12 text-center">
+            <img src="~/lib/images/@(loaderImage)" height="150" id="loadingIMG" style="display:none" />
+        </div>
+        <div class="form-group">
+            <label asp-for="UserName" class="font-size-h6 font-weight-bolder text-dark"></label>
+            <input asp-for="UserName" id="txtUsername" type="text" style="border: 1px solid silver;" class="form-control form-control-solid h-auto py-5 px-5 rounded-lg gorev-framework-username" autocomplete="off" />
+            <span class="text-danger text-align-left" asp-validation-for="UserName"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UserPassword" class="font-size-h6 font-weight-bolder text-dark"></label>
+            <input asp-for="UserPassword" type="password" id="txtPassword" style="border: 1px solid silver;" class="form-control form-control-solid h-auto py-5 px-5 rounded-lg gorev-framework-username" autocomplete="off" />
+            <span class="text-danger text-align-left" asp-validation-for="UserPassword"></span>
+            <br />
+        </div>
+
+        <div class="pb-lg-0 pb-5 text-center">
+            <button type="button" id="submitButton" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 btn-shadow mr-3 gorev-framework-login-btn mt-ladda-btn ladda-button" style="display: block;">Sign In</button>
+        </div>
+        <div class="form-group mt-1">
+            <div class="row">
+                <div class="col-12">
+                    <a style="float:left" asp-action="ForgetPassword" asp-controller="Account" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5" id="kt_login_forgot">Forgot Password ?</a>
+                    @* <a style="float:right;color:#c22026" href="https://tod.alphaderalabs.com/pages/shop-our-products" class=" font-size-h6 font-weight-bolder text-hover-primary pt-5" id="kt_login_forgot"> <i style="color:#c22026" class="ti-back-left mr-1"></i>Back to Shop</a> *@
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mt-1" style="text-align:justify;color:grey">
+            <p>
+                <b>Notice to all users:</b><br />
+                This system is restricted solely to authorized users and may be monitored for administrative and security reasons. The user expressly consents to such monitoring. Any use of this system must be in compliance with Alphadera Labs policies and applicable laws. Unauthorized users or any unauthorized use may subject the user to criminal and civil penalties under state, federal, or other applicable domestic and foreign laws.
+
+            </p>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script src="~/lib/js/theme/aes.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $("#loadingIMG").hide();
+        })
+        $("#submitButton").on("click", function () {
+            if ($("#form").valid()) {
+                $("#submitButton").attr("disabled", true);
+                $("#loadingIMG").show();
+                $("#form").submit();
+            } else {
+                $("#loadingIMG").hide();
+                $("#submitButton").removeAttr("disabled");
+            }
+        })
+    </script>
+}

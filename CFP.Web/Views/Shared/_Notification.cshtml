@@ -1,0 +1,203 @@
+﻿@model DashboardViewModel
+
+@* @if (Model != null && Model.Notifications != null && Model.Notifications.Count > 0)
+{
+    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+        <i class='bx bx-bell fs-22'></i>
+        <span class="position-absolute topbar-badge fs-10 translate-middle badge rounded-pill bg-danger">@(Model.Notifications.Count)<span class="visually-hidden">unread messages</span></span>
+    </button>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-notifications-dropdown" style="width:400px !important">
+
+        <div class="dropdown-head bg-primary bg-pattern rounded-top">
+            <div class="p-3">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="m-0 fs-16 fw-semibold text-white"> Notifications </h6>
+                    </div>
+                    <div class="col-auto dropdown-tabs">
+                        <span class="badge bg-light-subtle text-body fs-13"> @(Model.Notifications.Count) New</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-2 pt-2">
+                <ul class="nav nav-tabs dropdown-tabs nav-tabs-custom" data-dropdown-tabs="true" id="notificationItemsTab" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#all-noti-tab" role="presentation" aria-selected="true">
+                            All (@(Model.Notifications.Count))
+                        </a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-bs-toggle="tab" href="#appointments" role="presentation" aria-selected="false">
+                            Appointments
+                        </a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-bs-toggle="tab" href="#registrations" role="presentation" aria-selected="false">
+                            Registrations
+                        </a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-bs-toggle="tab" href="#results" role="presentation" aria-selected="false">
+                            Results
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="tab-content position-relative" id="notificationItemsTabContent">
+            <div class="tab-pane fade show active py-2 ps-2" id="all-noti-tab" role="tabpanel">
+                <div data-simplebar style="max-height: 300px;" class="pe-2">
+                    @foreach (var items in Model.Notifications)
+                    {
+
+
+                        @if (items.NotificationType == (int)Enumeration.NotificationType.Notification_Preference)
+                        {
+                            <div class="text-reset notification-item d-block dropdown-item position-relative ">
+                                <div class="d-flex">
+                                    <i class="ri-alert-line text-danger me-2 me-3  rounded-circle avatar-xs font-21"></i>
+                                    <div class="flex-1">
+                                        <a href="javascript:CFP.Common.SetNotificationPreference('@items.EncId')" class="stretched-link">
+                                            <h6 class="mt-0 mb-1 fs-13 fw-semibold">Mobile Notification</h6>
+                                            <div class="fs-13 text-muted">
+                                                <p class="mb-1">Update your notification preference</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (items.NotificationType == (int)Enumeration.NotificationType.Pending_Appointments)
+                        {
+                            <div class="text-reset notification-item d-block dropdown-item  position-relative ">
+                                <div class="d-flex">
+                                    <i class="ri-time-line text-primary me-2 me-3  rounded-circle avatar-xs font-21"></i>
+                                    <div class="flex-1">
+                                        <a title="Schedule Appointment" href="javascript:CFP.Appointment.Schedule('@items.EncId')" class="stretched-link">
+                                            <h6 class="mt-0 mb-1 fs-13 fw-semibold">Order #<b>@items.OrderNumber</b></h6>
+                                            <div class="fs-13 text-muted">
+                                                <p class="mb-1">Book Your Appointment </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                        else if (items.NotificationType == (int)Enumeration.NotificationType.Pending_KitRegistration)
+                        {
+
+                            <div class="text-reset notification-item d-block dropdown-item position-relative ">
+                                <div class="d-flex">
+                                    <i class="ri-spam-2-line text-warning me-2 me-3  rounded-circle avatar-xs font-21"></i>
+                                    <div class="flex-1">
+                                        <a title="Kit Registration" asp-controller="Question" asp-action="Index" asp-route-id="1" asp-route-kri="@items.EncId" class="stretched-link">
+                                            <h6 class="mt-0 mb-1 fs-13 fw-semibold">Order #<b>@items.OrderNumber</b></h6>
+                                            <div class="fs-13 text-muted">
+                                                <p class="mb-1">Complete Kit Registration & Collect your sample </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (items.NotificationType == (int)Enumeration.NotificationType.Test_Result_Updated)
+                        {
+                            <div class="text-reset notification-item d-block dropdown-item position-relative ">
+
+                                <div class="d-flex">
+                                    <i class="ri-download-2-line text-success me-2 me-3 rounded-circle avatar-xs font-21"></i>
+                                    <div class="flex-1">
+                                        <a title="Download Result" href="javascript:CFP.Common.UpdateTestDownloadStatus('@items.EncId')" class="stretched-link">
+                                            <h6 class="mt-0 mb-1 fs-13 fw-semibold">Order #<b>@items.OrderNumber</b></h6>
+                                            <div class="fs-13 text-muted">
+                                                <p class="mb-1">Download your test result </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+
+
+                    }
+                </div>
+
+            </div>
+
+            <div class="tab-pane fade py-2 ps-2" id="appointments" role="tabpanel" aria-labelledby="appointments">
+                <div data-simplebar style="max-height: 300px;" class="pe-2">
+                    @foreach (var items in Model.Notifications.Where(x => x.NotificationType == (int)Enumeration.NotificationType.Pending_Appointments))
+                    {
+                        <div class="text-reset notification-item d-block dropdown-item  position-relative ">
+                            <div class="d-flex">
+                                <i class="ri-time-line text-primary me-2 me-3  rounded-circle avatar-xs font-21"></i>
+                                <div class="flex-1">
+                                    <a title="Schedule Appointment" href="javascript:CFP.Appointment.Schedule('@items.EncId')" class="stretched-link">
+                                        <h6 class="mt-0 mb-1 fs-13 fw-semibold">Order #<b>@items.OrderNumber</b></h6>
+                                        <div class="fs-13 text-muted">
+                                            <p class="mb-1">Book Your Appointment </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+
+            <div class="tab-pane fade py-2 ps-2" id="registrations" role="tabpanel" aria-labelledby="registrations">
+                <div data-simplebar style="max-height: 300px;" class="pe-2">
+                    @foreach (var items in Model.Notifications.Where(x => x.NotificationType == (int)Enumeration.NotificationType.Pending_KitRegistration))
+                    {
+                        <div class="text-reset notification-item d-block dropdown-item position-relative ">
+                            <div class="d-flex">
+                                <i class="ri-spam-2-line text-warning me-2 me-3  rounded-circle avatar-xs font-21"></i>
+                                <div class="flex-1">
+                                    <a title="Kit Registration" asp-controller="Question" asp-action="Index" asp-route-id="1" asp-route-kri="@items.EncId" class="stretched-link">
+                                        <h6 class="mt-0 mb-1 fs-13 fw-semibold">Order #<b>@items.OrderNumber</b></h6>
+                                        <div class="fs-13 text-muted">
+                                            <p class="mb-1">Complete Kit Registration & Collect your sample </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+
+            <div class="tab-pane fade py-2 ps-2" id="results" role="tabpanel" aria-labelledby="results">
+                <div data-simplebar style="max-height: 300px;" class="pe-2">
+                    @foreach (var items in Model.Notifications.Where(x => x.NotificationType == (int)Enumeration.NotificationType.Test_Result_Updated))
+                    {
+                        <div class="text-reset notification-item d-block dropdown-item position-relative ">
+
+                            <div class="d-flex">
+                                <i class="ri-download-2-line text-success me-2 me-3 rounded-circle avatar-xs font-21"></i>
+                                <div class="flex-1">
+                                    <a title="Download Result" href="javascript:CFP.Common.UpdateTestDownloadStatus('@items.EncId')" class="stretched-link">
+                                        <h6 class="mt-0 mb-1 fs-13 fw-semibold">Order #<b>@items.OrderNumber</b></h6>
+                                        <div class="fs-13 text-muted">
+                                            <p class="mb-1">Download your test result </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+} *@

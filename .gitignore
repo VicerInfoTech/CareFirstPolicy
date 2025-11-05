@@ -1,0 +1,9 @@
+CFP.Common/bin/
+CFP.Common/obj/
+CFP.Provider/bin/
+CFP.Provider/obj/
+CFP.Web/bin/
+CFP.Web/obj/
+CFP.Web/wwwroot/LogFiles/
+CFP.Repository/bin/
+CFP.Repository/obj/

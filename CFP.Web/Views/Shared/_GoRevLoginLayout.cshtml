@@ -1,0 +1,131 @@
+﻿@using CFP.Common.Utility
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="../../../">
+    <meta charset="utf-8" />
+    <title>@AppCommon.ApplicationTitle - @ViewData["Title"]</title>
+    <meta name="description" content="GoRev Lab Result Login" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="apple-touch-icon" href="~/lib/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/lib/images/favicon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    <link href="~/lib/css/loader.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/ladda-themeless.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/prismjs.bundle.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/plugins.bundle.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/style.bundle.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/login.css" rel="stylesheet" />
+    <link href="~/lib/css/theme/icons/themify-icons/themify-icons.css" rel="stylesheet" /> 
+    <style>
+
+        @@media (max-width: 991px) {
+            .login-aside {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body id="kt_body" class="header-fixed subheader-enabled page-loading">
+    <div class="d-flex flex-column flex-root">
+        <div class="login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white" style="background-color: #F2F2F2 !important;" id="kt_login">
+            <div class="login-aside d-flex flex-column flex-row-auto" style="background-image: url('/lib/images/admin-bg.jpg'); background-size: cover; min-height: 50px !important;">
+                <div class="d-flex flex-column-auto flex-column pt-lg-40 pt-15">
+
+                    @*                     <a href="#" class="text-center mb-10">
+                    <img src="gorev-framework/images/logo-gradient-white.png" class="max-h-70px" alt="" />
+                    </a>
+                    <h1 class="font-weight-bolder text-center font-size-h4 font-size-h1-lg text-primary">
+                    <span style="color: #e1e1e1;">GoForward. GoExceed.</span>
+                    <br />GoRev.
+                    </h1> *@
+                </div>
+                <div class="aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center"></div>
+            </div>
+            <div class="login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden p-7 mx-auto">
+                <div class="d-flex flex-column-fluid flex-center">
+                    @RenderBody()
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="~/assets/js/jquery.min.js"></script>
+    
+    <script src="~/assets/js/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/assets/js/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script src="~/assets/js/jquery.inputmask.bundle.min.js"></script>
+    <script src="~/assets/js/jquery.inputmask.js"></script>
+    <script src="~/assets/js/aes.js"></script>
+
+    <script src="~/lib/js/custom/CFP.js" asp-append-version="true"></script>
+    <script src="~/lib/js/custom/CFP.common.js" asp-append-version="true"></script>
+    <script>
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+
+        function encryptPwd() {
+            if (document.getElementById("txtUsername") != null) {
+                var txtUserName = document.getElementById("txtUsername").value.trim();
+                var txtPassword = document.getElementById("txtPassword").value.trim();
+
+                if (txtUserName == "") {
+                    return false;
+                }
+                else if (txtPassword == "") {
+                    return false;
+                }
+                else {
+                    var key = CryptoJS.enc.Utf8.parse('8080808080808080');
+                    var iv = CryptoJS.enc.Utf8.parse('8080808080808080');
+                    var encryptedpassword = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtPassword), key,
+                        {
+                            keySize: 128 / 8,
+                            iv: iv,
+                            mode: CryptoJS.mode.CBC,
+                            padding: CryptoJS.pad.Pkcs7
+                        });
+                    document.getElementById("txtPassword").value = encryptedpassword;
+                    return true;
+                }
+            }
+        }
+
+
+        $(document).ready(function () {
+            $(".preloader").hide();
+        });
+
+        $(".form-control").keyup(function (e) {
+            
+            if (e.keyCode == 13) {
+                
+                $("#submitButton").click();
+                e.preventDefault();
+            }
+        })
+
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
