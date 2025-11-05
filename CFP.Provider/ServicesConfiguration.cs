@@ -22,6 +22,7 @@ namespace CFP.Provider
             services.AddRepositoryService(configuration);
             services.AddTransient<ICommonProvider, CommonProvider>();
             services.AddTransient<IUserMasterProvider, UserMasterProvider>();
+            services.AddTransient<IAgentMasterProvider, AgentMasterProvider>();
            
         }
 

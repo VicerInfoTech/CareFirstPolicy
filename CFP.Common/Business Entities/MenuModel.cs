@@ -8,15 +8,25 @@ namespace CFP.Common.Business_Entities
 {
     public class MenuModel
     {
-        public short MenuId { get; set; }
-        public string MenuName { get; set; }
-        public string MenuNameId { get; set; }
-        public string MenuUrl { get; set; }
-        public string Icon { get; set; }
-        public bool IsActive { get; set; }
+        public int MenuId { get; set; }
+
+        public string MenuName { get; set; } = null!;
+
+        public string MenuNameId { get; set; } = null!;
+
+        public string PageUrl { get; set; } = null!;
+
+        public string Icon { get; set; } = null!;
+
+        public int ParentId { get; set; }
+
         public short DisplayOrder { get; set; }
-        public int? ParentId { get; set; }
+
         public bool IsHaveChild { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public bool IsShowtoAdmin { get; set; }
 
     }
 }

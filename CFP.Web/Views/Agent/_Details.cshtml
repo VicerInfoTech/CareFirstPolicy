@@ -1,0 +1,64 @@
+﻿@using CFP.Common.Business_Entities
+
+@model AgentMasterModel
+
+
+<div class="modal-header">
+    <h4 class="modal-title fw-600" id="myModalLabel">
+        <i class='ti-user font-20'></i> @(Model.AgentMasterId > 0 ? "Edit Agent" : "Add New Agent")
+    </h4>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal">×</button>
+</div>
+
+<div class="card" style="margin-bottom:0px !important;">
+    <div class="card-body" style="padding-left:1rem;padding-right:1rem;">
+        <form class="validation-wizard form-horizontal form-material needs-validation" id="AgentMasterForm">
+
+            <input asp-for="EncId" type="hidden" />
+            <input asp-for="AgentMasterId" type="hidden" />
+            <input asp-for="CreatedBy" type="hidden" />
+            <input asp-for="CreatedOn" type="hidden" />
+            <input asp-for="IsActive" type="hidden" />
+
+            <div class="row">
+
+                <div class="col-12 mt-2">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control req-border" placeholder="First Name" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="FirstName"></span>
+                </div>
+
+                <div class="col-12 mt-2">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control req-border" placeholder="Last Name" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="LastName"></span>
+                </div>
+
+                <div class="col-12 mt-2">
+                    <label asp-for="Username"></label>
+                    <input asp-for="Username" class="form-control req-border" placeholder="Login Username" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="Username"></span>
+                </div>
+
+                <div class="col-12 mt-2">
+                    <label asp-for="ContactNumber"></label>
+                    <input asp-for="ContactNumber" class="form-control req-border" placeholder="Contact Number" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="ContactNumber"></span>
+                </div>
+
+                <div class="col-12 mt-2">
+                    <label asp-for="Degiganition"></label>
+                    <input asp-for="Degiganition" class="form-control req-border" placeholder="Designation" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="Degiganition"></span>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="modal-footer mt-3" style="margin-right: 1%;">
+    <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal"><i class="ti-na"></i> Cancel</button>
+    <button type="button" class="btn btn-success" onclick="CFP.Agent.Save()"><i class="ti-save"></i> Save</button>
+</div>

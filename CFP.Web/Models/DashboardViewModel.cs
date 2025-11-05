@@ -5,10 +5,9 @@ namespace CFP.Web.Models
     public class DashboardViewModel
     {
         public int RoleId { get; set; }
-        //public DashboardCountModel DashboardCountModel { get; set; }
-        //public List<KitSerialReportModel> KitSerialReports { get; set; }
-        //public List<AppointmentModel> UpcommingAppointment { get; set; }
-        //public List<KitRegistrationModel> KitRegistrations { get; set; }
-        //public List<DashboardNotificationModel> Notifications{ get; set; }
+        public bool IsEdit { get; set; }
+        public AgentMasterModel AgentMasterModel { get; set; }
+        public List<AgentMasterModel> AgentMasterModels { get; set; }
+     
     }
 }

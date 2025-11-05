@@ -1,11 +1,10 @@
-CFP.Location = new function () {
-
+CFP.Agent = new function () {
     this.Option = {
         Table: null,
     }
 
     this.Init = function (options) {
-        CFP.Location.Option.Table = $("#locationTableId").DataTable(
+        CFP.Agent.Option.Table = $("#userTableId").DataTable(
             {
                 searching: false,
                 paging: true,
@@ -16,20 +15,17 @@ CFP.Location = new function () {
                 bInfo: true,
                 ajax: {
                     type: "Post",
-                    url: UrlContent("Location/GetList"),
+                    url: UrlContent("Agent/GetList"),
                     data: function (dtParms) {
                         dtParms.search.value = $("#txtSearch").val();
-                        dtParms.Status= $("#ddStatus").val();
                         return dtParms;
                     },
                 },
                 "columns": [
-                    { data: "locationName", name: "LocationName", autoWidth: true },
-                    { data: "addresssLine1", name: "AddresssLine1", autoWidth: true },
-                    { data: "addresssLine2", name: "AddresssLine2", autoWidth: true },
-                    { data: "city", name: "City", autoWidth: true },
-                    { data: "stateName", name: "StateName", autoWidth: true, orderable:false, },
-                    { data: "zipcode", name: "Zipcode", autoWidth: true },
+                    { data: "firstName", name: "FirstName", autoWidth: true },
+                    { data: "lastName", name: "LastName", autoWidth: true },
+                    { data: "username", name: "Username", autoWidth: true },
+                    
                     {
                         data: "isActive", name: "IsActive", className: "col-1  text-center",
                         render: function (data, type, row) {
@@ -43,17 +39,16 @@ CFP.Location = new function () {
                     {
                         data: "encId", orderable: false, className: "text-center col-1", orderable: false,
                         render: function (data, type, row) {
-                            let btnEdit = ``;
+                            let btnEdit = `<button class="btn btn-primary btn-sm mr-1 ml-1" title="Edit" type="button" onclick="CFP.Agent.Add('${data}')"><i class="ri-pencil-line text-white" ></i></button>`;
                             let btnDelete = ``;
                             let btnReActive = ``;
                             if (row.isActive) {
-                                btnDelete = `<button class="btn btn-danger btn-sm mr-1 ml-1" type="button" onclick="CFP.Location.Delete('${data}')" title="De Activate Location"><i class="ri-delete-bin-line text-white" ></i></button>`;
-                                btnEdit = `<button class="btn btn-primary btn-sm mr-1 ml-1" title="Edit" type="button" onclick="CFP.Location.Add('${data}')"><i class="ri-pencil-line text-white" ></i></button>`;
+                                btnDelete = `<button class="btn btn-danger btn-sm mr-1 ml-1" type="button" onclick="CFP.Agent.Delete('${data}')" title="De Activate User's Account"><i class="ri-delete-bin-line text-white" ></i></button>`;
                             }
-                            else {
-                                btnReActive = `<button class="btn btn-primary btn-sm mr-1 ml-1" type="button" onclick="CFP.Location.ReActivate('${data}')" title="Re Activate Location"><i class="ri-check-line text-white" ></i></button>`;
-                            }
-                            return btnEdit + btnDelete + btnReActive;
+                            else
+                                btnReActive = `<button class="btn btn-success btn-sm mr-1 ml-1" type="button" onclick="CFP.Agent.ReActivate('${data}')" title="Re Activate User's Account"><i class="ri-check-line text-white" ></i></button>`;
+
+                            return btnEdit + btnDelete + btnReActive ;
                         }
                     },
                 ],
@@ -62,36 +57,36 @@ CFP.Location = new function () {
     }
 
     this.Search = function () {
-        CFP.Location.Option.Table.ajax.reload();
+        CFP.Agent.Option.Table.ajax.reload();
     }
 
     this.Add = function (id = '') {
         $(".preloader").show();
         $.ajax({
             type: "GET",
-            url: UrlContent("Location/_Details/" + id),
+            url: UrlContent("Agent/_Details/" + id),
             success: function (data) {
-                $(".preloader").hide();
-                $("#common-md-dialogContent").html(data); 
-                $.validator.unobtrusive.parse($("#LocationForm"));
-                CFP.Common.InitMask();
+                $("#common-md-dialogContent").html(data);
+                $.validator.unobtrusive.parse($("#AgentMasterForm"));
                 $("#common-md-dialog").modal('show');
+                $(".preloader").hide();
             }
         })
     }
 
     this.Save = function () {
-        if ($("#LocationForm").valid()) {
+        debugger;
+        if ($("#AgentMasterForm").valid()) {
             $(".preloader").show();
-            var formdata = $("#LocationForm").serialize();
+            var formdata = $("#AgentMasterForm").serialize();
             $.ajax({
                 type: "Post",
-                url: UrlContent("Location/Save/"),
+                url: UrlContent("Agent/Save/"),
                 data: formdata,
                 success: function (result) {
                     $(".preloader").hide();
                     if (result.isSuccess) {
-                        CFP.Location.Option.Table.ajax.reload();
+                        CFP.Agent.Option.Table.ajax.reload();
                         CFP.Common.ToastrSuccess(result.message);
                         $("#common-md-dialog").modal('hide');
                     } else {
@@ -104,27 +99,27 @@ CFP.Location = new function () {
 
     this.Delete = function (id) {
         Swal.fire({
-            title: '<h4>Are you sure want to delete this Location?</h4>',
+            title: '<h4>Are you sure want to De-Activate this User?</h4>',
             html: '',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#f33c02',
             cancelButtonColor: '#a1aab2',
-            confirmButtonText: '<i class="mdi mdi-trash-can"></i> Delete',
+            confirmButtonText: '<i class="mdi mdi-trash-can"></i> De-Activate',
             cancelButtonText: '<i class="mdi mdi-cancel"></i> Cancel'
         }).then((result) => {
             if (result.value) {
                 $('.preloader').show();
                 $.ajax({
                     type: "POST",
-                    url: UrlContent("Location/ChangeStatus"),
+                    url: UrlContent("Agent/DeActivate"),
                     data: {
                         id: id,
                     },
                     success: function (result) {
                         $('.preloader').hide();
                         if (result.isSuccess) {
-                            CFP.Location.Option.Table.ajax.reload();
+                            CFP.Agent.Option.Table.ajax.reload();
                             CFP.Common.ToastrSuccess(result.message);
                         }
                         else {
@@ -138,7 +133,7 @@ CFP.Location = new function () {
 
     this.ReActivate = function (id) {
         Swal.fire({
-            title: '<h4>Are you sure want to Re Activate this Location?</h4>',
+            title: '<h4>Are you sure want to Re Activate this User?</h4>',
             html: '',
             icon: 'question',
             showCancelButton: true,
@@ -151,14 +146,14 @@ CFP.Location = new function () {
                 $('.preloader').show();
                 $.ajax({
                     type: "POST",
-                    url: UrlContent("Location/ChangeStatus"),
+                    url: UrlContent("Agent/ReActivate"),
                     data: {
                         id: id,
                     },
                     success: function (result) {
                         $('.preloader').hide();
                         if (result.isSuccess) {
-                            CFP.Location.Option.Table.ajax.reload();
+                            CFP.Agent.Option.Table.ajax.reload();
                             CFP.Common.ToastrSuccess(result.message);
                         }
                         else {
@@ -169,6 +164,5 @@ CFP.Location = new function () {
             }
         });
     }
-
 
 }

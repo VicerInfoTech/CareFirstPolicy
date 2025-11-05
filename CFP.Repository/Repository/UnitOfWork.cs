@@ -38,13 +38,14 @@ namespace CFP.Repository.Repository
         #endregion
 
         #region Model Variables
-  
+
         private GenericRepository<LoginFailure> _LoginFailure;
         private GenericRepository<LoginHistory> _LoginHistory;
         private GenericRepository<Menu> _Menu;
         private GenericRepository<MenuRole> _MenuRole;
         private GenericRepository<Role> _Role;
         private GenericRepository<UserMaster> _UserMaster;
+        private GenericRepository<AgentMaster> _AgentMaster;
         #endregion
 
         #region Generic Classes Of DB Entities
@@ -102,7 +103,16 @@ namespace CFP.Repository.Repository
                 return _UserMaster;
             }
         }
-       
+        public GenericRepository<AgentMaster> AgentMaster
+        {
+            get
+            {
+                if (_AgentMaster == null)
+                    _AgentMaster = new GenericRepository<AgentMaster>(context);
+                return _AgentMaster;
+            }
+        }
+
         #endregion
     }
 }

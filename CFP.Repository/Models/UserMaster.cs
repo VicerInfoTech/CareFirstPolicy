@@ -35,6 +35,12 @@ public partial class UserMaster
 
     public string Ip { get; set; } = null!;
 
+    public virtual ICollection<AgentMaster> AgentMasterCreatedByNavigations { get; set; } = new List<AgentMaster>();
+
+    public virtual ICollection<AgentMaster> AgentMasterUpdatedByNavigations { get; set; } = new List<AgentMaster>();
+
+    public virtual ICollection<AgentMaster> AgentMasterUserMasters { get; set; } = new List<AgentMaster>();
+
     public virtual ICollection<LoginHistory> LoginHistories { get; set; } = new List<LoginHistory>();
 
     public virtual Role Role { get; set; } = null!;

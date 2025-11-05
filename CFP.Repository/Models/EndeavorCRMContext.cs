@@ -16,6 +16,8 @@ public partial class EndeavorCRMContext : DbContext
     {
     }
 
+    public virtual DbSet<AgentMaster> AgentMasters { get; set; }
+
     public virtual DbSet<LoginFailure> LoginFailures { get; set; }
 
     public virtual DbSet<LoginHistory> LoginHistories { get; set; }
@@ -34,6 +36,44 @@ public partial class EndeavorCRMContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AgentMaster>(entity =>
+        {
+            entity.ToTable("AgentMaster");
+
+            entity.Property(e => e.ContactNumber)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+            entity.Property(e => e.Degiganition)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Ip)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("IP");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.UpdatedOn).HasColumnType("datetime");
+            entity.Property(e => e.Username)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.AgentMasterCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.AgentMasterUpdatedByNavigations).HasForeignKey(d => d.UpdatedBy);
+
+            entity.HasOne(d => d.UserMaster).WithMany(p => p.AgentMasterUserMasters)
+                .HasForeignKey(d => d.UserMasterId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AgentMaster_UserMaster_UserId");
+        });
+
         modelBuilder.Entity<LoginFailure>(entity =>
         {
             entity.ToTable("LoginFailure");
