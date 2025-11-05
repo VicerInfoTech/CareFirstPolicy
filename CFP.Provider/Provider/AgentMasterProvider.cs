@@ -6,6 +6,7 @@ using CFP.Provider.IProvider;
 using CFP.Repository.Models;
 using CFP.Repository.Repository;
 using System.Linq.Dynamic.Core;
+using static CFP.Common.Utility.Enumeration;
 
 namespace CFP.Provider.Provider
 {
@@ -102,8 +103,8 @@ namespace CFP.Provider.Provider
                 if (!string.IsNullOrEmpty(model.EncId))
                     model.AgentMasterId = _commonProvider.UnProtect(model.EncId);
 
-                if (unitOfWork.AgentMaster.Any(x => x.Username.ToLower() == model.Username.ToLower()
-                && x.AgentMasterId != model.AgentMasterId))
+                if (unitOfWork.UserMaster.Any(x => x.Username.ToLower() == model.Username.ToLower()
+                && x.UserMasterId != model.UserMasterId))
                 {
                     response.IsSuccess = false;
                     response.Message = "Email address already registred.";
@@ -116,14 +117,11 @@ namespace CFP.Provider.Provider
                 model.ContactNumber = AppCommon.RemoveExtra(model.ContactNumber);
                 var agent = _mapper.Map<AgentMasterModel, AgentMaster>(model, _temp);
                 agent.IsActive = true;
-                // user.IsPasswordCreated = true;
                 if (_temp == null)
                 {
-                    var pass = PasswordHash.CreateHash(AppCommon.CommonPassword);
                     UserMaster userMaster = new UserMaster()
                     {
                         Username = model.Username,
-                        UserPassword = pass,
                         LastName = model.LastName,
                         FirstName = model.FirstName,
                         ContactNumber = AppCommon.RemoveExtra(model.ContactNumber),
@@ -132,6 +130,7 @@ namespace CFP.Provider.Provider
                         TwoStepAuth = false,
                         IsActive = true,
                     };
+                    userMaster.UserPassword = PasswordHash.CreateHash(AppCommon.CommonPassword);
                     unitOfWork.UserMaster.Insert(userMaster, sessionProviderModel.UserId, sessionProviderModel.Ip);
                     unitOfWork.Save();
                     agent.UserMasterId = userMaster.UserMasterId;
@@ -140,6 +139,13 @@ namespace CFP.Provider.Provider
                 }
                 else
                 {
+                    _temp.UserMaster.Username = model.Username;
+                    _temp.UserMaster.LastName = model.LastName;
+                    _temp.UserMaster.FirstName = model.FirstName;
+                    _temp.UserMaster.ContactNumber = AppCommon.RemoveExtra(model.ContactNumber);
+                    _temp.UserMaster.UpdatedBy = sessionProviderModel.UserId;
+                    _temp.UserMaster.UpdatedOn = AppCommon.CurrentDate;
+
                     response.Message = "Agent updated successfully";
                     unitOfWork.AgentMaster.Update(agent, sessionProviderModel.UserId, sessionProviderModel.Ip);
                 }

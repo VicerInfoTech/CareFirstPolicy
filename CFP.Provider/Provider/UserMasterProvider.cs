@@ -50,6 +50,8 @@ namespace CFP.Provider.Provider
                         return model;
                     }
 
+                    if (PasswordHash.ValidatePassword(AES.DecryptAES(login.UserPassword), userData.UserPassword))
+                    {
                         model.UserId = userData.UserMasterId;
                         model.Username = userData.Username;
                         model.FirstName = userData.FirstName;
@@ -57,21 +59,18 @@ namespace CFP.Provider.Provider
                         model.RoleId = userData.RoleId;
                         model.FullName = userData.FirstName + " " + userData.LastName;
                         model.IsSuccess = true;
-
                         InsertLoginHistory(userData.UserMasterId, sessionId, Ip);
                         RemoveLoginFailure(login.UserName);
-                    //if (PasswordHash.ValidatePassword(AES.DecryptAES(login.UserPassword), userData.UserPassword))
-                    //{
-                    //}
-                    //else
-                    //{
-                    //    model.IsSuccess = false;
-                    //    int loginAttempt = InsertLoginFailure(login, userData.UserMasterId, Ip);
-                    //    if (loginAttempt < 3)
-                    //        model.Message = "Invalid Password. " + (3 - loginAttempt) + " attempt left!";
-                    //    else
-                    //        model.Message = "Invalid Password. Your account is blocked for 15 min.!";
-                    //}
+                    }
+                    else
+                    {
+                        model.IsSuccess = false;
+                        int loginAttempt = InsertLoginFailure(login, userData.UserMasterId, Ip);
+                        if (loginAttempt < 3)
+                            model.Message = "Invalid Password. " + (3 - loginAttempt) + " attempt left!";
+                        else
+                            model.Message = "Invalid Password. Your account is blocked for 15 min.!";
+                    }
 
                 }
                 else
@@ -219,7 +218,7 @@ namespace CFP.Provider.Provider
                 var validate = ValidatePassword(userData, false);
                 if (validate.IsSuccess)
                 {
-                    var user = unitOfWork.UserMaster.Get(x => x.UserMasterId == userData.UserMasterId );
+                    var user = unitOfWork.UserMaster.Get(x => x.UserMasterId == userData.UserMasterId);
                     if (user != null)
                     {
                         user.UserPassword = PasswordHash.CreateHash(userData.Password);
@@ -269,7 +268,7 @@ namespace CFP.Provider.Provider
                 {
                     if (isChangePwd)
                     {
-                        var user = unitOfWork.UserMaster.GetAll(x => x.UserMasterId == userData.UserMasterId ).FirstOrDefault();
+                        var user = unitOfWork.UserMaster.GetAll(x => x.UserMasterId == userData.UserMasterId).FirstOrDefault();
                         if (user != null)
                         {
                             if (PasswordHash.ValidatePassword(userData.OldPassword, user.UserPassword))
@@ -361,7 +360,7 @@ namespace CFP.Provider.Provider
             ResponseModel res = new ResponseModel();
             try
             {
-                var _user = unitOfWork.UserMaster.GetAll(x => x.Username == model.Username && x.IsActive ).FirstOrDefault();
+                var _user = unitOfWork.UserMaster.GetAll(x => x.Username == model.Username && x.IsActive).FirstOrDefault();
                 if (_user != null)
                 {
                     if (_user.IsActive)
@@ -496,7 +495,7 @@ namespace CFP.Provider.Provider
             return model;
         }
 
- 
+
         public DatatablePageResponseModel<UserMasterModel> GetUserList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel)
         {
             DatatablePageResponseModel<UserMasterModel> list = new DatatablePageResponseModel<UserMasterModel>()
@@ -574,7 +573,7 @@ namespace CFP.Provider.Provider
                     model.UserMasterId = _commonProvider.UnProtect(model.EncId);
 
                 if (unitOfWork.UserMaster.Any(x => x.Username.ToLower() == model.Username.ToLower()
-                && x.UserMasterId != model.UserMasterId ))
+                && x.UserMasterId != model.UserMasterId))
                 {
                     response.IsSuccess = false;
                     response.Message = "Email address already registred.";
@@ -587,10 +586,10 @@ namespace CFP.Provider.Provider
                 model.ContactNumber = AppCommon.RemoveExtra(model.ContactNumber);
                 UserMaster user = _mapper.Map<UserMasterModel, UserMaster>(model, _temp);
                 user.IsActive = true;
-               // user.IsPasswordCreated = true;
+                // user.IsPasswordCreated = true;
                 if (_temp == null)
                 {
-                   // user.UserCode = code;
+                    // user.UserCode = code;
                     user.UserPassword = PasswordHash.CreateHash(AppCommon.CommonPassword);
                     response.Message = "User added successfully";
                     unitOfWork.UserMaster.Insert(user, sessionProviderModel.UserId, sessionProviderModel.Ip);
@@ -692,7 +691,7 @@ namespace CFP.Provider.Provider
                     model.Message = AppCommon.NotFound;
                     return model;
                 }
-      
+
                 string password = AppCommon.GenerateRandomPassword(10);
                 user.UserPassword = PasswordHash.CreateHash(password);
                 unitOfWork.UserMaster.Update(user, sessionProviderModel.UserId, sessionProviderModel.Ip);
@@ -713,7 +712,7 @@ namespace CFP.Provider.Provider
                                     Thanks<br>"
                                     + AppCommon.EmailFooterName;
 
-              //  TwilioAPI.SendEmail(user.Username, AppCommon.ApplicationTitle, subject, message).Wait();
+                //  TwilioAPI.SendEmail(user.Username, AppCommon.ApplicationTitle, subject, message).Wait();
                 model.Message = "Reset password link sent to your user's email.";
                 model.IsSuccess = true;
             }

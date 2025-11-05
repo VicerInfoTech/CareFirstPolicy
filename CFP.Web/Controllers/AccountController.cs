@@ -37,9 +37,9 @@ namespace CFP.Patient.Controllers
                 var response = _provider.Authentication(model, _sessionManager.GetSessionId(), _sessionManager.GetIP());
                 if (response.IsSuccess)
                 {
-                 
                     if (response.IsEnableTwoStepAuth)
                     {
+                        TempData[AppCommon.SuccessTempKeyName] = response.Message;
                         return RedirectToAction("VerifyOTP", "Account", new { @id = response.Result });
                     }
                     else
@@ -55,6 +55,7 @@ namespace CFP.Patient.Controllers
                 }
                 else
                 {
+                    TempData[AppCommon.ErrorTempKeyName] = response.Message;
                     return View(model);
                 }
             }
@@ -75,12 +76,12 @@ namespace CFP.Patient.Controllers
             var response = _provider.SendRessetPasswordMailPatient(model);
             return View(model);
         }
-    
+
         public IActionResult Logout()
         {
             _sessionManager.ClearSession();
-            //return RedirectToAction("Index");
-            return Redirect(AppCommon.TOD_URL);
+            return RedirectToAction("Index");
+           // return Redirect(AppCommon.TOD_URL);
         }
 
         [Route("ErrorLog")]
@@ -115,7 +116,7 @@ namespace CFP.Patient.Controllers
             OtpModel model = new OtpModel() { EncUserMasterId = id };
             return View(model);
         }
-       // [HttpPost]
+        // [HttpPost]
         //public IActionResult VerifyOTP(OtpModel model)
         //{
         //    try
