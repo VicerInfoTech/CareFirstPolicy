@@ -1,0 +1,70 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Deal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                            <div class="input-group mt-1" id="searchId">
+                                <input class="form-control" id="txtSearch" autocomplete="off" placeholder="Search..." />
+                                <div class="input-group-append pointermouse" onclick="CFP.Deal.Search()">
+                                    <span class="input-group-text"><i class="ri-search-line"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                            @*   <select class="form-control mt-1" id="ddStatus" onchange="AlphaLabTOD.User.Search();">
+                                <option value="0"> All Status</option>
+                                <option value="@((int)Enumeration.ActiveInActiveStatus.Active)"> Active</option>
+                                <option value="@((int)Enumeration.ActiveInActiveStatus.In_Active)"> In-Active</option>
+                            </select> *@
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 text-right mt-1">
+                            <button type="button" class="btn btn-primary" onclick="CFP.Deal.Add()">
+                                <i class="ri-add-line"></i> Add Deal
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 table-responsive">
+                            <table class="table table-hover table-bordered display responsive nowrap" width="100%" id="userTableId">
+                                <thead>
+                                    <tr>
+                                        <th><b>First Name</b></th>
+                                        <th><b>Last Name</b></th>
+                                        <th><b>Agent Name</b></th>
+                                        <th><b>Status</b></th>
+                                        <th><b>Action</b></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="userTableBody"></tbody>
+                                <tfoot id="tablefoot" class="highlight" style="background-color:darkgray;overflow-y:scroll">
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/js/custom/CFP.Deal.js" asp-append-version="true"></script>
+
+    <script>
+        $(document).ready(function () {
+            CFP.Deal.Init();
+            $("#txtSearch").on("keyup", function () {
+                CFP.Deal.Search();
+            });
+        });
+    </script>
+}

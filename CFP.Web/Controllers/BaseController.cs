@@ -49,41 +49,24 @@ namespace CFP.Patient.Controllers
                 Draw = HttpContext.Request.Form["draw"],
             };
 
-            if (HttpContext.Request.Form.Any(x => x.Key == "KitId") && !string.IsNullOrEmpty(HttpContext.Request.Form["KitId"].ToString()))
-                model.KitId = AppCommon.ConvertToInt32(HttpContext.Request.Form["KitId"]);
-
-            if (HttpContext.Request.Form.Any(x => x.Key == "UserId") && !string.IsNullOrEmpty(HttpContext.Request.Form["UserId"].ToString()))
-                model.UserId = AppCommon.ConvertToInt32(HttpContext.Request.Form["UserId"]);
-
-            if (HttpContext.Request.Form.Any(x => x.Key == "PatientId") && !string.IsNullOrEmpty(HttpContext.Request.Form["PatientId"].ToString()))
-                model.PatientId = AppCommon.ConvertToInt32(HttpContext.Request.Form["PatientId"]);
-
-            if (HttpContext.Request.Form.Any(x => x.Key == "Status") && !string.IsNullOrEmpty(HttpContext.Request.Form["Status"].ToString()))
-                model.Status = AppCommon.ConvertToInt32(HttpContext.Request.Form["Status"]);
-
-            if (HttpContext.Request.Form.Any(x => x.Key == "PrintStatus") && !string.IsNullOrEmpty(HttpContext.Request.Form["PrintStatus"].ToString()))
-                model.PrintStatus = AppCommon.ConvertToInt32(HttpContext.Request.Form["PrintStatus"]);
-
-            if (HttpContext.Request.Form.Any(x => x.Key == "Date") && !string.IsNullOrEmpty(HttpContext.Request.Form["Date"].ToString()))
-                model.Date = HttpContext.Request.Form["Date"];
-
-            if (HttpContext.Request.Form.Any(x => x.Key == "OrderListType") && !string.IsNullOrEmpty(HttpContext.Request.Form["OrderListType"].ToString()))
-                model.OrderListType = Convert.ToInt32(HttpContext.Request.Form["OrderListType"]);
-
-            if (HttpContext.Request.Form.Any(x => x.Key == "TestType") && !string.IsNullOrEmpty(HttpContext.Request.Form["TestType"].ToString()))
-                model.TestType = Convert.ToInt32(HttpContext.Request.Form["TestType"]);
-
-            if (HttpContext.Request.Form.Any(x => x.Key == "RoleId") && !string.IsNullOrEmpty(HttpContext.Request.Form["RoleId"].ToString()))
-                model.RoleId = Convert.ToInt32(HttpContext.Request.Form["RoleId"]);
+            if (HttpContext.Request.Form.Any(x => x.Key == "Id") && !string.IsNullOrEmpty(HttpContext.Request.Form["Id"].ToString()))
+                model.Id = AppCommon.ConvertToInt32(HttpContext.Request.Form["Id"]);
 
             return model;
 
         }
 
-        //public List<SelectListItem> GetUserList()
-        //{
-        //    return _commonProvider.GetUserDropDown().Select(x => new SelectListItem() { Text = x.Text, Value = x.Value }).ToList();
-        //}
+        public List<SelectListItem> GetAgentList()
+        {
+            var agentList = _commonProvider.GetAgentList()
+                 .Select(x => new SelectListItem { Text = x.Text, Value = x.Value });
+
+            if (_sessionManager.RoleId == (int)Enumeration.Role.Agent)
+                agentList = agentList.Where(x => x.Value == _sessionManager.UserId.ToString());
+
+            var list = agentList.ToList();
+            return list;
+        }
 
         public List<SelectListItem> GetRoleList()
         {
@@ -93,6 +76,7 @@ namespace CFP.Patient.Controllers
 
             return list;
         }
+
         #region Temp Data Methods
         public void DeleteAllFilter()
         {

@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CFP.Web.Controllers
 {
-    public class AgentController : BaseController
+    public class DealController : BaseController
     {
         #region Variables
-        IAgentMasterProvider _provider;
+        IDealProvider _provider;
         #endregion
 
         #region Constructor
-        public AgentController(ICommonProvider commonProvider, ISessionManager sessionManager, IAgentMasterProvider userProvider) : base(commonProvider, sessionManager)
+        public DealController(ICommonProvider commonProvider, ISessionManager sessionManager, IDealProvider userProvider) : base(commonProvider, sessionManager)
         {
             _provider = userProvider;
         }
@@ -23,7 +23,7 @@ namespace CFP.Web.Controllers
         {
             return View();
         }
-       
+
         public JsonResult GetList()
         {
             return Json(_provider.GetUserList(GetPagingRequestModel(), GetSessionProviderParameters()));
@@ -31,13 +31,15 @@ namespace CFP.Web.Controllers
 
         public IActionResult _Details(string id)
         {
-          
-            return PartialView(_provider.GetById(_commonProvider.UnProtect(id)));
+            DashboardViewModel viewModel = new DashboardViewModel();
+            viewModel.AgentList = GetAgentList();
+            viewModel.DealModel = _provider.GetById(_commonProvider.UnProtect(id));
+            return PartialView(viewModel);
         }
 
-        public JsonResult Save(AgentMasterModel model)
+        public JsonResult Save(DashboardViewModel model)
         {
-            return Json(_provider.Save(model, GetSessionProviderParameters()));
+            return Json(_provider.Save(model.DealModel, GetSessionProviderParameters()));
         }
 
         [HttpPost]
@@ -45,11 +47,7 @@ namespace CFP.Web.Controllers
         {
             return Json(_provider.DeActivate(_commonProvider.UnProtect(id), GetSessionProviderParameters()));
         }
-       
-        [HttpPost]
-        public JsonResult ReActivate(string id)
-        {
-            return Json(_provider.ReActivate(_commonProvider.UnProtect(id), GetSessionProviderParameters()));
-        }
+
+
     }
 }

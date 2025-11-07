@@ -46,6 +46,7 @@ namespace CFP.Repository.Repository
         private GenericRepository<Role> _Role;
         private GenericRepository<UserMaster> _UserMaster;
         private GenericRepository<AgentMaster> _AgentMaster;
+        private GenericRepository<Deal> _Deal;
         #endregion
 
         #region Generic Classes Of DB Entities
@@ -110,6 +111,15 @@ namespace CFP.Repository.Repository
                 if (_AgentMaster == null)
                     _AgentMaster = new GenericRepository<AgentMaster>(context);
                 return _AgentMaster;
+            }
+        }
+        public GenericRepository<Deal> Deal
+        {
+            get
+            {
+                if (_Deal == null)
+                    _Deal = new GenericRepository<Deal>(context);
+                return _Deal;
             }
         }
 

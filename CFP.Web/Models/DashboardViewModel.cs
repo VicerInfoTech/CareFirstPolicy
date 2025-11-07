@@ -1,4 +1,5 @@
 ﻿using CFP.Common.Business_Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CFP.Web.Models
 {
@@ -6,8 +7,7 @@ namespace CFP.Web.Models
     {
         public int RoleId { get; set; }
         public bool IsEdit { get; set; }
-        public AgentMasterModel AgentMasterModel { get; set; }
-        public List<AgentMasterModel> AgentMasterModels { get; set; }
-     
+        public DealModel DealModel { get; set; }
+        public List<SelectListItem> AgentList { get; set; }
     }
 }

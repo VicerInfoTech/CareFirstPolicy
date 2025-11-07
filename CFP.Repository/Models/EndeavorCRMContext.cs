@@ -18,6 +18,8 @@ public partial class EndeavorCRMContext : DbContext
 
     public virtual DbSet<AgentMaster> AgentMasters { get; set; }
 
+    public virtual DbSet<Deal> Deals { get; set; }
+
     public virtual DbSet<LoginFailure> LoginFailures { get; set; }
 
     public virtual DbSet<LoginHistory> LoginHistories { get; set; }
@@ -72,6 +74,48 @@ public partial class EndeavorCRMContext : DbContext
                 .HasForeignKey(d => d.UserMasterId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AgentMaster_UserMaster_UserId");
+        });
+
+        modelBuilder.Entity<Deal>(entity =>
+        {
+            entity.ToTable("Deal");
+
+            entity.Property(e => e.CloseDate).HasColumnType("datetime");
+            entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+            entity.Property(e => e.Ffm)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("FFM");
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Ip)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("IP");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Notes)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.TypeOfCoverage)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UpdatedOn).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Agent).WithMany(p => p.Deals)
+                .HasForeignKey(d => d.AgentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Deal_AgentMaster_agentId");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DealCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.DealUpdatedByNavigations)
+                .HasForeignKey(d => d.UpdatedBy)
+                .HasConstraintName("FK_Deal_UserMaster");
         });
 
         modelBuilder.Entity<LoginFailure>(entity =>

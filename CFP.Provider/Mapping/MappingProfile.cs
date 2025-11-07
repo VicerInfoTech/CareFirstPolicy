@@ -18,6 +18,9 @@ namespace CFP.Provider.Mapping
             CreateMap<MenuModel, Menu>();
             CreateMap<Menu, MenuModel>();
 
+            CreateMap<DealModel, Deal>();
+            CreateMap<Deal, DealModel>();
+
 
         }
     }

@@ -100,6 +100,24 @@ namespace CFP.Provider.Provider
             }
             return list;
         }
+        public List<DropDownModel> GetAgentList()
+        {
+            List<DropDownModel> list = new List<DropDownModel>();
+            try
+            {
+                list = unitOfWork.AgentMaster.GetAll(x => x.IsActive == true).Select(
+                                       x => new DropDownModel
+                                       {
+                                           Text = x.FirstName + " " + x.LastName,
+                                           Value = x.AgentMasterId.ToString()
+                                       }).OrderBy(x => x.Text).ToList();
+            } 
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "CommonProvider=>GetAgentList");
+            }
+            return list;
+        }
 
 
 

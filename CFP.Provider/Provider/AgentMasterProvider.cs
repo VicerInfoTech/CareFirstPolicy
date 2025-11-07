@@ -63,10 +63,10 @@ namespace CFP.Provider.Provider
                 }
 
                 // Status filter
-                if (requestModel.Status == (short)Enumeration.ActiveInActiveStatus.Active)
-                    dataList = dataList.Where(x => x.IsActive).ToList();
-                else if (requestModel.Status == (short)Enumeration.ActiveInActiveStatus.In_Active)
-                    dataList = dataList.Where(x => !x.IsActive).ToList();
+                //if (requestModel.Status == (short)Enumeration.ActiveInActiveStatus.Active)
+                //    dataList = dataList.Where(x => x.IsActive).ToList();
+                //else if (requestModel.Status == (short)Enumeration.ActiveInActiveStatus.In_Active)
+                //    dataList = dataList.Where(x => !x.IsActive).ToList();
 
                 list.recordsFiltered = dataList.Count();
 
@@ -229,6 +229,7 @@ namespace CFP.Provider.Provider
             }
             return model;
         }
+
 
         #endregion
     }

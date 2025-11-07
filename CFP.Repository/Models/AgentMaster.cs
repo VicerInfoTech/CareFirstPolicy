@@ -33,6 +33,8 @@ public partial class AgentMaster
 
     public virtual UserMaster CreatedByNavigation { get; set; } = null!;
 
+    public virtual ICollection<Deal> Deals { get; set; } = new List<Deal>();
+
     public virtual UserMaster? UpdatedByNavigation { get; set; }
 
     public virtual UserMaster UserMaster { get; set; } = null!;

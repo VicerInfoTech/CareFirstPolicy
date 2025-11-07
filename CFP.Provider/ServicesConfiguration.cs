@@ -23,6 +23,7 @@ namespace CFP.Provider
             services.AddTransient<ICommonProvider, CommonProvider>();
             services.AddTransient<IUserMasterProvider, UserMasterProvider>();
             services.AddTransient<IAgentMasterProvider, AgentMasterProvider>();
+            services.AddTransient<IDealProvider, DealProvider>();
            
         }
 

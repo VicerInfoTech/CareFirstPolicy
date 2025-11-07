@@ -531,14 +531,7 @@ namespace CFP.Provider.Provider
                     ).ToList();
                 }
 
-                if (requestModel.Status == (short)Enumeration.ActiveInActiveStatus.Active)
-                    users = users.Where(x => x.IsActive).ToList();
-                else if (requestModel.Status == (short)Enumeration.ActiveInActiveStatus.In_Active)
-                    users = users.Where(x => !x.IsActive).ToList();
-
-                if (requestModel.RoleId > 0)
-                    users = users.Where(x => x.RoleId == requestModel.RoleId).ToList();
-
+              
                 list.recordsFiltered = users.Count();
 
                 if (!string.IsNullOrEmpty(requestModel.SortColumnName) && !string.IsNullOrEmpty(requestModel.SortDirection))

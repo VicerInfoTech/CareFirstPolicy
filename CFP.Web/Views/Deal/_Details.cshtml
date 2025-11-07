@@ -1,0 +1,136 @@
+﻿@using CFP.Common.Business_Entities
+
+@model DashboardViewModel
+
+
+<div class="modal-header">
+    <h4 class="modal-title fw-600" id="myModalLabel"><i class="ri-add-line font-20"></i> @(Model.DealModel.AgentId > 0 ? "Edit Deal" : "Add New Deal")</h4>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal">×</button>
+</div>
+
+<div class="card" style="margin-bottom:0px !important">
+    <div class="card-body" style="padding-left:1rem;padding-right:1rem;">
+        <form class="form-horizontal form-material" id="DealMasterForm">
+
+            <input asp-for="DealModel.EncId" type="hidden" />
+            <input asp-for="DealModel.IsActive" type="hidden" />
+            <input asp-for="DealModel.CreatedBy" type="hidden" />
+            <input asp-for="DealModel.CreatedOn" type="hidden" />
+
+            <div class="row">
+                <div class="col-md-4 mt-2">
+                    <label asp-for="DealModel.TypeOfCoverage"></label>
+                    <select asp-for="DealModel.TypeOfCoverage" class="form-control req-border">
+                        <option value="">Select Type Of Coverage</option>
+                        <option value="1">Health Insurance</option>
+                        <option value="2">Dental</option>
+                        <option value="3">Vision</option>
+                        <option value="4">Life Insurance</option>
+                    </select>
+                    <span asp-validation-for="DealModel.TypeOfCoverage" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label asp-for="DealModel.FirstName"></label>
+                    <input asp-for="DealModel.FirstName" class="form-control req-border" placeholder="First Name" autocomplete="off" />
+                    <span asp-validation-for="DealModel.FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label asp-for="DealModel.LastName"></label>
+                    <input asp-for="DealModel.LastName" class="form-control req-border" placeholder="Last Name" autocomplete="off" />
+                    <span asp-validation-for="DealModel.LastName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label asp-for="DealModel.NoOfApplicants"></label>
+                    <input asp-for="DealModel.NoOfApplicants" type="number" class="form-control req-border" placeholder="Number of Applicants" autocomplete="off" />
+                    <span asp-validation-for="DealModel.NoOfApplicants" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label asp-for="DealModel.Ffm"></label>
+                    <input asp-for="DealModel.Ffm" class="form-control req-border" placeholder="FFM" autocomplete="off" />
+                    <span asp-validation-for="DealModel.Ffm" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label asp-for="DealModel.Career"></label>
+                    <select asp-for="DealModel.Career" class="form-control req-border">
+                        <option value="">Select Career Type</option>
+                        <option value="1">Private</option>
+                        <option value="2">Government</option>
+                    </select>
+                    <span asp-validation-for="DealModel.Career" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label asp-for="DealModel.TypeOfWork"></label>
+                    <select asp-for="DealModel.TypeOfWork" class="form-control req-border">
+                        <option value="">Select Type Of Work</option>
+                        <option value="1">Full Time</option>
+                        <option value="2">Part Time</option>
+                    </select>
+                    <span asp-validation-for="DealModel.TypeOfWork" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label asp-for="DealModel.MonthlyIncome"></label>
+                    <input asp-for="DealModel.MonthlyIncome" type="number" class="form-control req-border" autocomplete="off" />
+                    <span asp-validation-for="DealModel.MonthlyIncome" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label asp-for="DealModel.DocNeeded"></label>
+                    <select asp-for="DealModel.DocNeeded" class="form-control req-border">
+                        <option value="">Select Doc Needed</option>
+                        <option value="1">PDF</option>
+                        <option value="2">AdharCard</option>
+                    </select>
+                    <span asp-validation-for="DealModel.DocNeeded" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3 mt-2">
+                    <label asp-for="DealModel.SocialProvided"></label>
+                    <select asp-for="DealModel.SocialProvided" class="form-control req-border">
+                        <option value="">Select Social Provided</option>
+                        <option value="1">Yes</option>
+                        <option value="2">NO</option>
+                    </select>
+                    <span asp-validation-for="DealModel.SocialProvided" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-3 mt-2">
+                    <label asp-for="DealModel.CustomerLanguage"></label>
+                    <select asp-for="DealModel.CustomerLanguage" class="form-control req-border">
+                        <option value="">Select Customer Language</option>
+                        <option value="1">Hindi</option>
+                        <option value="2">English</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3 mt-2">
+                    <label asp-for="DealModel.CloseDate"></label>
+                    <input asp-for="DealModel.CloseDate" type="date" class="form-control req-border" />
+                </div>
+
+                <div class="col-md-3 mt-2">
+                    <label asp-for="DealModel.AgentId"></label>
+                    <select asp-for="DealModel.AgentId" class="form-control req-border" asp-items="Model.AgentList">
+                        <option value="">Select Agent</option>
+                    </select>
+                    <span asp-validation-for="DealModel.AgentId" class="text-danger"></span>
+                </div>
+                <div class="col-md-12 mt-2">
+                    <label asp-for="DealModel.Notes"></label>
+                    <textarea asp-for="DealModel.Notes" rows="3" class="form-control req-border" placeholder="Notes"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-footer" style="margin-right: 1%;">
+    <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal"><i class="ri-close-line"></i> Cancel</button>
+    <button type="button" class="btn btn-success" onclick="CFP.Deal.Save()"><i class="ri-save-line"></i> Save</button>
+</div>

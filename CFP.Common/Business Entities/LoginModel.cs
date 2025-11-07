@@ -29,6 +29,7 @@ namespace CFP.Common.Business_Entities
         public int UserMasterId { get; set; }
         public string EncId { get; set; }
         public string Username { get; set; }
+        public bool IsAgent { get; set; }
         
         
         [Display(Name = "Old Password")]

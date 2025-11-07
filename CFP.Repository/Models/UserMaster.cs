@@ -41,6 +41,10 @@ public partial class UserMaster
 
     public virtual ICollection<AgentMaster> AgentMasterUserMasters { get; set; } = new List<AgentMaster>();
 
+    public virtual ICollection<Deal> DealCreatedByNavigations { get; set; } = new List<Deal>();
+
+    public virtual ICollection<Deal> DealUpdatedByNavigations { get; set; } = new List<Deal>();
+
     public virtual ICollection<LoginHistory> LoginHistories { get; set; } = new List<LoginHistory>();
 
     public virtual Role Role { get; set; } = null!;
