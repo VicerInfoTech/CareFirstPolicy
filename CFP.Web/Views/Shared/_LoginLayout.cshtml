@@ -1,108 +1,92 @@
 ﻿@using CFP.Common.Utility
-@{
-    Layout = null;
-}
-<!doctype html>
-<html lang="en" data-layout="twocolumn" data-layout-style="default" data-sidebar="light" data-topbar="dark" data-sidebar-size="lg" data-preloader="disable">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    @await Html.PartialAsync("_Meta")
-    @RenderSection("styles", required: false)
-    @await Html.PartialAsync("_Css")
-   
+    <base href="../../../">
+    <meta charset="utf-8" />
+    <title>@AppCommon.ApplicationTitle - @ViewData["Title"]</title>
+    <meta name="description" content="GoRev Lab Result Login" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="apple-touch-icon" href="~/lib/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/lib/images/favicon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    <link href="~/lib/css/loader.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/ladda-themeless.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/prismjs.bundle.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/plugins.bundle.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/style.bundle.css" rel="stylesheet" />
+    <link href="~/lib/css/gorev/login.css" rel="stylesheet" />
+    <style>
+
+        @@media (max-width: 991px) {
+            .login-aside {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 
-<body>
-       
-    <div class="auth-page-wrapper pt-5">
-        <!-- auth page bg -->
-        <div class="auth-one-bg-position auth-one-bg" id="auth-particles">
-            <div class="bg-overlay"></div>
-
-            <div class="shape">
-                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 120">
-                    <path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
-                </svg>
-            </div>
-        </div>
-
-        <div class="main-wrapper">            
-            @RenderBody()
-        </div>
-        <!-- auth page content -->
-        
-        <div id="preloader" class="preloader" style="opacity:0.5; visibility:visible;">
-            <div id="status">
-                <div class="spinner-border text-primary avatar-sm" role="status">
-                    <span class="visually-hidden">Loading...</span>
+<body id="kt_body" class="header-fixed subheader-enabled page-loading">
+   @*  <div class="d-flex flex-column flex-root">
+        <div class="login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white" style="background-color: #F2F2F2 !important;" id="kt_login">
+            <div class="login-aside d-flex flex-column flex-row-auto" style="background-image: url('/lib/images/admin-bg.jpg'); background-size: cover; min-height: 50px !important;">
+                <div class="d-flex flex-column-auto flex-column pt-lg-40 pt-15">
+                 
                 </div>
+                <div class="aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center"></div>
+            </div>
+            <div class="login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden p-7 mx-auto">
+                <div class="d-flex flex-column-fluid flex-center">
+                    @RenderBody()
+
+                </div>
+
             </div>
         </div>
-        <!-- end auth page content -->
-        <!-- footer -->
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="text-center">
-                            <p class="mb-0 text-muted">&copy; @AppCommon.CurrentDate.Year. Powered By <a href="@(Url.Content("https://arudhait.com//"))" target="_blank"> Arudha IT Solutions</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- end Footer -->
+    </div> *@
+    <div class="login-content ...">
+        @RenderBody()
     </div>
     
-    <!-- END layout-wrapper -->
-    @await Html.PartialAsync("_Script")
-    <script src="~/js/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/js/aes.js"></script>
-    <script src="~/js/custom/alphaderadcc.js" asp-append-version="true"></script>
-    <script src="~/js/custom/alphaderadcc.common.js" asp-append-version="true"></script>
-    <script src="~/js/jquery-validation/dist/toastr.min.js" asp-append-version=" true"></script>
-    <script src="~/js/jquery/dist/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="~/assets/js/jquery.min.js"></script>
+    
+    <script src="~/assets/js/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/assets/js/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+    <script src="~/assets/js/jquery.inputmask.bundle.min.js"></script>
+    <script src="~/assets/js/aes.js"></script>
+
+    <script src="~/lib/js/custom/CFP.js" asp-append-version="true"></script>
+    <script src="~/lib/js/custom/CFP.common.js" asp-append-version="true"></script>
     <script>
-        $(".password").click(function () {
-            if ($(this).children().hasClass("fa-eye")) {
-                $(this).children().removeClass().addClass("fas fa-eye-slash");
-                $(this).parent().next().attr("type", "text");
-            }
-            else {
-                $(this).children().removeClass().addClass("fas fa-eye");
-                $(this).parent().next().attr("type", "password");
-            }
-        });
-        $(".preloader").fadeOut();
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
 
-        function isNumber(evt) {
-            evt = (evt) ? evt : window.event;
-            var charCode = (evt.which) ? evt.which : evt.keyCode;
-            if ((charCode > 31 && charCode < 48) || charCode > 57) {
-                return false;
-            }
-            return true;
-        }
-
-
-        function GotoLogin() {
-            window.location.href = UrlContent("Account/Index");
-        }
 
         function encryptPwd() {
             if (document.getElementById("txtUsername") != null) {
                 var txtUserName = document.getElementById("txtUsername").value.trim();
                 var txtPassword = document.getElementById("txtPassword").value.trim();
-                var txtCaptcha = document.getElementById("txtCaptcha").value.trim();
 
                 if (txtUserName == "") {
                     return false;
                 }
                 else if (txtPassword == "") {
-                    return false;
-                }
-                else if (txtCaptcha == "") {
                     return false;
                 }
                 else {
@@ -121,143 +105,21 @@
             }
         }
 
-        (function () {
-            'use strict';
-            const forms = document.querySelectorAll('.needs-validation');
-            forms.forEach(form => {
-                form.addEventListener(
-                    'submit',
-                    event => {
-                        if (!form.checkValidity()) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    },
-                    false
-                );
-            });
 
-        })();
-
-        function encryptPwdWithoutUsername() {
-            if (document.getElementById("passwordTextnew") != null) {
-                var txtPassword = document.getElementById("passwordTextnew").value.trim();
-                var txtPasswordConfirm = document.getElementById("passwordTextConfirm").value.trim();
-                var ResetPaswordCaptcha = document.getElementById("captcha").value.trim();
-
-                if (txtPassword == "" || ResetPaswordCaptcha == "") {
-                    return false;
-                }
-                else {
-                    var key = CryptoJS.enc.Utf8.parse('8080808080808080');
-                    var iv = CryptoJS.enc.Utf8.parse('8080808080808080');
-                    var encryptedpassword = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtPassword), key,
-                        {
-                            keySize: 128 / 8,
-                            iv: iv,
-                            mode: CryptoJS.mode.CBC,
-                            padding: CryptoJS.pad.Pkcs7
-                        });
-                    document.getElementById("passwordTextnew").value = encryptedpassword;
-                    let confPass = document.getElementById("passwordTextConfirm");
-                    if (confPass != null && typeof confPass != "undefined") {
-                        var encryptedConfpassword = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(confPass.value.trim()), key,
-                            {
-                                keySize: 128 / 8,
-                                iv: iv,
-                                mode: CryptoJS.mode.CBC,
-                                padding: CryptoJS.pad.Pkcs7
-                            });
-                        confPass.value = encryptedConfpassword;
-                    }
-                    return true;
-                }
-            }
-        }
-
-        function ResetBtnClick() {
-            $("#divMsg").removeClass("show").addClass("hide");
-            $.validator.unobtrusive.parse($("#forgotPasswordForm"));
-            if ($("#forgotPasswordForm").valid()) {
-                $(".preloader").show();
-                var formdata = $("#forgotPasswordForm").serialize();
-
-                $.ajax({
-                    url: '@Url.Action("ResetPass", "Account")',
-                    type: 'POST',
-                    data: formdata,
-                    success: function (data) {
-                        console.log(data)
-                        $(".preloader").hide();
-                        $("#forgotalert").show();
-                        $("#forgotalert").removeClass("alert-danger").removeClass("alert-success").addClass("alert-success");
-                        if (data.isSuccess) {
-                            $("#forgotalert").addClass("alert-success");
-                            $("#lblError").text(data.message);
-                            $("#divMsg").removeClass("alert-danger").addClass("alert-success");
-                            $("#divMsg i").removeClass("ri-error-warning-line").addClass("ri-check-double-line");
-                            $("#divMsg").removeClass("hide").addClass("show");
-                        }
-                        else {
-                            $("#lblError").text(data.message);
-                            $("#divMsg").removeClass("alert-success").addClass("alert-danger");
-                            $("#divMsg i").removeClass("ri-check-double-line").addClass("ri-error-warning-line");
-                            $("#divMsg").removeClass("hide").addClass("show");
-                            AlphaDeraDCC.Common.RefreshCaptcha();
-                        }
-                        $("#txtCaptcha2").val('');
-                        AlphaDeraDCC.Common.RefreshCaptcha();
-                    }
-                });
-
-            }
-            else {
-                $("#forgotPasswordForm").addClass("was-validated");
-                return false;
-            }
-
-        }
-
-        $('#forgotalert button').on("click", function () {
-            $("#forgotalert").Show();
-            return false;
+        $(document).ready(function () {
+            $(".preloader").hide();
         });
+
+        $(".form-control").keyup(function (e) {
+            
+            if (e.keyCode == 13) {
+                
+                $("#submitButton").click();
+                e.preventDefault();
+            }
+        })
+
     </script>
-
-    <script>
-        $(document).ready(function () {
-            $("#loginform input").keypress(function (event) {
-                if (event.which == 13) {
-                    event.preventDefault();
-                    AlphaDeraDCC.Common.Login();
-                }
-            });
-        });
-
-        $(document).ready(function () {
-            $("#ResetPassword input").keypress(function (event) {
-                if (event.which == 13) {
-                    event.preventDefault();
-                    $("#resetSubmitbtn").click();
-                }
-            });
-        });
-        $(document).ready(function () {
-            $("#forgotPasswordForm input").keypress(function (event) {
-                if (event.which == 13) {
-                    event.preventDefault();
-                    ResetBtnClick()
-                }
-            });
-        });
-        function UrlContent(url) {
-            return "@Url.Content("~/")" + url;
-        }
-    </script>
-
-  @RenderSection("scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
-
-

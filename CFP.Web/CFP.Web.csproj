@@ -15,4 +15,9 @@
     <ProjectReference Include="..\CFP.Provider\CFP.Provider.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\ExtraFiles\Templates\" />
+    <Folder Include="wwwroot\ExtraFiles\TestResults\" />
+  </ItemGroup>
+
 </Project>

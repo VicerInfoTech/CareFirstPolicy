@@ -5,6 +5,7 @@
     @RenderSection("CSS", required: false)
     @await Html.PartialAsync("_HeaderScriptPartial")
     <title>@AppCommon.ApplicationTitle - @ViewData["Title"] </title>
+    @RenderSection("Style", required: false)   
 </head>
 <body class="">
     <div class="preloader" style="margin: 0 auto;position: absolute;z-index: 9998;height: 100%;width: 100%;opacity: 0.5;">
@@ -57,7 +58,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    @AppCommon.CurrentDate.Year © AlphaDERA Labs.
+                    @AppCommon.CurrentDate.Year © @AppCommon.ApplicationTitle.
                 </div>
                 <div class="col-sm-6">
                     <div class="text-sm-end d-none d-sm-block">

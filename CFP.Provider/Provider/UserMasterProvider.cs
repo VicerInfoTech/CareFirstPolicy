@@ -57,6 +57,10 @@ namespace CFP.Provider.Provider
                         model.FirstName = userData.FirstName;
                         model.LastName = userData.LastName;
                         model.RoleId = userData.RoleId;
+                        if (userData.AgentMasterUserMasters.Any())
+                        {
+                            model.AgentId = userData.AgentMasterUserMasters.FirstOrDefault().AgentMasterId;
+                        }
                         model.FullName = userData.FirstName + " " + userData.LastName;
                         model.IsSuccess = true;
                         InsertLoginHistory(userData.UserMasterId, sessionId, Ip);
@@ -531,7 +535,7 @@ namespace CFP.Provider.Provider
                     ).ToList();
                 }
 
-              
+
                 list.recordsFiltered = users.Count();
 
                 if (!string.IsNullOrEmpty(requestModel.SortColumnName) && !string.IsNullOrEmpty(requestModel.SortDirection))

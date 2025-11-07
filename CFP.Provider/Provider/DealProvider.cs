@@ -58,10 +58,14 @@ namespace CFP.Provider.Provider
                         SocialProvided = x.SocialProvided,
                         CustomerLanguage = x.CustomerLanguage,
                         CloseDate = x.CloseDate,
+                        AgentId = x.AgentId,
                         AgentName = $"{x.Agent.FirstName} {x.Agent.LastName}",
                         IsActive = x.IsActive,
                     }).ToList();
-
+                if (sessionProviderModel.RoleId == (int)Enumeration.Role.Agent)
+                {
+                    dataList = dataList.Where(x => x.AgentId == sessionProviderModel.AgentId).ToList();
+                }
                 list.recordsTotal = dataList.Count();
 
                 // Search filter
@@ -90,7 +94,11 @@ namespace CFP.Provider.Provider
                 }
 
                 // Paging
-                list.data = dataList.Skip(requestModel.StartIndex).Take(requestModel.PageSize).ToList();
+                list.data = dataList.Skip(requestModel.StartIndex).Take(requestModel.PageSize).Select(x =>
+                {
+                    x.TypeOfCoverages = x.TypeOfCoverage.Split(',');
+                    return x;
+                }).ToList();
             }
             catch (Exception ex)
             {
@@ -99,7 +107,6 @@ namespace CFP.Provider.Provider
 
             return list;
         }
-
 
         public ResponseModel Save(DealModel model, SessionProviderModel sessionProviderModel)
         {
@@ -121,6 +128,7 @@ namespace CFP.Provider.Provider
 
                 //string code = _commonProvider.GetUserCode();
                 var agent = _mapper.Map<DealModel, Deal>(model, _temp);
+                agent.TypeOfCoverage = string.Join(",", model.TypeOfCoverages);
                 if (_temp == null)
                 {
                     agent.IsActive = true;
@@ -162,6 +170,7 @@ namespace CFP.Provider.Provider
             }
             return model;
         }
+
         public ResponseModel DeActivate(int id, SessionProviderModel sessionProviderModel)
         {
             ResponseModel model = new ResponseModel();

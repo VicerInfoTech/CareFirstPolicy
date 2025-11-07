@@ -16,6 +16,8 @@ namespace CFP.Common.Business_Entities
 
         [Display(Name = "Type of Coverage")]
         [Required(ErrorMessage = "Type of Coverage is required.")]
+        public string[] TypeOfCoverages { get; set; } = Array.Empty<string>();
+
         public string TypeOfCoverage { get; set; } = null!;
 
         [Display(Name = "First Name")]

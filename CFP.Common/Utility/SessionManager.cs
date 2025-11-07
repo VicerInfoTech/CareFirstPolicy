@@ -36,6 +36,18 @@ namespace CFP.Common.Utility
                 SetSession();
             }
         }
+        public int AgentId
+        {
+            get
+            {
+                return GetSession().AgentId;
+            }
+            set
+            {
+                SessionData.AgentId = value;
+                SetSession();
+            }
+        }
         public string Username
         {
             get

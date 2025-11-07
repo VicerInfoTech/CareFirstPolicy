@@ -29,6 +29,7 @@ namespace CFP.Patient.Controllers
             {
                 UserId = _sessionManager.UserId,
                 RoleId = _sessionManager.RoleId,
+                AgentId = _sessionManager.AgentId,
                 Username = _sessionManager.Username,
                 Ip = _sessionManager.GetIP(),
                 FirstName = _sessionManager.FirstName,
@@ -62,7 +63,7 @@ namespace CFP.Patient.Controllers
                  .Select(x => new SelectListItem { Text = x.Text, Value = x.Value });
 
             if (_sessionManager.RoleId == (int)Enumeration.Role.Agent)
-                agentList = agentList.Where(x => x.Value == _sessionManager.UserId.ToString());
+                agentList = agentList.Where(x => x.Value == _sessionManager.AgentId.ToString());
 
             var list = agentList.ToList();
             return list;

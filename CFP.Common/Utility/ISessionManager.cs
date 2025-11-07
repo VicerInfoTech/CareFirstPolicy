@@ -8,6 +8,7 @@ namespace CFP.Common.Utility
     {
         int UserId { get; set; }
         int RoleId { get; set; }
+        int AgentId { get; set; }
         string Username { get; set; }
         string FirstName { get; set; }
         string LastName { get; set; }

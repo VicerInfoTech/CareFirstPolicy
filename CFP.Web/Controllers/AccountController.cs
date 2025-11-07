@@ -46,6 +46,7 @@ namespace CFP.Patient.Controllers
                     {
                         _sessionManager.UserId = response.UserId;
                         _sessionManager.RoleId = response.RoleId;
+                        _sessionManager.AgentId = response.AgentId;
                         _sessionManager.Username = response.Username;
                         _sessionManager.FirstName = response.FirstName;
                         _sessionManager.LastName = response.LastName;

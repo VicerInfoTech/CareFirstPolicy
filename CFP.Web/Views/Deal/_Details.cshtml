@@ -19,15 +19,14 @@
 
             <div class="row">
                 <div class="col-md-4 mt-2">
-                    <label asp-for="DealModel.TypeOfCoverage"></label>
-                    <select asp-for="DealModel.TypeOfCoverage" class="form-control req-border">
-                        <option value="">Select Type Of Coverage</option>
+                    <label asp-for="DealModel.TypeOfCoverages"></label>
+                    <select asp-for="DealModel.TypeOfCoverages" class="form-control req-border select2" multiple="multiple" data-placeholder="Select Type Of Coverage">
                         <option value="1">Health Insurance</option>
                         <option value="2">Dental</option>
                         <option value="3">Vision</option>
                         <option value="4">Life Insurance</option>
                     </select>
-                    <span asp-validation-for="DealModel.TypeOfCoverage" class="text-danger"></span>
+                    <span asp-validation-for="DealModel.TypeOfCoverages" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-4 mt-2">
