@@ -10,6 +10,7 @@ using OfficeOpenXml;
 using System.Dynamic;
 using System.Reflection;
 using static CFP.Common.Utility.Enumeration;
+using Microsoft.EntityFrameworkCore;
 
 namespace CFP.Provider.Provider
 {
@@ -111,7 +112,27 @@ namespace CFP.Provider.Provider
                                            Text = x.FirstName + " " + x.LastName,
                                            Value = x.AgentMasterId.ToString()
                                        }).OrderBy(x => x.Text).ToList();
-            } 
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "CommonProvider=>GetAgentList");
+            }
+            return list;
+        }
+        public List<DropDownModel> GetLeaderBoard()
+        {
+            List<DropDownModel> list = new List<DropDownModel>();
+            try
+            {
+
+
+                list = unitOfWork.AgentMaster.GetAll(x => x.IsActive == true).Select(
+                                       x => new DropDownModel
+                                       {
+                                           Text = x.FirstName + " " + x.LastName,
+                                           ExtraValue = x.Deals.Count()
+                                       }).OrderBy(x => x.Text).ToList();
+            }
             catch (Exception ex)
             {
                 AppCommon.LogException(ex, "CommonProvider=>GetAgentList");

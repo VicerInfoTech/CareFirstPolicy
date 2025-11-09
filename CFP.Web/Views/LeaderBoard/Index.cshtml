@@ -1,0 +1,80 @@
+﻿@model DashboardViewModel
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css">
+
+<style>
+    .board-container {
+        /* max-width: 900px; */
+        margin: 30px auto;
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 20px;
+    }
+
+    .progress-bar {
+        height: 14px;
+        background: #e8ecff;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4e73df, #1cc8ee);
+        width: 0;
+        border-radius: 8px;
+        transition: width 1.2s ease;
+    }
+
+</style>
+
+<div class="board-container">
+    <div class="title">🏆 Leader Board</div>
+
+    <table class="table table-bordered table-hover">
+        <thead style="background:#f4f6ff;">
+            <tr>
+                <th>Agent</th>
+                <th>Progress</th>
+                <th style="width:120px;">Deals</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.LeaderBoard.OrderByDescending(x => x.ExtraValue).ToList())
+            {
+                <tr>
+                    <td><i class="ri-user-3-line"></i> @item.Text</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" data-value="@item.ExtraValue"></div>
+                        </div>
+                    </td>
+                    <td><strong>@item.ExtraValue</strong></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    var values = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.LeaderBoard.Select(x => x.ExtraValue).ToList()));
+
+    document.querySelectorAll('.progress-fill').forEach(function (bar) {
+        var val = bar.getAttribute('data-value');
+        var max = Math.max.apply(Math, values);
+        bar.style.width = ((val / max) * 100) + "%";
+    });
+</script>
+
+
+

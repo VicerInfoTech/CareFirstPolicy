@@ -30,6 +30,16 @@ namespace CFP.Web.Controllers
                 
             };
             return View(model);
+        } 
+        public IActionResult LeaderBoard()
+        {
+            DashboardViewModel model = new DashboardViewModel()
+            {
+                RoleId = _sessionManager.RoleId,
+                
+            };
+            model.LeaderBoard=_commonProvider.GetLeaderBoard();
+            return View(model);
         }
         public JsonResult SaveTempFilter(string KitId, string PatientId)
         {

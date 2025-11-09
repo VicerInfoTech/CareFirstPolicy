@@ -1,0 +1,98 @@
+﻿@model DashboardViewModel
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    .board-container {
+        max-width: 900px;
+        margin: 30px auto;
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 15px;
+    }
+
+    .agent-progress {
+        margin-bottom: 18px;
+    }
+
+    .agent-label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+    }
+
+    .progress-bar {
+        height: 12px;
+        border-radius: 8px;
+        background: #dfe7ff;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #2b7bff, #6bc1ff);
+        width: 0;
+        border-radius: 8px;
+        transition: 1.2s ease;
+    }
+</style>
+
+<div class="board-container">
+    <div class="title">🏆 Agent Leaderboard</div>
+
+    <canvas id="leaderChart" height="120"></canvas>
+
+    <hr />
+
+    @foreach (var item in Model.LeaderBoard)
+    {
+            <div class="agent-progress">
+            <div class="agent-label">@item.Text (@item.ExtraValue Deals)</div>
+                <div class="progress-bar">
+                <div class="progress-fill" data-value="@item.ExtraValue"></div>
+                </div>
+            </div>
+    }
+</div>
+
+<script>
+    // Prepare Data for Chart
+    var labels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.LeaderBoard.Select(x => x.Text).ToList()));
+    var values = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.LeaderBoard.Select(x => x.ExtraValue).ToList()));
+
+    // Chart.js
+    new Chart(document.getElementById('leaderChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Total Deals Closed",
+                data: values,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // Animate Progress Bars
+    document.querySelectorAll('.progress-fill').forEach(function (bar) {
+        var val = bar.getAttribute('data-value');
+        var max = Math.max.apply(Math, values);
+        bar.style.width = ((val / max) * 100) + "%";
+    });
+</script>

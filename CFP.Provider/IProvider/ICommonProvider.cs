@@ -25,6 +25,7 @@ namespace CFP.Provider.IProvider
         #region Other Methods
         List<MenuModel> GetMenuList(SessionProviderModel sessionProviderModel);
         List<DropDownModel> GetAgentList();
+        List<DropDownModel> GetLeaderBoard();
         #endregion
 
     }
