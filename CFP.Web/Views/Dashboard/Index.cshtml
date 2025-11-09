@@ -1,9 +1,8 @@
 ﻿@model DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
-
-    // ViewBag.ParentPageName = "<i class='ri-home-2-line'></i> Home";
-    // ViewBag.PageName = "<i class='ri-home-4-line'></i> Dashboard";
+    ViewBag.ParentPageName = "Dashboard";
+    ViewBag.PageName = "Dashboard";
 }
 
 
@@ -17,7 +16,7 @@
 
     <script>
         $(document).ready(function () {
-            CFP.Common.MenuLink("/Order/Dashboard");
+          //  CFP.Common.MenuLink("/Order/Dashboard");
             CFP.Dashboard.Init('@Model.RoleId');
             $("#txtSearch").on("keyup", function () {
                 CFP.Dashboard.Search();
