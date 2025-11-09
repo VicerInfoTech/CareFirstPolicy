@@ -245,13 +245,13 @@ if (donutchartProjectsStatusColors) {
 }
 
 // chat
-var currentChatId = "users-chat";
-scrollToBottom(currentChatId);
+//var currentChatId = "users-chat";
+//scrollToBottom(currentChatId);
 
-// Scroll to Bottom
-function scrollToBottom(id) {
-    setTimeout(() => {
-        var scrollEl = new SimpleBar(document.getElementById('chat-conversation'));
-        scrollEl.getScrollElement().scrollTop = document.getElementById("users-conversation").scrollHeight;
-    }, 100);
-}
+//// Scroll to Bottom
+//function scrollToBottom(id) {
+//    setTimeout(() => {
+//        var scrollEl = new SimpleBar(document.getElementById('chat-conversation'));
+//        scrollEl.getScrollElement().scrollTop = document.getElementById("users-conversation").scrollHeight;
+//    }, 100);
+//}

@@ -294,7 +294,7 @@ namespace CFP.Provider.Provider
                     {
                         string msgBody = File.ReadAllText(filePath);
                         msgBody = msgBody.Replace("[UserName]", user.FirstName + " " + user.LastName)
-                            .Replace("[URL]", AppCommon.TOD_URL)
+                            .Replace("[URL]", AppCommon.CFP_URL)
                             .Replace("[Email]", user.Username)
                             .Replace("[AppName]", AppCommon.ApplicationTitle);
 

@@ -23,7 +23,7 @@ namespace CFP.Common.Utility
         public static string SMTPUserName = "";
         public static string SMTPPassword = "";
         public static string APP_URL = "";
-        public static string TOD_URL = "";
+        public static string CFP_URL = "";
         public static string NotFound = "Record not found. Please Contact Administrator!";
         public static string DateOnlyFormat = "MM/dd/yyyy";
         public static string TimeFormat = "hh:mm tt";
