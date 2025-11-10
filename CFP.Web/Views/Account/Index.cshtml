@@ -1,120 +1,119 @@
-﻿
-
-@using CFP.Common.Business_Entities;
+﻿@using CFP.Common.Business_Entities;
 @using CFP.Common.Utility;
 @model LoginModel
 @{
-    Layout = "_LoginLayout";
-    string loaderImage = "admin-loading.gif";
+	Layout = "_LoginLayout";
+	string loaderImage = "admin-loading.gif";
 }
-
-<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
-
 <style>
-    body { margin: 0; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
-    .login-container { display: flex; height: 100vh; width: 100%; }
-    .login-left { flex: 1; background: linear-gradient(135deg, #4f46e5, #9333ea); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px; text-align: center; }
-    .login-left img { width: 240px; margin-bottom: 30px; }
-    .login-right { flex: 1; display: flex; justify-content: center; align-items: center; background: #ffffff; }
-    .login-box { width: 380px; position: relative; }
-    .form-control { height: 48px; border-radius: 8px !important; }
-    .input-group-text { background: #f2f4f7; border: 1px solid #ced4da; }
-    .btn-login { height: 48px; border-radius: 8px; width: 100%; font-weight: 600; }
-    #loadingIMG { width: 80px; display: none; margin: 10px auto; }
+	.rt-bdr-rds{
+		border-top-right-radius: 0.25rem !important;
+		border-bottom-right-radius: 0.25rem !important;
+	}
 </style>
 
-<div class="login-container">
+<div class="col-md-8 col-lg-6 col-xl-5">
+	<div class="card mt-4">
 
-    <div class="login-left">
-        <img src="~/lib/images/logo-dark.png">
-        <h2>Welcome Back 👋</h2>
-        <p>Your dashboard is waiting. Please sign in.</p>
-    </div>
+		<div class="card-body p-4">
+			<div class="text-center mt-2">
+				<h5 class="text-primary">Welcome Back !</h5>
+				<p class="text-muted">Sign in to continue.</p>
+			</div>
+			<div class="p-2 mt-4">
+				<!-- ✅ Error Messages -->
+				@if (TempData[AppCommon.ErrorTempKeyName] != null)
+				{
+					<div class="alert alert-danger">@TempData[AppCommon.ErrorTempKeyName]</div>
+				}
+				else if (TempData[AppCommon.SuccessTempKeyName] != null)
+				{
+					<div class="alert alert-success">@TempData[AppCommon.SuccessTempKeyName]</div>
+				}
+				<form method="post" asp-action="Index" asp-controller="Account" class="needs-validation" onsubmit="return encryptPwd();" id="form">
 
-    <div class="login-right">
-        <div class="login-box">
+					<div class="mb-3">
+						<label asp-for="UserName" class="fw-semibold"></label>
+						<div class="input-group">
+							<span class="input-group-text"><i class="ri-user-line"></i></span>
+							<input asp-for="UserName" id="txtUsername" class="form-control" autocomplete="off" />
+						</div>
+						<span asp-validation-for="UserName" class="text-danger"></span>
+					</div>
 
-            <!-- ✅ Error Messages -->
-            @if (TempData[AppCommon.ErrorTempKeyName] != null)
-            {
-                <div class="alert alert-danger">@TempData[AppCommon.ErrorTempKeyName]</div>
-            }
-            else if (TempData[AppCommon.SuccessTempKeyName] != null)
-            {
-                <div class="alert alert-success">@TempData[AppCommon.SuccessTempKeyName]</div>
-            }
+					<div class="mb-3">
+						<label asp-for="UserPassword" class="fw-semibold"></label>
+						<div class="input-group">
+							<span class="input-group-text"><i class="ri-lock-password-line"></i></span>
+							<input asp-for="UserPassword" id="txtPassword" type="password" class="form-control pe-5 password-input rt-bdr-rds" autocomplete="off" />
+							<button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
 
-            <!-- ✅ Loader -->
-            <div class="text-center">
-                <img src="~/lib/images/@loaderImage" id="loadingIMG" />
-            </div>
+						</div>
+						<span asp-validation-for="UserPassword" class="text-danger"></span>
+					</div>
 
-            <form method="post" asp-action="Index" asp-controller="Account" class="needs-validation" onsubmit="return encryptPwd();" id="form">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="auth-remember-check">
+						<label class="form-check-label" for="auth-remember-check">Remember me</label>
+					</div>
 
-                <div class="mb-3">
-                    <label asp-for="UserName" class="fw-semibold"></label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="ri-user-line"></i></span>
-                        <input asp-for="UserName" id="txtUsername" class="form-control" autocomplete="off" />
-                    </div>
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </div>
+					<div class="mt-4">
+						<button class="btn btn-success w-100" type="button" id="submitButton">Sign In</button>
+					</div>
 
-                <div class="mb-4">
-                    <label asp-for="UserPassword" class="fw-semibold"></label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="ri-lock-password-line"></i></span>
-                        <input asp-for="UserPassword" id="txtPassword" type="password" class="form-control" autocomplete="off" />
-                    </div>
-                    <span asp-validation-for="UserPassword" class="text-danger"></span>
-                </div>
+				</form>
+			</div>
+		</div>
+		<!-- end card body -->
+	</div>
+	<!-- end card -->
 
-                <button type="button" id="submitButton" class="btn btn-primary btn-login">
-                    <i class="ri-login-circle-line"></i> Sign In
-                </button>
-
-              @*   <div class="mt-3 text-center">
-                    <a asp-action="ForgetPassword" asp-controller="Account" class="text-decoration-none text-primary">Forgot Password?</a>
-                </div> *@
-
-            </form>
-        </div>
-    </div>
 
 </div>
 
+
 @section Scripts {
-    @* <script src="~/lib/js/theme/aes.js"></script> *@
+	@* <script src="~/lib/js/theme/aes.js"></script> *@
 
-    <script>
-        $(document).ready(function () {
-            $("#loadingIMG").hide();
-        });
+	<script>
+	
+		$("#password-addon").on("click", function () {
+				var passwordInput = $('#txtPassword');
+				var firstChildOfButton = $(this).children().first();
 
-        $("#submitButton").on("click", function () {
-            if ($("#form").valid()) {
-                $("#submitButton").attr("disabled", true);
-                $("#loadingIMG").show();
-                $("#form").submit();
-            } else {
-                $("#loadingIMG").hide();
-                $("#submitButton").removeAttr("disabled");
-            }
-        });
+				if (passwordInput.attr('type') === 'password') {
+				  passwordInput.attr('type', 'text');
+				  firstChildOfButton.addClass('ri-eye-off-fill').removeClass("ri-eye-fill");
+				} else {
+				  passwordInput.attr('type', 'password');
+				  firstChildOfButton.addClass('ri-eye-fill').removeClass("ri-eye-off-fill");
+				}
+		});
 
-        function encryptPwd() {
-            var user = $("#txtUsername").val().trim();
-            var pass = $("#txtPassword").val().trim();
-            if (user === "" || pass === "") return false;
+		$("#submitButton").on("click", function () {
+			if ($("#form").valid()) {
+				$("#submitButton").attr("disabled", true);
+				$("#preloader").show();
+				$("#form").submit();
+			} else {
+				$("#preloader").hide();
+				$("#submitButton").removeAttr("disabled");
+			}
+		});
 
-            var key = CryptoJS.enc.Utf8.parse('8080808080808080');
-            var iv = CryptoJS.enc.Utf8.parse('8080808080808080');
-            var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(pass), key, { keySize: 128/8, iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+		function encryptPwd() {
+			var user = $("#txtUsername").val().trim();
+			var pass = $("#txtPassword").val().trim();
+			if (user === "" || pass === "") return false;
 
-            $("#txtPassword").val(encrypted);
-            return true;
-        }
-    </script>
+			var key = CryptoJS.enc.Utf8.parse('8080808080808080');
+			var iv = CryptoJS.enc.Utf8.parse('8080808080808080');
+			var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(pass), key, { keySize: 128/8, iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+
+			$("#txtPassword").val(encrypted);
+			return true;
+		}
+	</script>
 }
 
 

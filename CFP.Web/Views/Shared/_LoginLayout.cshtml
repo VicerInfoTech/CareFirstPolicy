@@ -2,124 +2,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <base href="../../../">
-    <meta charset="utf-8" />
-    <title>@AppCommon.ApplicationTitle - @ViewData["Title"]</title>
-    <meta name="description" content="GoRev Lab Result Login" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link rel="apple-touch-icon" href="~/lib/images/favicon.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="~/lib/images/favicon.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-    <link href="~/lib/css/loader.css" rel="stylesheet" />
-    <link href="~/lib/css/gorev/ladda-themeless.css" rel="stylesheet" />
-    <link href="~/lib/css/gorev/prismjs.bundle.css" rel="stylesheet" />
-    <link href="~/lib/css/gorev/plugins.bundle.css" rel="stylesheet" />
-    <link href="~/lib/css/gorev/style.bundle.css" rel="stylesheet" />
-    <link href="~/lib/css/gorev/login.css" rel="stylesheet" />
-    <style>
-
-        @@media (max-width: 991px) {
-            .login-aside {
-                display: none !important;
-            }
-        }
-    </style>
+	<meta charset="utf-8" />
+	<title>@AppCommon.ApplicationTitle - @ViewData["Title"]</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+	<meta content="Themesbrand" name="author" />
+	<!-- App favicon -->
+	<link rel="shortcut icon" href="~/assets/images/favicon.ico">
+	<link rel="icon" type="image/png" sizes="16x16" href="~/lib/images/favicon.png">
+	<!-- Layout config Js -->
+	<script src="~/assets/js/layout.js"></script>
+	<!-- Bootstrap Css -->
+	<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<!-- Icons Css -->
+	<link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+	<!-- App Css-->
+	<link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+	<!-- custom Css-->
+	<link href="~/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body id="kt_body" class="header-fixed subheader-enabled page-loading">
-   @*  <div class="d-flex flex-column flex-root">
-        <div class="login login-1 login-signin-on d-flex flex-column flex-lg-row flex-column-fluid bg-white" style="background-color: #F2F2F2 !important;" id="kt_login">
-            <div class="login-aside d-flex flex-column flex-row-auto" style="background-image: url('/lib/images/admin-bg.jpg'); background-size: cover; min-height: 50px !important;">
-                <div class="d-flex flex-column-auto flex-column pt-lg-40 pt-15">
-                 
-                </div>
-                <div class="aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center"></div>
-            </div>
-            <div class="login-content flex-row-fluid d-flex flex-column justify-content-center position-relative overflow-hidden p-7 mx-auto">
-                <div class="d-flex flex-column-fluid flex-center">
-                    @RenderBody()
+<body>
+	
+	<div class="preloader" style="margin: 0 auto;position: absolute;z-index: 9998;height: 100%;width: 100%;opacity: 0.5;">
+		<div class="spinner-grow" style="width: 5rem; height: 5rem;position: absolute;left: 50%;top: 50%;" role="status">
+			<span class="sr-only">Loading...</span>
+		</div>
+	</div>
+	<div class="auth-page-wrapper pt-5">
+		<!-- auth page bg -->
+		<div class="auth-one-bg-position auth-one-bg" id="auth-particles">
+			<div class="bg-overlay"></div>
 
-                </div>
+			<div class="shape">
+				<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1440 120">
+					<path d="M 0,36 C 144,53.6 432,123.2 720,124 C 1008,124.8 1296,56.8 1440,40L1440 140L0 140z"></path>
+				</svg>
+			</div>
+		</div>
+		<div class="auth-page-content">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="text-center mt-sm-5 mb-4 text-white-50">
+							<div>
+								<h1 class="text-white">@AppCommon.ApplicationTitle</h1>
+							</div>
+							<p class="mt-3 fs-15 fw-medium">Insuracne Policy Consultant</p>
+						</div>
+					</div>
+				</div>
+				<!-- end row -->
 
-            </div>
-        </div>
-    </div> *@
-    <div class="login-content ...">
-        @RenderBody()
-    </div>
-    
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="~/assets/js/jquery.min.js"></script>
-    
-    <script src="~/assets/js/jquery.validate.min.js" asp-append-version="true"></script>
-    <script src="~/assets/js/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
-    <script src="~/assets/js/jquery.inputmask.bundle.min.js"></script>
-    <script src="~/assets/js/aes.js"></script>
+				<div class="row justify-content-center">
+					@RenderBody()
+				</div>
+				<!-- end row -->
+			</div>
+		</div>
+		<footer class="footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="text-center">
+							<p class="mb-0 text-muted">
+								&copy;
+								<script>document.write(new Date().getFullYear())</script> @AppCommon.ApplicationTitle.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<!-- end Footer -->
+	</div>
+	<!-- JAVASCRIPT -->
+	<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+	<script src="~/assets/libs/node-waves/waves.min.js"></script>
+	<script src="~/assets/libs/feather-icons/feather.min.js"></script>
+	<script src="~/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+	<script src="~/assets/js/plugins.js"></script>
 
-    <script src="~/lib/js/custom/CFP.js" asp-append-version="true"></script>
-    <script src="~/lib/js/custom/CFP.common.js" asp-append-version="true"></script>
-    <script>
-        (function () {
-            'use strict';
-            window.addEventListener('load', function () {
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                var forms = document.getElementsByClassName('needs-validation');
-                // Loop over them and prevent submission
-                var validation = Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
+	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<script src="~/assets/js/jquery.min.js"></script>
 
+	<script src="~/assets/js/jquery.validate.min.js" asp-append-version="true"></script>
+	<script src="~/assets/js/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+	<script src="~/assets/js/jquery.inputmask.bundle.min.js"></script>
+	<script src="~/assets/js/aes.js"></script>
 
-        function encryptPwd() {
-            if (document.getElementById("txtUsername") != null) {
-                var txtUserName = document.getElementById("txtUsername").value.trim();
-                var txtPassword = document.getElementById("txtPassword").value.trim();
-
-                if (txtUserName == "") {
-                    return false;
-                }
-                else if (txtPassword == "") {
-                    return false;
-                }
-                else {
-                    var key = CryptoJS.enc.Utf8.parse('8080808080808080');
-                    var iv = CryptoJS.enc.Utf8.parse('8080808080808080');
-                    var encryptedpassword = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtPassword), key,
-                        {
-                            keySize: 128 / 8,
-                            iv: iv,
-                            mode: CryptoJS.mode.CBC,
-                            padding: CryptoJS.pad.Pkcs7
-                        });
-                    document.getElementById("txtPassword").value = encryptedpassword;
-                    return true;
-                }
-            }
-        }
+	<script src="~/lib/js/custom/CFP.js" asp-append-version="true"></script>
+	<script src="~/lib/js/custom/CFP.common.js" asp-append-version="true"></script>
+	<script>
+		(function () {
+			'use strict';
+			window.addEventListener('load', function () {
+				// Fetch all the forms we want to apply custom Bootstrap validation styles to
+				var forms = document.getElementsByClassName('needs-validation');
+				// Loop over them and prevent submission
+				var validation = Array.prototype.filter.call(forms, function (form) {
+					form.addEventListener('submit', function (event) {
+						if (form.checkValidity() === false) {
+							event.preventDefault();
+							event.stopPropagation();
+						}
+						form.classList.add('was-validated');
+					}, false);
+				});
+			}, false);
+		})();
 
 
-        $(document).ready(function () {
-            $(".preloader").hide();
-        });
+		function encryptPwd() {
+			if (document.getElementById("txtUsername") != null) {
+				var txtUserName = document.getElementById("txtUsername").value.trim();
+				var txtPassword = document.getElementById("txtPassword").value.trim();
 
-        $(".form-control").keyup(function (e) {
-            
-            if (e.keyCode == 13) {
-                
-                $("#submitButton").click();
-                e.preventDefault();
-            }
-        })
+				if (txtUserName == "") {
+					return false;
+				}
+				else if (txtPassword == "") {
+					return false;
+				}
+				else {
+					var key = CryptoJS.enc.Utf8.parse('8080808080808080');
+					var iv = CryptoJS.enc.Utf8.parse('8080808080808080');
+					var encryptedpassword = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtPassword), key,
+						{
+							keySize: 128 / 8,
+							iv: iv,
+							mode: CryptoJS.mode.CBC,
+							padding: CryptoJS.pad.Pkcs7
+						});
+					document.getElementById("txtPassword").value = encryptedpassword;
+					return true;
+				}
+			}
+		}
 
-    </script>
-    @RenderSection("Scripts", required: false)
+
+		$(document).ready(function () {
+			$(".preloader").hide();
+		});
+
+		$(".form-control").keyup(function (e) {
+
+			if (e.keyCode == 13) {
+
+				$("#submitButton").click();
+				e.preventDefault();
+			}
+		})
+
+	</script>
+	@RenderSection("Scripts", required: false)
 </body>
 </html>

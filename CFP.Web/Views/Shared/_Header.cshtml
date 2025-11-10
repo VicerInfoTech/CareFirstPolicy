@@ -2,17 +2,27 @@
     <div class="layout-width">
         <div class="navbar-header">
             <div class="d-flex">
-                <!-- LOGO -->
+                <!-- LOGO -->                
                 <div class="navbar-brand-box horizontal-logo">
-                    <a asp-action="Index" asp-controller="Dashboard" class="logo logo-dark">
+                    <a asp-action="Index" asp-controller="Dashboard" class="logo logo-dark" style="margin:10px;">
                         <span class="logo-sm">
-                            @* <img src="assets/images/logo-sm.png" alt="" height="22"> *@
+                            <img src="~/assets/images/logo-sm.png" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="~/lib/images/logo-dark.png" alt="" height="30" />
+                            <h1 style="font-weight:900">CFP</h1>
+                        </span>
+                    </a>
+                    <!-- Light Logo-->
+                    <a asp-action="Index" asp-controller="Dashboard" class="logo logo-light" style="margin:10px;">
+                        <span class="logo-sm">
+                            <img src="~/assets/images/logo-sm.png" alt="" height="22">
+                        </span>
+                        <span class="logo-lg">
+                            <h1 class="text-white" style="font-weight:900">CFP</h1>
                         </span>
                     </a>
                 </div>
+
                 <button type="button" class="btn btn-sm px-3 fs-16 vertical-menu-btn topnav-hamburger" id="topnav-hamburger-icon">
                     <span class="hamburger-icon">
                         <span></span>

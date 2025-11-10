@@ -13,7 +13,7 @@ namespace CFP.Common.Utility
         public static int CommonUserId = 1;
         public static string IP = "AUTO";
         public static string ErrorMessage = "Something Went Wrong. Please Contact Administrator!";
-        public static string ApplicationTitle = "Endeavor Insurance Group";
+        public static string ApplicationTitle = "Care First Policy";
         public static string Protection = "CFP";
         public static string SessionName = "CFP.Session";
         public static string ConnectionString = "";
@@ -31,8 +31,8 @@ namespace CFP.Common.Utility
         public static string DateTimeSimpleFormat = "MMddyyyyhhmmss";
         private static byte[] _salt = Encoding.ASCII.GetBytes("o6806642kbM7c5");
         private static string _encSecret = "CFP";
-        public static string EmailMessage = @"<p> If you have any questions, feel free to call our Customer Support representative at +1 (832) 402-8733, Monday through Friday, 9 am to 5 pm EST, or email <a href=""mailto:support@alphaderalabs.com"">support@alphaderalabs.com</a>.    </p>";
-        public static string EmailFooterName = "Endeavor Insurance Group Team";
+        public static string EmailMessage = @"";
+        public static string EmailFooterName = "Care First Policy";
         public static string ErrorTempKeyName = "Temp_Error";
         public static string SuccessTempKeyName = "Temp_Success";
         #endregion

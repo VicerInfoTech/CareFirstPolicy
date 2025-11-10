@@ -3,23 +3,24 @@
 
 <div class="app-menu navbar-menu">
     <!-- LOGO -->
-    <div class="navbar-brand-box" style="margin: 25px;">
+    
+    <div class="navbar-brand-box">
         <!-- Dark Logo-->
-        <a href="/" class="logo logo-dark">
+        <a asp-action="Index" asp-controller="Dashboard" class="logo logo-dark" style="margin:10px;">
             <span class="logo-sm">
-                <img src="/assets/images/logo-sm.png" alt="" height="22">
+                <img src="~/assets/images/logo-sm.png" alt="" height="22">
             </span>
-            <span class="logo-lg">
-                <img src="/assets/images/logo-dark.png" alt="" height="17">
+            <span class="logo-lg" >
+                <h1 style="font-weight:900">CFP</h1>
             </span>
         </a>
         <!-- Light Logo-->
-        <a href="/" class="logo logo-light">
+        <a asp-action="Index" asp-controller="Dashboard" class="logo logo-light" style="margin:10px;">
             <span class="logo-sm">
-                <img src="/assets/images/logo-sm.png" alt="" height="22">
+                <img src="~/assets/images/logo-sm.png" alt="" height="22">
             </span>
-            <span class="logo-lg">
-                <img src="/assets/images/logo-light.png" alt="" height="17">
+            <span class="logo-lg" >
+                <h1 class="text-white" style="font-weight:900">CFP</h1>
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
@@ -102,80 +103,4 @@
 <div class="sidebar-background"></div>
 <div class="simplebar-track simplebar-vertical"></div>
 
-
-@* <div class="app-menu navbar-menu">
-    <!-- LOGO -->
-    <div class="navbar-brand-box">
-
-        <!-- Light Logo-->
-        <a href="/" class="logo logo-light">
-            <img src="~/lib/images/logo-dark.png" class="headerLogo" style="height:50px;" />
-        </a>
-        <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
-            <i class="ri-record-circle-line"></i>
-        </button>
-    </div>
-
-    <div id="scrollbar" class="h-100" data-simplebar>
-        <div class="container-fluid">
-
-            <div id="two-column-menu">
-            </div>
-            <ul class="navbar-nav" id="navbar-nav">
-                <li class="menu-title"><span data-key="t-menu">Menu</span></li>
-                @foreach (var item in Model.Where(x => x.ParentId == 0))
-                {
-                    if (item.IsHaveChild)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" href="#@(item.MenuNameId)"
-                               href="@(Url.Content(item.PageUrl))"
-                               data-bs-toggle="collapse" role="button" aria-expanded="false"
-                               aria-controls="@(item.MenuNameId)">
-                                <i class="@(item.Icon)"></i>
-                                <span data-key="@(item.MenuNameId)">
-                                    @item.MenuName
-                                </span>
-                            </a>
-                            <div class="collapse menu-dropdown" id="@(item.MenuNameId)">
-                                <ul class="nav nav-sm flex-column">
-                                    @foreach (var subMenu in Model.Where(x => x.ParentId == item.MenuId).OrderBy(x => x.DisplayOrder))
-                                    {
-                                        <li class="nav-item">
-                                            <a href="@(Url.Content(subMenu.PageUrl))" data-key="@(subMenu.MenuNameId)"
-                                               class="nav-link">
-                                                <i class="@(subMenu.Icon)"></i>
-                                                @subMenu.MenuName
-                                            </a>
-                                        </li>
-                                    }
-                                </ul>
-                            </div>
-                        </li>
-
-                    }
-                    else
-                    {
-
-                        <li class="nav-item">
-                            <a class="nav-link menu-link" role="button" href="@(Url.Content(item.PageUrl))">
-                                <i class="@(item.Icon)"></i>
-                                <span data-key="@(item.MenuNameId)">
-
-                                    @item.MenuName
-                                </span>
-                            </a>
-
-
-                        </li>
-                    }
-                }
-
-
-            </ul>
-        </div>
-    </div>
-    <div class="sidebar-background"></div>
-</div>
-<div class="simplebar-track simplebar-vertical"></div> *@
 

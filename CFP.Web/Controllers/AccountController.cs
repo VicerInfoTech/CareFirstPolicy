@@ -27,6 +27,7 @@ namespace CFP.Patient.Controllers
         #region Methods
         public IActionResult Index()
         {
+            ViewData["Title"] = "Sign In";
             return View();
         }
         [HttpPost]
