@@ -1,7 +1,27 @@
 ﻿@using CFP.Common.Business_Entities
 
 @model DashboardViewModel
+<style>
+    .select2-container--default .select2-selection--multiple {
+        border-left: 3px solid red !important;
+        position: relative;
+    }
 
+    .form-control .select2-selection.select2-selection--multiple {
+        display: block;
+        width: 100%;
+        padding: .5rem .9rem  !important;
+    }
+
+    .select2-container .select2-search--inline .select2-search__field {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0 14.4px;
+    }
+
+</style>
 
 <div class="modal-header">
     <h4 class="modal-title fw-600" id="myModalLabel"><i class="ri-add-line font-20"></i> @(Model.DealModel.AgentId > 0 ? "Edit Deal" : "Add New Deal")</h4>
@@ -19,8 +39,15 @@
 
             <div class="row">
                 <div class="col-md-4 mt-2">
+                 @*    <select class="mySelect" id="mySelect" style="width:200px;" name="states[]" multiple>
+                        <option value="1">India</option>
+                        <option value="2">USA</option>
+                        <option value="3">UK</option>
+                        <option value="4">Japan</option>
+                    </select> *@
+
                     <label asp-for="DealModel.TypeOfCoverages"></label>
-                    <select asp-for="DealModel.TypeOfCoverages" class="form-control req-border select2" multiple="multiple" data-placeholder="Select Type Of Coverage">
+                    <select asp-for="DealModel.TypeOfCoverages" class="form-control req-border" id="multipleSelect" multiple data-placeholder="Select Type Of Coverage">
                         <option value="1">Health Insurance</option>
                         <option value="2">Dental</option>
                         <option value="3">Vision</option>

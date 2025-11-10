@@ -78,8 +78,8 @@
             success: function (data) {
                 $("#common-xl-dialogContent").html(data);
                 //$(".select2").select2();
-           
                 $.validator.unobtrusive.parse($("#DealMasterForm"));
+                $('#multipleSelect').select2();
                 $("#common-xl-dialog").modal('show');
                 $(".preloader").hide();
             }

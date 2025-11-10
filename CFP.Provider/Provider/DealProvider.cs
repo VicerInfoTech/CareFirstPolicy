@@ -153,6 +153,7 @@ namespace CFP.Provider.Provider
         }
 
         public DealModel GetById(int id)
+        
         {
             DealModel model = new DealModel();
             try
@@ -161,6 +162,7 @@ namespace CFP.Provider.Provider
                 if (data != null)
                 {
                     model = _mapper.Map<DealModel>(data);
+                    model.TypeOfCoverages = data.TypeOfCoverage.Split(',');
                     model.EncId = _commonProvider.Protect(id);
                 }
             }

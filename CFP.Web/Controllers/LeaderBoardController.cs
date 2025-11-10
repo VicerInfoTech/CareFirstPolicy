@@ -1,11 +1,13 @@
 ﻿using CFP.Common.Utility;
 using CFP.Patient.Controllers;
 using CFP.Provider.IProvider;
+using CFP.Web.Filter;
 using CFP.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CFP.Web.Controllers
 {
+    [Authorization(MenuId = 5)]
     public class LeaderBoardController : BaseController
     {
 

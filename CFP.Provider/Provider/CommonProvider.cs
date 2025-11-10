@@ -161,29 +161,29 @@ namespace CFP.Provider.Provider
             return list;
         }
 
-        //public bool IsAuthorized(int roleId, int menuId)
-        //{
-        //    bool isAuthorized = false;
-        //    try
-        //    {
-        //        if (roleId == (int)Enumeration.Role.Super_Admin)
-        //            isAuthorized = true;
-        //        else
-        //        {
-        //            var menu = unitOfWork.Menu.Get(x => x.MenuId == menuId);
-        //            if (menu != null)
-        //            {
-        //                if (menu.MenuRole.Any(x => x.RoleId == roleId))
-        //                    isAuthorized = true;
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        AppCommon.LogException(ex, "CommonProvider=>IsAuthorized");
-        //    }
-        //    return isAuthorized;
-        //}
+        public bool IsAuthorized(int roleId, int menuId)
+        {
+            bool isAuthorized = false;
+            try
+            {
+                if (roleId == (int)Enumeration.Role.Super_Admin)
+                    isAuthorized = true;
+                else
+                {
+                    var menu = unitOfWork.Menu.Get(x => x.MenuId == menuId);
+                    if (menu != null)
+                    {
+                        if (menu.MenuRoles.Any(x => x.RoleId == roleId))
+                            isAuthorized = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "CommonProvider=>IsAuthorized");
+            }
+            return isAuthorized;
+        }
 
 
         public ResponseModel CovertExcelToModel<TDATA>(Stream file, ref List<TDATA> tDATAs) where TDATA : new()

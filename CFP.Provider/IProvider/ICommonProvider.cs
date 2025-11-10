@@ -26,6 +26,7 @@ namespace CFP.Provider.IProvider
         List<MenuModel> GetMenuList(SessionProviderModel sessionProviderModel);
         List<DropDownModel> GetAgentList();
         List<DropDownModel> GetLeaderBoard();
+        bool IsAuthorized(int roleId, int menuId);
         #endregion
 
     }
