@@ -100,7 +100,7 @@ namespace CFP.Common.Utility
                 SetSession();
             }
 
-        }  
+        }
         public SessionManager(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -112,12 +112,27 @@ namespace CFP.Common.Utility
         }
         public SessionModel GetSession()
         {
-            var session = _httpContextAccessor.HttpContext.Session.Get(sessionKey);
-            return (SessionModel)(session != null ? FromByteArray<SessionModel>(session) : new SessionModel());
+            var sessionModel = new SessionModel();
+            if (_httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(sessionKey, out var base64))
+            {
+                var session = Convert.FromBase64String(base64);
+                return (SessionModel)(session != null ? FromByteArray<SessionModel>(session) : new SessionModel());
+            }
+            return sessionModel;
         }
         public void SetSession()
         {
-            _httpContextAccessor.HttpContext.Session.Set(sessionKey, ObjectToByteArray(SessionData));
+            //_httpContextAccessor.HttpContext.Session.Set(sessionKey, ObjectToByteArray(SessionData));
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(
+                sessionKey,
+                Convert.ToBase64String(ObjectToByteArray(SessionData)),
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(30)
+                });
         }
         public string GetSessionId()
         {
@@ -126,8 +141,11 @@ namespace CFP.Common.Utility
         public void ClearSession()
         {
             SessionData = new SessionModel();
-            _httpContextAccessor.HttpContext.Session.Remove(sessionKey);
-            _httpContextAccessor.HttpContext.Session.Clear();
+            //_httpContextAccessor.HttpContext.Session.Remove(sessionKey);
+            //_httpContextAccessor.HttpContext.Session.Clear();
+
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete(sessionKey);
+
         }
         public string GetIP()
         {

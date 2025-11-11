@@ -8,3 +8,5 @@ CFP.Web/wwwroot/LogFiles/
 CFP.Repository/bin/
 CFP.Repository/obj/
 .vs/CFP/
+.vs/
+CFP.Web/Properties/PublishProfiles/
