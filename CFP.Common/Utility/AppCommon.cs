@@ -45,7 +45,7 @@ namespace CFP.Common.Utility
         {
             get
             {
-                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+                return DateTime.UtcNow;
             }
         }
         public static DateTime ConvertToCST(DateTime date)

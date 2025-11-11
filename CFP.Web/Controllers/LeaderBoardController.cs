@@ -33,6 +33,17 @@ namespace CFP.Web.Controllers
             model.LeaderBoard = _commonProvider.GetLeaderBoard();
             return View(model);
         }
+        [HttpGet]
+        public IActionResult _LeaderBoard()
+        {
+            DashboardViewModel model = new DashboardViewModel()
+            {
+                RoleId = _sessionManager.RoleId,
+
+            };
+            model.LeaderBoard = _commonProvider.GetLeaderBoard();
+            return PartialView(model);
+        }
         #endregion
     }
 }

@@ -3,10 +3,10 @@
     ViewData["Title"] = "Deal";
     Layout = "~/Views/Shared/_Layout.cshtml";
     //ViewBag.ParentPageName = "Deal";
-    ViewBag.PageName = "Deal";
-
+    ViewBag.ParentPageName = "<a href='/Dashboard/Index'><i class='ri-home-2-line'></i> Home</a>";
+    ViewBag.PageName = "<i class='ri-shake-hands-line'></i>  Deal";
 }
-
+<link href="~/lib/css/gorev/bootstrap-datepicker.min.css" rel="stylesheet" asp-append-version="true" />
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -57,6 +57,7 @@
 </div>
 
 @section Scripts {
+    <script src="~/lib/js/gorev/bootstrap-datepicker.min.js" asp-append-version="true"></script>
     <script src="~/lib/js/custom/CFP.Deal.js" asp-append-version="true"></script>
 
     <script>
@@ -65,6 +66,7 @@
             $("#txtSearch").on("keyup", function () {
                 CFP.Deal.Search();
             });
+           
         });
     </script>
 }

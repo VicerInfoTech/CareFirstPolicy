@@ -80,6 +80,12 @@
                 //$(".select2").select2();
                 $.validator.unobtrusive.parse($("#DealMasterForm"));
                 $('#multipleSelect').select2();
+                //$('.datepicker').datepicker({
+                //    autoclose: true,
+                //    format: 'mm/dd/yyyy',
+                //    todayHighlight: true,
+                //});
+                flatpicker();
                 $("#common-xl-dialog").modal('show');
                 $(".preloader").hide();
             }

@@ -59,6 +59,7 @@ namespace CFP.Common.Business_Entities
 
         [Display(Name = "Close Date")]
         [Required(ErrorMessage = "Close Date is required.")]
+        public string CloseDates { get; set; }
         public DateTime CloseDate { get; set; }
 
         [Display(Name = "Notes")]

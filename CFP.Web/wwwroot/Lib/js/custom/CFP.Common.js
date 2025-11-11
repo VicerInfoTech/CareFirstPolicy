@@ -128,4 +128,19 @@ CFP.Common = new function () {
 
     }
 
+
+    this.LeaderBoard = function () {
+        $(".preloader").show();
+        $.ajax({
+            type: "GET",
+            url: UrlContent("LeaderBoard/_LeaderBoard/"),
+            success: function (data) {
+              
+                $("#leaderboarddivId").html(data);
+               
+               
+                $(".preloader").hide();
+            }
+        })
+    }
 }

@@ -1,0 +1,97 @@
+﻿@model DashboardViewModel
+
+<div id="leaderboard"></div>
+
+<script>
+	// Page title change (optional)
+	const parentElement = document.getElementsByClassName('page-title-box');
+	if(parentElement.length > 0) {
+		parentElement[0].querySelector('.mb-sm-0').innerHTML="🏆 Live Leaderboard";
+	}
+
+	// Convert Model Data
+	var values = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
+				Model.LeaderBoard.Select(x => new { x.Text, x.ExtraValue })
+				.OrderByDescending(x => x.ExtraValue)
+				.Take(10)
+			));
+
+	const players = [];
+	values.forEach(function (entity,index) {
+		var avatr='linear-gradient(135deg,#4f8bff,#7af0ff)';
+		if(index==0) avatr='linear-gradient(135deg,#ffcc00,#ff8800)';
+		if(index==1) avatr='linear-gradient(135deg,#c0cbd6,#7a7a7a)';
+		if(index==2) avatr='linear-gradient(135deg,#da8a6d,#a5572c)';
+
+		players.push({
+			id:(index+1),
+			name:entity.Text,
+			nick:entity.Text.split(' ')[0],
+			score:entity.ExtraValue,
+			avatarBg:avatr
+		})
+	});
+
+	const leaderboard = document.getElementById('leaderboard');
+	let dailyTarget = 100; // change your logic if target dynamic
+
+	function createItem(p, rank) {
+	  const li = document.createElement('div');
+	  li.className = 'item';
+	  li.dataset.id = p.id;
+
+	  // Rank Styles
+	  if(rank===1) li.classList.add('top-1');
+	  if(rank===2) li.classList.add('top-2');
+	  if(rank===3) li.classList.add('top-3');
+
+	let iconHTML = '';
+	if(rank === 1) {
+		iconHTML = `<div class="runner"><img src="https://cdn-ildpbjm.nitrocdn.com/DNFbjUCPWTXiaenlvaftCfYTTTYPdzXQ/assets/images/optimized/rev-e860287/ourdesignz.com/wp-content/uploads/2015/03/running-horse.gif" style="height:45px;"></div>`;
+	}
+	else if(rank === players.length) {
+		iconHTML = `<div class="runner"><img src="https://c.tenor.com/_Nbvod4MYo0AAAAd/tenor.gif" style="height:45px;"></div>`;
+	}
+	// else {
+	// 	iconHTML = `<div class="runner"><img src="https://cdn-icons-png.flaticon.com/512/43/43143.png" style="height:32px;opacity:0.8;"></div>`;
+	// }
+	  li.innerHTML = `
+		<div class="rank">${rank}</div>
+		<div class="avatar" style="background:${p.avatarBg}">${p.name[0]}</div>
+		<div class="meta">
+		  <div class="name">${p.name}</div>
+		  <div class="sub">${Math.max(0,dailyTarget - p.score)} deals to go</div>
+		</div>
+		${iconHTML}
+		<div class="scoreBox">
+		  <div class="score">${p.score}</div>
+		  <div class="progress"><div class="bar" style="width:${Math.min(100,(p.score/dailyTarget)*100)}%"></div></div>
+		</div>
+	  `;
+	  return li;
+	}
+
+	function render() {
+	  leaderboard.innerHTML = '';
+	  players.sort((a,b)=>b.score-a.score).forEach((p,i)=>{
+		leaderboard.appendChild(createItem(p,i+1));
+	  });
+	}
+
+	render();
+
+	// Auto Refresh Every 1 Minute
+	//setInterval(function(){ CFP.Common.LeaderBoard(); }, 60000);
+
+</script>
+
+<style>
+	#leaderboard { margin-top:15px; }
+	.item{display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;background:#fff;margin-bottom:8px;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+	.rank{width:40px;font-weight:700;text-align:center;}
+	.avatar{width:45px;height:45px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
+	.runner{text-align:center;width:60px;}
+	.scoreBox{text-align:right;}
+	.progress{height:6px;width:120px;background:#ddd;border-radius:6px;overflow:hidden;}
+	.bar{height:100%;background:#0078ff;}
+</style>

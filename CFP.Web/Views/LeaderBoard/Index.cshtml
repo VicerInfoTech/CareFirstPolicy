@@ -5,8 +5,8 @@
 	ViewData["Title"] = "Leader Board";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	//ViewBag.ParentPageName = "Leader Board";
-	ViewBag.PageName = "Leader Board";
-
+	ViewBag.ParentPageName = "<a href='/Dashboard/Index'><i class='ri-home-2-line'></i> Home</a>";
+	ViewBag.PageName = "<i class='ri-dashboard-2-line'></i>  Leader Board";
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css">
 
@@ -236,12 +236,23 @@
 
 <div class="" style="">
 	<div class="">
-		<div class="list" id="leaderboard"></div>
+		<div class="list" id="leaderboarddivId"></div>
 
 	</div>
 </div>
 
-<script>
+@section Scripts {
+
+	<script>
+		$(document).ready(function () {
+			CFP.Common.LeaderBoard();
+		
+		});
+	</script>
+}
+
+
+@* <script>
 	const parentElement = document.getElementsByClassName('page-title-box');
 	parentElement[0].querySelector('.mb-sm-0').innerHTML="🏆 Live Leaderboard";
 
@@ -376,5 +387,5 @@
 	});
 </script>
 
-
+ *@
 

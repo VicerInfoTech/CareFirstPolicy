@@ -10,7 +10,7 @@
     .form-control .select2-selection.select2-selection--multiple {
         display: block;
         width: 100%;
-        padding: .5rem .9rem  !important;
+        padding: .5rem .9rem !important;
     }
 
     .select2-container .select2-search--inline .select2-search__field {
@@ -39,7 +39,7 @@
 
             <div class="row">
                 <div class="col-md-4 mt-2">
-                 @*    <select class="mySelect" id="mySelect" style="width:200px;" name="states[]" multiple>
+                    @*    <select class="mySelect" id="mySelect" style="width:200px;" name="states[]" multiple>
                         <option value="1">India</option>
                         <option value="2">USA</option>
                         <option value="3">UK</option>
@@ -135,10 +135,21 @@
                     </select>
                 </div>
 
-                <div class="col-md-3 mt-2">
+                                <div class="col-md-3 mt-2">
                     <label asp-for="DealModel.CloseDate"></label>
-                    <input asp-for="DealModel.CloseDate" type="date" class="form-control req-border" />
+                    <input asp-for="DealModel.CloseDate" type="datetime-local" class="form-control req-border "  />
                 </div>
+
+               @*  <div class="col-md-3 mt-2">
+                    <label asp-for="DealModel.CloseDates"></label>
+                    <input asp-for="DealModel.CloseDates"
+                           type="text"
+                           class="form-control req-border"
+                           data-provider="flatpickr"
+                           data-enable-time="true"
+                           data-date-format="Y-m-d H:i"   
+                    />
+                </div> *@
 
                 <div class="col-md-3 mt-2">
                     <label asp-for="DealModel.AgentId"></label>
