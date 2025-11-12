@@ -57,7 +57,7 @@ namespace CFP.Common.Business_Entities
         [Display(Name = "Customer Language")]
         public int CustomerLanguage { get; set; }
 
-        [Display(Name = "Close Date")]
+        [Display(Name = "Closed Date")]
         [Required(ErrorMessage = "Close Date is required.")]
         public string CloseDates { get; set; }
         public DateTime CloseDate { get; set; }

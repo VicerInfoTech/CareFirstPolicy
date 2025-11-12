@@ -131,7 +131,7 @@ namespace CFP.Common.Utility
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Strict,
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(30)
+                    Expires = DateTimeOffset.UtcNow.AddHours(8)
                 });
         }
         public string GetSessionId()

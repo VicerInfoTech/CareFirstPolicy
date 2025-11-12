@@ -135,10 +135,8 @@ CFP.Common = new function () {
             type: "GET",
             url: UrlContent("LeaderBoard/_LeaderBoard/"),
             success: function (data) {
-              
-                $("#leaderboarddivId").html(data);
-               
-               
+                $("#leaderboarddivId").empty();
+                $("#leaderboarddivId").html(data);                 
                 $(".preloader").hide();
             }
         })

@@ -32,24 +32,17 @@ namespace CFP.Web.Controllers
                 
             };
             return View(model);
-        } 
-        public IActionResult LeaderBoard()
-        {
-            DashboardViewModel model = new DashboardViewModel()
-            {
-                RoleId = _sessionManager.RoleId,
-                
-            };
-            model.LeaderBoard=_commonProvider.GetLeaderBoard();
-            return View(model);
-        }
+        }       
         public JsonResult SaveTempFilter(string KitId, string PatientId)
         {
             SetDataInTemp(AppCommon.TMP_ENC_KIT_ID, KitId);
             SetDataInTemp(AppCommon.TMP_ENC_PATIENT_ID, PatientId);
             return Json(true);
         }
-        
+        public JsonResult LeaderBoard()
+        {
+            return Json(_commonProvider.GetLeaderBoard().Select(x => new { x.Text, x.ExtraValue }).OrderByDescending(x => x.ExtraValue).Take(8).ToList());
+        }
 
         #endregion
     }

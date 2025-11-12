@@ -76,7 +76,7 @@
             type: "GET",
             url: UrlContent("Deal/_Details/" + id),
             success: function (data) {
-                $("#common-xl-dialogContent").html(data);
+                $("#common-lg-dialogContent").html(data);
                 //$(".select2").select2();
                 $.validator.unobtrusive.parse($("#DealMasterForm"));
                 $('#multipleSelect').select2();
@@ -86,7 +86,7 @@
                 //    todayHighlight: true,
                 //});
                 flatpicker();
-                $("#common-xl-dialog").modal('show');
+                $("#common-lg-dialog").modal('show');
                 $(".preloader").hide();
             }
         })

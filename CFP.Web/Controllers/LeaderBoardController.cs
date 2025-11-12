@@ -28,10 +28,13 @@ namespace CFP.Web.Controllers
             DashboardViewModel model = new DashboardViewModel()
             {
                 RoleId = _sessionManager.RoleId,
-
             };
             model.LeaderBoard = _commonProvider.GetLeaderBoard();
             return View(model);
+        }
+        public JsonResult LeaderBoard()
+        {
+            return Json(_commonProvider.GetLeaderBoard().Select(x => new { x.Text, x.ExtraValue }).OrderByDescending(x => x.ExtraValue).Take(8).ToList());
         }
         [HttpGet]
         public IActionResult _LeaderBoard()

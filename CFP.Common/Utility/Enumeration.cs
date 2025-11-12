@@ -5,8 +5,8 @@
         public enum Role
         {
             Super_Admin = 1,
-            User = 2,
             Agent = 3,
+            User = 4,
            
         }
       

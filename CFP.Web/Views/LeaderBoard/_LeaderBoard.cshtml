@@ -1,97 +1,365 @@
 ﻿@model DashboardViewModel
 
+<style>
+	:root {
+		--bg: #ffffff;
+		--card: #f7f9fc;
+		--muted: #6b7280;
+		--accent: #0078ff;
+		--gold: #ffd166;
+		--silver: #c0cbd6;
+		--bronze: #da8a6d;
+	}
+
+	* {
+		box-sizing: border-box
+	}
+
+	/* body {
+												margin: 0;
+												font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+												background: var(--bg);
+												min-height: 100vh;
+												color: #111827;
+												display: flex;
+												align-items: center;
+												justify-content: center;
+												padding: 32px
+											} */
+
+
+
+
+
+	.innercard {
+		background: var(--card);
+		border-radius: 14px;
+		padding: 18px;
+		box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+	}
+
+	.list {
+		margin-top: 6px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		position: relative
+	}
+
+	.item {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 12px;
+		border-radius: 10px;
+		background: #fff;
+		transition: background 220ms, transform 400ms;
+		will-change: transform;
+	}
+
+		.item:hover {
+			background: #f9fafb
+		}
+
+	.rank {
+		width: 46px;
+		text-align: center;
+		font-weight: 700
+	}
+
+	.runner {
+		width: 100px;
+		text-align: center;
+		font-weight: 700;
+		align-items: center;
+	}
+
+	.avatar {
+		width: 50px;
+		height: 50px;
+		border-radius: 12px;
+		flex-shrink: 0;
+		background: linear-gradient(135deg,var(--accent),#7bffb2);
+		display: grid;
+		place-items: center;
+		color: #fff;
+		font-weight: 700
+	}
+
+	.meta {
+		flex: 1;
+		min-width: 0
+	}
+
+	.name {
+		font-weight: 600
+	}
+
+	.sub {
+		font-size: 12px;
+		color: var(--muted);
+		margin-top: 2px
+	}
+
+	.scoreBox {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 6px
+	}
+
+	.score {
+		font-weight: 800;
+		font-size: 18px
+	}
+
+	.progress {
+		height: 6px;
+		width: 160px;
+		background: #e5e7eb;
+		border-radius: 6px;
+		overflow: hidden
+	}
+
+	.bar {
+		height: 100%;
+		width: 10%;
+		background: linear-gradient(90deg,var(--accent),#7bffb2);
+		transition: width 700ms cubic-bezier(.2,.9,.22,1)
+	}
+
+	.item.top-1 {
+		box-shadow: 0 4px 14px rgba(255,209,102,0.25);
+	}
+
+	.item.top-2 {
+		box-shadow: 0 4px 14px rgba(192,203,214,0.2);
+	}
+
+	.item.top-3 {
+		box-shadow: 0 4px 14px rgba(218,138,109,0.2);
+	}
+
+	.medal {
+		font-size: 12px;
+		padding: 6px;
+		border-radius: 6px;
+		font-weight: 700
+	}
+
+		.medal.gold {
+			background: var(--gold);
+			color: #1b1506
+		}
+
+		.medal.silver {
+			background: var(--silver);
+			color: #071028
+		}
+
+		.medal.bronze {
+			background: var(--bronze);
+			color: #2b0c00
+		}
+
+	@@keyframes floatIn {
+		from {
+			opacity: 0;
+			transform: translateY(12px) scale(0.995)
+		}
+
+		to {
+			opacity: 1;
+			transform: none
+		}
+	}
+
+	.item {
+		animation: floatIn 420ms both
+	}
+
+	@@keyframes pulse {
+		0% {
+			transform: scale(1)
+		}
+
+		50% {
+			transform: scale(1.02)
+		}
+
+		100% {
+			transform: scale(1)
+		}
+	}
+
+	.item.top-1 .avatar {
+		animation: pulse 2200ms infinite
+	}
+
+	.moving {
+		transition: transform 520ms cubic-bezier(.2,.9,.22,1)
+	}
+
+
+	@@media (max-width:420px) {
+		.scoreBox .progress {
+			display: none
+		}
+
+		.rank {
+			width: 36px
+		}
+
+		.avatar {
+			width: 44px;
+			height: 44px
+		}
+	}
+
+</style>
+
 <div id="leaderboard"></div>
 
-<script>
-	// Page title change (optional)
-	const parentElement = document.getElementsByClassName('page-title-box');
-	if(parentElement.length > 0) {
-		parentElement[0].querySelector('.mb-sm-0').innerHTML="🏆 Live Leaderboard";
-	}
+@section Scripts {
 
-	// Convert Model Data
-	var values = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(
-				Model.LeaderBoard.Select(x => new { x.Text, x.ExtraValue })
-				.OrderByDescending(x => x.ExtraValue)
-				.Take(10)
-			));
+	<script>
+		$(document).ready(function () {
 
-	const players = [];
-	values.forEach(function (entity,index) {
-		var avatr='linear-gradient(135deg,#4f8bff,#7af0ff)';
-		if(index==0) avatr='linear-gradient(135deg,#ffcc00,#ff8800)';
-		if(index==1) avatr='linear-gradient(135deg,#c0cbd6,#7a7a7a)';
-		if(index==2) avatr='linear-gradient(135deg,#da8a6d,#a5572c)';
+		let scores =[];
+		const players=[];
+		refreshScores();
 
-		players.push({
-			id:(index+1),
-			name:entity.Text,
-			nick:entity.Text.split(' ')[0],
-			score:entity.ExtraValue,
-			avatarBg:avatr
-		})
-	});
+		const leaderboard = document.getElementById('leaderboard');
+		let live = true;
+		let interval;
+		let dailyTarget=100;
 
-	const leaderboard = document.getElementById('leaderboard');
-	let dailyTarget = 100; // change your logic if target dynamic
+		function bindPlayers(){
+			scores.forEach(function (entity,index) {
+				var avatr='linear-gradient(135deg,#cfe2ff,#b7b2ff)';
+				if(index==0) avatr='linear-gradient(135deg,#00d4ff,#6a7cff)';
+				if(index==1) avatr='linear-gradient(135deg,#ffd166,#ff7ab6)';
+				if(index==2) avatr='linear-gradient(135deg,#7bffb2,#00d4ff)';
+				if(index==3) avatr='linear-gradient(135deg,#a78bfa,#7c3aed)';
+				if(index==4) avatr='linear-gradient(135deg,#ffb86b,#ff7a7a)';
+				if(index==5) avatr='linear-gradient(135deg,#8be9fd,#9be15d)';
+				if(index==6) avatr='linear-gradient(135deg,#f6d365,#fda085)';
+				if(index==7) avatr='linear-gradient(135deg,#cfe2ff,#b7b2ff)';
 
-	function createItem(p, rank) {
-	  const li = document.createElement('div');
-	  li.className = 'item';
-	  li.dataset.id = p.id;
+				players.push({id:(index+1),name:entity.text,nick:entity.text.split(' ')[0],score:entity.extraValue,avatarBg:avatr})
+			});
+		}
 
-	  // Rank Styles
-	  if(rank===1) li.classList.add('top-1');
-	  if(rank===2) li.classList.add('top-2');
-	  if(rank===3) li.classList.add('top-3');
+		function createItem(p, rank){
+		  const li = document.createElement('div');
+		  li.className = 'item';
+		  li.dataset.id = p.id;
 
-	let iconHTML = '';
-	if(rank === 1) {
-		iconHTML = `<div class="runner"><img src="https://cdn-ildpbjm.nitrocdn.com/DNFbjUCPWTXiaenlvaftCfYTTTYPdzXQ/assets/images/optimized/rev-e860287/ourdesignz.com/wp-content/uploads/2015/03/running-horse.gif" style="height:45px;"></div>`;
-	}
-	else if(rank === players.length) {
-		iconHTML = `<div class="runner"><img src="https://c.tenor.com/_Nbvod4MYo0AAAAd/tenor.gif" style="height:45px;"></div>`;
-	}
-	// else {
-	// 	iconHTML = `<div class="runner"><img src="https://cdn-icons-png.flaticon.com/512/43/43143.png" style="height:32px;opacity:0.8;"></div>`;
-	// }
-	  li.innerHTML = `
-		<div class="rank">${rank}</div>
-		<div class="avatar" style="background:${p.avatarBg}">${p.name[0]}</div>
-		<div class="meta">
-		  <div class="name">${p.name}</div>
-		  <div class="sub">${Math.max(0,dailyTarget - p.score)} deals to go</div>
-		</div>
-		${iconHTML}
-		<div class="scoreBox">
-		  <div class="score">${p.score}</div>
-		  <div class="progress"><div class="bar" style="width:${Math.min(100,(p.score/dailyTarget)*100)}%"></div></div>
-		</div>
-	  `;
-	  return li;
-	}
+		  if(rank===1) li.classList.add('top-1');
+		  else if(rank===2) li.classList.add('top-2');
+		  else if(rank===3) li.classList.add('top-3');
+		  
+		var runImgSrc='';
+		if(rank===1) runImgSrc='<div class="runner"><img src="https://cdn-ildpbjm.nitrocdn.com/DNFbjUCPWTXiaenlvaftCfYTTTYPdzXQ/assets/images/optimized/rev-e860287/ourdesignz.com/wp-content/uploads/2015/03/running-horse.gif" style="height: 50px;"></div>';
+		else if(rank===players.length) runImgSrc='<div class="runner"><img src="https://c.tenor.com//_Nbvod4MYo0AAAAd//tenor.gif" style="height: 50px;"></div>';
 
-	function render() {
-	  leaderboard.innerHTML = '';
-	  players.sort((a,b)=>b.score-a.score).forEach((p,i)=>{
-		leaderboard.appendChild(createItem(p,i+1));
-	  });
-	}
+			li.innerHTML = `
+			<div class="rank">${rank}</div>
+			<div class="avatar" style="background:${p.avatarBg}">${p.name.split(' ')[0][0]}</div>
+			<div class="meta">
+			  <div class="name">${p.name}</div>
+			  <div class="sub">@@${p.nick}  • ${Math.max(0,dailyTarget - p.score)} deals to go</div>
+			</div>
+			${runImgSrc}
+			<div class="scoreBox">
+			  <div class="score">${p.score}</div>
+			  <div class="progress"><div class="bar" style="width:${Math.min(100,(p.score/dailyTarget)*100)}%"></div></div>
+			</div>
+		  `;
+		  return li;
+		}
 
-	render();
+		function render(initial){
+		  const sorted = players.slice().sort((a,b)=>b.score-a.score || a.id - b.id);
 
-	// Auto Refresh Every 1 Minute
-	//setInterval(function(){ CFP.Common.LeaderBoard(); }, 60000);
+		  if(initial){
+			leaderboard.innerHTML = '';
+			sorted.forEach((p,i)=>leaderboard.appendChild(createItem(p,i+1)));
+		  } else {
+			const beforeRects = new Map();
+			[...leaderboard.children].forEach(n => beforeRects.set(n.dataset.id, n.getBoundingClientRect()));
 
-</script>
+			sorted.forEach((p,i)=>{
+			  const existing = leaderboard.querySelector(`[data-id='${p.id}']`);
+			  if(existing){
+				existing.querySelector('.score').textContent = p.score;
+				existing.querySelector('.sub').textContent = `@@${p.nick} • ${Math.max(0,dailyTarget - p.score)} pts to go`;
+				existing.querySelector('.bar').style.width = Math.min(100,(p.score/dailyTarget)*100) + '%';
+				existing.classList.remove('top-1','top-2','top-3');
+				if(i===0) existing.classList.add('top-1');
+				if(i===1) existing.classList.add('top-2');
+				if(i===2) existing.classList.add('top-3');
 
-<style>
-	#leaderboard { margin-top:15px; }
-	.item{display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;background:#fff;margin-bottom:8px;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
-	.rank{width:40px;font-weight:700;text-align:center;}
-	.avatar{width:45px;height:45px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;}
-	.runner{text-align:center;width:60px;}
-	.scoreBox{text-align:right;}
-	.progress{height:6px;width:120px;background:#ddd;border-radius:6px;overflow:hidden;}
-	.bar{height:100%;background:#0078ff;}
-</style>
+				existing.querySelector('.rank').textContent = i+1;
+				leaderboard.appendChild(existing);
+			  } else {
+				leaderboard.appendChild(createItem(p,i+1));
+			  }
+			});
+
+			[...leaderboard.children].forEach(node=>{
+			  const id = node.dataset.id;
+			  const before = beforeRects.get(id);
+			  const after = node.getBoundingClientRect();
+			  if(before){
+				const dx = before.left - after.left;
+				const dy = before.top - after.top;
+				if(dx || dy){
+				  node.style.transform = `translate(${dx}px, ${dy}px)`;
+				  node.classList.add('moving');
+				  requestAnimationFrame(()=>{
+					node.style.transform = '';
+					setTimeout(()=>node.classList.remove('moving'), 520);
+				  });
+				}
+			  }
+			});
+		  }
+		}
+
+		render(true);
+
+		function refreshScores(){
+			 $.ajax({
+				type: "GET",
+				url: UrlContent("LeaderBoard/LeaderBoard"),
+				success: function (data) {
+					players.length =0;
+					scores=data;
+					bindPlayers();
+					render(false);
+				}
+			})
+		}
+
+		function start(){
+		  if(interval) clearInterval(interval);
+		  interval = setInterval(()=>{refreshScores();}, 1000 * 60);
+		}
+		function stop(){ if(interval) clearInterval(interval); interval = null }
+
+		start();
+
+		leaderboard.addEventListener('click', (ev)=>{
+		  const node = ev.target.closest('.item');
+		  if(!node) return;
+		  const id = Number(node.dataset.id);
+		  const p = players.find(x=>x.id===id);
+		  if(!p) return;
+		  p.score = Math.min(1000, p.score + 60);
+		  render(false);
+		  node.animate([{boxShadow:'0 0 0 rgba(0,0,0,0)'},{boxShadow:'0 0 18px rgba(0,0,0,0.1)'},{boxShadow:'0 0 0 rgba(0,0,0,0)'}],{duration:700});
+		});
+		});
+	</script>
+}
