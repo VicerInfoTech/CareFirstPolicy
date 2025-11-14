@@ -11,5 +11,6 @@ namespace CFP.Web.Models
         public DealModel DealModel { get; set; }
         public List<DropDownModel> LeaderBoard { get; set; }
         public List<SelectListItem> AgentList { get; set; }
+        public List<SelectListItem> CareerList { get; set; }
     }
 }

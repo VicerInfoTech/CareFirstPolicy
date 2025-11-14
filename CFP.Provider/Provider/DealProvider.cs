@@ -6,6 +6,7 @@ using CFP.Provider.IProvider;
 using CFP.Repository.Models;
 using CFP.Repository.Repository;
 using Microsoft.Extensions.Logging;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,7 @@ namespace CFP.Provider.Provider
                         EncId = _commonProvider.Protect(x.DealId),
                         FirstName = x.FirstName,
                         LastName = x.LastName,
+                        FullName=x.FirstName+" "+x.LastName,
                         TypeOfCoverage = x.TypeOfCoverage,
                         CreatedOn = x.CreatedOn,
                         NoOfApplicants = x.NoOfApplicants,
@@ -61,7 +63,10 @@ namespace CFP.Provider.Provider
                         AgentId = x.AgentId,
                         AgentName = $"{x.Agent.FirstName} {x.Agent.LastName}",
                         IsActive = x.IsActive,
-                    }).ToList();
+                        CreatedBy= x.CreatedBy,
+                        CreatedByString=x.CreatedByNavigation.FirstName+" "+x.CreatedByNavigation.LastName,
+                       DealId=x.DealId,
+                    }).OrderByDescending(x=>x.DealId).ToList();
                 if (sessionProviderModel.RoleId == (int)Enumeration.Role.Agent)
                 {
                     dataList = dataList.Where(x => x.AgentId == sessionProviderModel.AgentId).ToList();
@@ -97,6 +102,10 @@ namespace CFP.Provider.Provider
                 list.data = dataList.Skip(requestModel.StartIndex).Take(requestModel.PageSize).Select(x =>
                 {
                     x.TypeOfCoverages = x.TypeOfCoverage.Split(',');
+                    x.CreatedOnString = x.CreatedOn.ToString("MM/dd/yyyy HH:mm tt");
+                    x.CareerName = AppCommon.GetEnumDisplayName((Enumeration.Career)x.Career);
+                    x.CloseDateString = x.CloseDate.ToString("MM/dd/yyyy HH:mm tt");
+                    x.DealIdString = x.DealId.ToString("000000");
                     return x;
                 }).ToList();
             }
@@ -131,6 +140,7 @@ namespace CFP.Provider.Provider
                 agent.TypeOfCoverage = string.Join(",", model.TypeOfCoverages);
                 if (_temp == null)
                 {
+                    
                     agent.IsActive = true;
                     response.Message = "Deal added successfully";
                     unitOfWork.Deal.Insert(agent, sessionProviderModel.UserId, sessionProviderModel.Ip);
@@ -153,7 +163,7 @@ namespace CFP.Provider.Provider
         }
 
         public DealModel GetById(int id)
-        
+
         {
             DealModel model = new DealModel();
             try

@@ -22,20 +22,35 @@
                     },
                 },
                 "columns": [
-                    { data: "firstName", name: "FirstName", autoWidth: true },
-                    { data: "lastName", name: "LastName", autoWidth: true },
+                    { data: "dealIdString", name: "DealIdString", autoWidth: true },
+                    { data: "fullName", name: "FullName", autoWidth: true },
+                    { data: "careerName", name: "CareerName", autoWidth: true },
+                    { data: "closeDateString", name: "CloaseDateString", autoWidth: true },
                     { data: "agentName", name: "Username", autoWidth: true },
-
                     {
-                        data: "isActive", name: "IsActive", className: "col-1  text-center",
+                        data: null,
+                        name: "CreatedInfo",
                         render: function (data, type, row) {
-                            if (data) {
-                                return '<span class="badge bg-success  font-14">Active<span>';
-                            } else {
-                                return '<span class="badge bg-danger  font-14">In-Active<span>';
-                            }
-                        }
+                            return `
+            <div>
+                <div><strong>${row.createdByString}</strong></div>
+                <div><small style="font-size: 0.75em;">${row.createdOnString}</small></div>
+            </div>
+        `;
+                        },
+                        autoWidth: true
                     },
+
+                    //{
+                    //    data: "isActive", name: "IsActive", className: "col-1  text-center",
+                    //    render: function (data, type, row) {
+                    //        if (data) {
+                    //            return '<span class="badge bg-success  font-14">Active<span>';
+                    //        } else {
+                    //            return '<span class="badge bg-danger  font-14">In-Active<span>';
+                    //        }
+                    //    }
+                    //},
                     {
                         data: "encId", orderable: false, className: "text-center col-1",
                         render: function (data, type, row) {
@@ -85,7 +100,8 @@
                 //    format: 'mm/dd/yyyy',
                 //    todayHighlight: true,
                 //});
-                flatpicker();
+                // flatpicker();
+                CFP.Common.InitDatePicker();
                 $("#common-lg-dialog").modal('show');
                 $(".preloader").hide();
             }
@@ -101,11 +117,12 @@
                 url: UrlContent("Deal/Save/"),
                 data: formdata,
                 success: function (result) {
+                    debugger;
                     $(".preloader").hide();
                     if (result.isSuccess) {
                         CFP.Deal.Option.Table.ajax.reload();
                         CFP.Common.ToastrSuccess(result.message);
-                        $("#common-xl-dialog").modal('hide');
+                        $("#common-lg-dialog").modal('hide');
                     } else {
                         CFP.Common.ToastrError(result.message);
                     }

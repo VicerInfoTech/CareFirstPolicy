@@ -1,11 +1,12 @@
-﻿@model DashboardViewModel
+﻿@using CFP.Common.Utility
+@model DashboardViewModel
 @{
 	ViewData["Title"] = "Dashboard";
 	ViewBag.ParentPageName = "<a href='/Dashboard/Index'><i class='ri-home-2-line'></i> Home</a>";
 	ViewBag.PageName = "<i class='ri-dashboard-line'></i>  Dashboard";
 }
 
-@if (Model.RoleId == (int)CFP.Common.Utility.Enumeration.Role.Agent)
+@if (Model.RoleId == (int)Enumeration.Role.Agent || Model.RoleId == (int)Enumeration.Role.AgentLead)
 {
 	<link rel="stylesheet" href="~/assets/css/leaderboard.css" asp-append-version="true" />
 	<div class="row">

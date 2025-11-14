@@ -25,7 +25,7 @@ namespace CFP.Web.Controllers
         {
             return View();
         }
-       
+
         public JsonResult GetList()
         {
             return Json(_provider.GetUserList(GetPagingRequestModel(), GetSessionProviderParameters()));
@@ -33,7 +33,7 @@ namespace CFP.Web.Controllers
 
         public IActionResult _Details(string id)
         {
-          
+
             return PartialView(_provider.GetById(_commonProvider.UnProtect(id)));
         }
 
@@ -47,11 +47,24 @@ namespace CFP.Web.Controllers
         {
             return Json(_provider.DeActivate(_commonProvider.UnProtect(id), GetSessionProviderParameters()));
         }
-       
+
         [HttpPost]
         public JsonResult ReActivate(string id)
         {
             return Json(_provider.ReActivate(_commonProvider.UnProtect(id), GetSessionProviderParameters()));
+        }
+
+        [HttpGet]
+        public PartialViewResult _Reset(int id)
+        {
+            ResetPasswordModel model = new ResetPasswordModel() { EncId = _commonProvider.Protect(id) };
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public JsonResult ResetPassword(ResetPasswordModel model)
+        {
+            return Json(_provider.ResetPassword(model, _sessionManager.GetIP()));
         }
     }
 }

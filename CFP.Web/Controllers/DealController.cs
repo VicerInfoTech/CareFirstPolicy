@@ -13,12 +13,14 @@ namespace CFP.Web.Controllers
     {
         #region Variables
         IDealProvider _provider;
+        private IAgentMasterProvider _agentMasterProvider;
         #endregion
 
         #region Constructor
-        public DealController(ICommonProvider commonProvider, ISessionManager sessionManager, IDealProvider userProvider) : base(commonProvider, sessionManager)
+        public DealController(ICommonProvider commonProvider, ISessionManager sessionManager, IDealProvider userProvider, IAgentMasterProvider agentMasterProvider) : base(commonProvider, sessionManager)
         {
             _provider = userProvider;
+            _agentMasterProvider = agentMasterProvider;
         }
         #endregion
         public IActionResult Index()
@@ -34,8 +36,16 @@ namespace CFP.Web.Controllers
         public IActionResult _Details(string id)
         {
             DashboardViewModel viewModel = new DashboardViewModel();
+            viewModel.RoleId = _sessionManager.RoleId;
             viewModel.AgentList = GetAgentList();
+            viewModel.CareerList = GetCareerList();
             viewModel.DealModel = _provider.GetById(_commonProvider.UnProtect(id));
+            if (string.IsNullOrEmpty(id))
+            {
+                viewModel.DealModel.CloseDate = AppCommon.CurrentDate;
+                viewModel.DealModel.AgentId = _sessionManager.AgentId;
+            }
+
             return PartialView(viewModel);
         }
 

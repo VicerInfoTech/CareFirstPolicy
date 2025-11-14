@@ -11,7 +11,7 @@ namespace CFP.Common.Business_Entities
     {
         public string? EncId { get; set; }
 
-        public int  DealId { get; set; }
+        public int DealId { get; set; }
         public string AgentName { get; set; }
 
         [Display(Name = "Type of Coverage")]
@@ -30,7 +30,7 @@ namespace CFP.Common.Business_Entities
 
         [Display(Name = "Number of Applicants")]
         [Range(1, 20, ErrorMessage = "No. of Applicants must be greater than 0.")]
-        public int NoOfApplicants { get; set; }
+        public int? NoOfApplicants { get; set; }
 
         [Display(Name = "FFM")]
         [Required(ErrorMessage = "FFM is required.")]
@@ -46,7 +46,7 @@ namespace CFP.Common.Business_Entities
 
         [Display(Name = "Monthly Income")]
         [Range(0, 1000000, ErrorMessage = "Monthly Income must be valid.")]
-        public int MonthlyIncome { get; set; }
+        public int? MonthlyIncome { get; set; }
 
         [Display(Name = "Documents Needed")]
         public int DocNeeded { get; set; }
@@ -59,7 +59,10 @@ namespace CFP.Common.Business_Entities
 
         [Display(Name = "Closed Date")]
         [Required(ErrorMessage = "Close Date is required.")]
+
         public string CloseDates { get; set; }
+        [Display(Name = "Closed Date")]
+        [Required(ErrorMessage = "Close Date is required.")]
         public DateTime CloseDate { get; set; }
 
         [Display(Name = "Notes")]
@@ -79,6 +82,12 @@ namespace CFP.Common.Business_Entities
         public DateTime? UpdatedOn { get; set; }
 
         public string Ip { get; set; } = null!;
+        public string FullName { get; set; } = null!;
+        public string CareerName { get; set; } = null!;
+        public string CloseDateString { get; set; } = null!;
+        public string CreatedOnString { get; set; } = null!;
+        public string CreatedByString { get; set; } = null!;
+        public string DealIdString { get; set; } = null!;
 
         public virtual AgentMasterModel Agent { get; set; } = null!;
 

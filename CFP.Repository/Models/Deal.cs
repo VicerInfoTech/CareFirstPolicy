@@ -36,6 +36,7 @@ public partial class Deal
     public int AgentId { get; set; }
 
     public bool IsActive { get; set; }
+
     public int CreatedBy { get; set; }
 
     public DateTime CreatedOn { get; set; }

@@ -52,6 +52,40 @@ CFP.Common = new function () {
         });
     }
 
+
+    this.InitDatePicker = function () {
+        $('.date-picker-time').flatpickr({
+            enableTime: true,
+            enableSeconds: true,
+            time_24hr: false,
+            dateFormat: "m/d/Y h:i:S K",
+            allowInput: true
+        });
+
+        $('.date-picker').flatpickr({
+            dateFormat: "m/d/Y",    // MM/DD/YYYY format
+            allowInput: true,       // user can type manually
+            defaultDate: null,      // no default date
+        });
+
+
+        CFP.Common.InitDateKeyEvent();
+    }
+
+    this.InitDateKeyEvent = function () {
+        $('.date-picker, .date-picker-time').on('keypress', function (e) {
+            var Id = "#" + $(this).attr("Id");
+            var key = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+            if ($(Id).val().length < 10 && key != 47 && key != 45) {
+                FormatDate(e, this);
+            }
+            else {
+                e.preventDefault();
+                return false;
+            }
+        });
+    }
+
     this.ChangePassword = function (id) {
         debugger;
         $(".preloader").show();
@@ -136,7 +170,7 @@ CFP.Common = new function () {
             url: UrlContent("LeaderBoard/_LeaderBoard/"),
             success: function (data) {
                 $("#leaderboarddivId").empty();
-                $("#leaderboarddivId").html(data);                 
+                $("#leaderboarddivId").html(data);
                 $(".preloader").hide();
             }
         })

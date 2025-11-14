@@ -41,6 +41,18 @@ public partial class UserMaster
 
     public virtual ICollection<AgentMaster> AgentMasterUserMasters { get; set; } = new List<AgentMaster>();
 
+    public virtual ICollection<ChatConnection> ChatConnections { get; set; } = new List<ChatConnection>();
+
+    public virtual ICollection<ChatMessage> ChatMessageFromUsers { get; set; } = new List<ChatMessage>();
+
+    public virtual ICollection<ChatMessage> ChatMessageToUsers { get; set; } = new List<ChatMessage>();
+
+    public virtual ICollection<ChatRoom> ChatRoomCreatedByNavigations { get; set; } = new List<ChatRoom>();
+
+    public virtual ICollection<ChatRoomMember> ChatRoomMembers { get; set; } = new List<ChatRoomMember>();
+
+    public virtual ICollection<ChatRoom> ChatRoomUpdatedByNavigations { get; set; } = new List<ChatRoom>();
+
     public virtual ICollection<Deal> DealCreatedByNavigations { get; set; } = new List<Deal>();
 
     public virtual ICollection<Deal> DealUpdatedByNavigations { get; set; } = new List<Deal>();

@@ -1,0 +1,44 @@
+﻿@using CFP.Common.Business_Entities
+@model ResetPasswordModel
+
+
+
+<div class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="myModalLabel">
+        <i class='mdi mdi-shield-lock-open-outline'></i> Reset Password
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
+</div>
+<div class="modal-body">
+    <form class="validation-wizard form-horizontal form-material needs-validation" id="resetPwdForm">
+        <div class="row">
+            <input asp-for="EncId" type="hidden" />
+
+
+            <div class="col-12">
+                <label asp-for="Password"></label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text password" id="basic-addon11"><i class="ri-eye-line"></i></span>
+                    </div>
+                    <input asp-for="Password" type="password" class="form-control req-border" autocomplete="off" placeholder="New Password" />
+                </div>
+                <span class="text-danger" asp-validation-for="Password"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="ConfirmPassword"></label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text password" id="basic-addon11"><i class="ri-eye-line"></i></span>
+                    </div>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control req-border" autocomplete="off" placeholder="Confirm Password" />
+                </div>
+                <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal"><i class="ri-forbid-line"></i> Cancel</button>
+    <button type="button" class="btn btn-success " onclick="CFP.Agent.SavePassword()"><i class="ri-save-line"></i> Submit</button>
+</div>

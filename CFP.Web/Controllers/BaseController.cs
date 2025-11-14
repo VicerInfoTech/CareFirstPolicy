@@ -74,8 +74,20 @@ namespace CFP.Patient.Controllers
             List<SelectListItem> list = new List<SelectListItem>();
             list.Add(new SelectListItem() { Value = ((int)Enumeration.Role.Agent).ToString(), Text = "Agent" });
             list.Add(new SelectListItem() { Value = ((int)Enumeration.Role.User).ToString(), Text = "User" });
+            list.Add(new SelectListItem() { Value = ((int)Enumeration.Role.AgentLead).ToString(), Text = "Agent Lead" });
 
             return list;
+        }
+
+        [NonAction]
+        protected List<SelectListItem> GetCareerList()
+        {
+            return Enum.GetValues(typeof(Enumeration.Career)).Cast<Enumeration.Career>()
+             .Select(e => new SelectListItem
+             {
+                 Value = ((int)e).ToString(),
+                 Text = AppCommon.GetEnumDisplayName(e)
+             }).ToList();
         }
 
         #region Temp Data Methods

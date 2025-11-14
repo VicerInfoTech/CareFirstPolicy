@@ -1,4 +1,5 @@
 ﻿@using CFP.Common.Business_Entities
+@using CFP.Common.Utility
 
 @model DashboardViewModel
 <style>
@@ -13,13 +14,29 @@
         padding: .5rem .9rem !important;
     }
 
-    .select2-container .select2-search--inline .select2-search__field {
+   /*  .select2-container .select2-search--inline .select2-search__field {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         margin: 0 14.4px;
     }
+ */
+    .select2-container .select2-search--inline .select2-search__field {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin: 0 !important;
+        width: auto !important;
+    }
+    /* Make the inline search input vertically centered */
+    .select2-container--default .select2-selection--multiple .select2-search__field {
+        height: 20px !important; /* Matches Select2 default tag height */
+        line-height: 31px !important; /* Centers cursor/placeholder vertically */
+        padding: 0 6px !important;
+    }
+
 
 </style>
 
@@ -74,29 +91,10 @@
 
                 <div class="col-md-6 mt-2">
                     <label asp-for="DealModel.Career"></label>
-                    <select asp-for="DealModel.Career" class="form-select req-border">
+                    <select asp-for="DealModel.Career" class="form-select req-border" asp-items="Model.CareerList">
                         <option value="">Select</option>
-                        <option value="1">AMBETTER</option>
-                        <option value="2">AETNA</option>
-                        <option value="3">BCBS</option>
-                        <option value="4">CARESOURCE</option>
-                        <option value="5">CIGNA</option>
-                        <option value="6">MOLINA</option>
-                        <option value="7">OSCAR</option>
-                        <option value="8">UNITED HEALTHCARE</option>
-                        <option value="9">FLORIDA BLUE</option>
-                        <option value="10">HEALTH FIRST</option>
-                        <option value="11">UNIV OF UTHA</option>
-                        <option value="12">MEDICA</option>
-                        <option value="13">ALLIANT HEALTH</option>
-                        <option value="14">AMERIHEALTH</option>
-                        <option value="15">PRIORITY HEALTH</option>
-                        <option value="16">FIRST CHOICE</option>
-                        <option value="17">AMERITAS</option>
-                        <option value="18">WELLPOINT</option>
-                        <option value="19">INSTIL</option>
-                        <option value="20">ANTHEM</option>
                     </select>
+
                     <span asp-validation-for="DealModel.Career" class="text-danger"></span>
                 </div>
 
@@ -150,10 +148,10 @@
                 </div>
                 <div class="col-md-6 mt-2">
                     <label asp-for="DealModel.CloseDate"></label>
-                    <input asp-for="DealModel.CloseDate" type="datetime-local" class="form-control req-border "  />
+                    <input asp-for="DealModel.CloseDate" type="datatime-local" placeholder="Select date & time" class="form-control req-border date-picker-time" />
                 </div>
 
-               @*  <div class="col-md-3 mt-2">
+                @*  <div class="col-md-3 mt-2">
                     <label asp-for="DealModel.CloseDates"></label>
                     <input asp-for="DealModel.CloseDates"
                            type="text"
@@ -163,14 +161,23 @@
                            data-date-format="Y-m-d H:i"   
                     />
                 </div> *@
+                @if (Model.RoleId != (int)Enumeration.Role.AgentLead && Model.RoleId != (int)Enumeration.Role.Agent)
+                {
 
-                <div class="col-md-12 mt-2">
-                    <label asp-for="DealModel.AgentId"></label>
-                    <select asp-for="DealModel.AgentId" class="form-select req-border" asp-items="Model.AgentList">
-                        <option value="">Select Agent</option>
-                    </select>
-                    <span asp-validation-for="DealModel.AgentId" class="text-danger"></span>
-                </div>
+                    <div class="col-md-12 mt-2">
+                        <label asp-for="DealModel.AgentId"></label>
+                        <select asp-for="DealModel.AgentId" class="form-select req-border" asp-items="Model.AgentList">
+                            <option value="">Select Agent</option>
+                        </select>
+                        <span asp-validation-for="DealModel.AgentId" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+
+                    <input asp-for="DealModel.AgentId" type="hidden" />
+
+                }
                 <div class="col-md-12 mt-2">
                     <label asp-for="DealModel.Notes"></label>
                     <textarea asp-for="DealModel.Notes" rows="3" class="form-control req-border" placeholder="Notes"></textarea>

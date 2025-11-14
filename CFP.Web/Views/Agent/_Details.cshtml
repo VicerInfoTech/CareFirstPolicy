@@ -22,35 +22,109 @@
 
             <div class="row">
 
-                <div class="col-12 mt-2">
+                <div class="col-6 mt-2">
                     <label asp-for="FirstName"></label>
                     <input asp-for="FirstName" class="form-control req-border" placeholder="First Name" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="FirstName"></span>
                 </div>
 
-                <div class="col-12 mt-2">
+                <div class="col-6 mt-2">
                     <label asp-for="LastName"></label>
                     <input asp-for="LastName" class="form-control req-border" placeholder="Last Name" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="LastName"></span>
                 </div>
-
-                <div class="col-12 mt-2">
-                    <label asp-for="Username"></label>
-                    <input asp-for="Username" class="form-control req-border" placeholder="Login Username" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="Username"></span>
+                <div class="col-md-6 mt-2">
+                    <label asp-for="Dob"></label>
+                    <input asp-for="Dob" placeholder="Select dob" class="form-control  date-picker" />
                 </div>
-
-                <div class="col-12 mt-2">
+                <div class="col-6 mt-2">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control req-border" placeholder="Login Username" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                </div>
+                <div class="col-6 mt-2">
+                    <label asp-for="Ssn"></label>
+                    <input asp-for="Ssn" class="form-control " placeholder="SSN" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="Ssn"></span>
+                </div>
+                <div class="col-6 mt-2">
                     <label asp-for="ContactNumber"></label>
-                    <input asp-for="ContactNumber" class="form-control req-border" placeholder="Contact Number" autocomplete="off" />
+                    <input asp-for="ContactNumber" class="form-control " placeholder="Contact Number" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="ContactNumber"></span>
                 </div>
-
-                <div class="col-12 mt-2">
-                    <label asp-for="Degiganition"></label>
-                    <input asp-for="Degiganition" class="form-control req-border" placeholder="Designation" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="Degiganition"></span>
+                <div class="col-6 mt-2">
+                    <label asp-for="Designation"></label>
+                    <input asp-for="Designation" class="form-control " placeholder="Designation" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="Designation"></span>
                 </div>
+                <div class="col-6 mt-2">
+                    <label asp-for="Npn"></label>
+                    <input asp-for="Npn" class="form-control " placeholder="NPN" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="Npn"></span>
+                </div>
+                <div class="col-2 mt-2">
+                    <label asp-for="ChaseExt"></label>
+                    <input asp-for="ChaseExt" class="form-control " placeholder="Chase Ext." autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="ChaseExt"></span>
+                </div>
+                <div class="col-5 mt-2">
+                    <label asp-for="ChaseDataUsername"></label>
+                    <input asp-for="ChaseDataUsername" class="form-control " placeholder="Chase Data Login" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="ChaseDataUsername"></span>
+                </div>
+                <div class="col-5 mt-2">
+                    <label asp-for="ChaseDataPassword"></label>
+                    <input asp-for="ChaseDataPassword" class="form-control " placeholder="Chase Data Password" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="ChaseDataPassword"></span>
+                </div>
+
+                <div class="col-6 mt-2">
+                    <label asp-for="HealthSherpaUsername"></label>
+                    <input asp-for="HealthSherpaUsername" class="form-control " placeholder="Healthsherpa Login" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="HealthSherpaUsername"></span>
+                </div>
+                <div class="col-6 mt-2">
+                    <label asp-for="HealthSherpaPassword"></label>
+                    <input asp-for="HealthSherpaPassword" class="form-control " placeholder="HealthSherpa Password" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="HealthSherpaPassword"></span>
+                </div>
+
+                <div class="col-6 mt-2">
+                    <label asp-for="MyMfgUsername"></label>
+                    <input asp-for="MyMfgUsername" class="form-control " placeholder="MyMFG Username" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="MyMfgUsername"></span>
+                </div>
+                <div class="col-6 mt-2">
+                    <label asp-for="MyMfgPassword"></label>
+                    <input asp-for="MyMfgPassword" class="form-control " placeholder="MyMFG Password" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="MyMfgPassword"></span>
+                </div>
+                <div class="col-6 mt-2">
+                    <label asp-for="FfmUsername"></label>
+                    <input asp-for="FfmUsername" class="form-control " placeholder="FFM Username " autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="FfmUsername"></span>
+                </div>
+                <div class="col-6 mt-2">
+                    <label asp-for="Forwarding"></label>
+                    <input asp-for="Forwarding" class="form-control " placeholder="Forwarding" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="Forwarding"></span>
+                </div>
+                <div class="col-6 mt-2">
+                    <label asp-for="PayStructure"></label>
+                    <input asp-for="PayStructure" class="form-control " placeholder="Pay Structure" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="PayStructure"></span>
+                </div>
+                @if (string.IsNullOrEmpty(Model.EncId))
+                {
+                    <div class="col-md-6 mt-2">
+                        <label asp-for="RoleId"></label>
+                        <select asp-for="RoleId" class="form-select req-border">
+                            <option value="3">Agent</option>
+                            <option value="2">Agent Lead</option>
+                        </select>
+                    </div>
+                }
+
 
             </div>
 

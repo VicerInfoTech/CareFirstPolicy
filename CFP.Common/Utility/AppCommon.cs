@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -469,6 +471,24 @@ namespace CFP.Common.Utility
             }
 
             return plaintext;
+        }
+
+        public static string GetEnumDisplayName(Enum value)
+        {
+            if (value == null)
+            {
+                return "";
+            }
+            var fieldInfo = value.GetType().GetField(value.ToString());
+            if (fieldInfo != null)
+            {
+                var displayAttribute = fieldInfo.GetCustomAttribute<DisplayAttribute>();
+                if (displayAttribute != null)
+                {
+                    return displayAttribute.Name;
+                }
+            }
+            return value.ToString();
         }
     }
 

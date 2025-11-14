@@ -33,7 +33,7 @@
     gap: 12px;
     padding: 12px;
     border-radius: 10px;
-    background: #1a1d21;
+    background: #ffffff;
     transition: background 220ms, transform 400ms;
     will-change: transform;
 }

@@ -15,5 +15,6 @@ namespace CFP.Provider.IProvider
         AgentMasterModel GetById(int id);
         ResponseModel DeActivate(int id, SessionProviderModel sessionProviderModel);
         ResponseModel ReActivate(int id, SessionProviderModel sessionProviderModel);
+        ResponseModel ResetPassword(ResetPasswordModel userData, string IP);
     }
 }

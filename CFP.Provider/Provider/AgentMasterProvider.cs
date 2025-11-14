@@ -30,7 +30,7 @@ namespace CFP.Provider.Provider
         public DatatablePageResponseModel<AgentMasterModel> GetUserList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel)
         {
             DatatablePageResponseModel<AgentMasterModel> list = new DatatablePageResponseModel<AgentMasterModel>()
-            {   
+            {
                 data = new List<AgentMasterModel>(),
                 draw = requestModel.Draw
             };
@@ -44,10 +44,11 @@ namespace CFP.Provider.Provider
                         LastName = x.LastName,
                         CreatedOn = x.CreatedOn,
                         IsActive = x.IsActive,
-                        Username = x.Username,
+                        Email = x.Email,
                         UserMasterId = x.UserMasterId,
                         EncId = _commonProvider.Protect(x.AgentMasterId),
-                    }).ToList();
+                        AgentMasterId=x.AgentMasterId,
+                    }).OrderByDescending(x=>x.AgentMasterId).ToList();
 
                 list.recordsTotal = dataList.Count();
 
@@ -58,7 +59,7 @@ namespace CFP.Provider.Provider
                     dataList = dataList.Where(x =>
                         x.FirstName.ToLower().Contains(search) ||
                         x.LastName.ToLower().Contains(search) ||
-                        x.Username.ToLower().Contains(search)
+                        x.Email.ToLower().Contains(search)
                     ).ToList();
                 }
 
@@ -103,7 +104,7 @@ namespace CFP.Provider.Provider
                 if (!string.IsNullOrEmpty(model.EncId))
                     model.AgentMasterId = _commonProvider.UnProtect(model.EncId);
 
-                if (unitOfWork.UserMaster.Any(x => x.Username.ToLower() == model.Username.ToLower()
+                if (unitOfWork.UserMaster.Any(x => x.Username.ToLower() == model.Email.ToLower()
                 && x.UserMasterId != model.UserMasterId))
                 {
                     response.IsSuccess = false;
@@ -121,11 +122,11 @@ namespace CFP.Provider.Provider
                 {
                     UserMaster userMaster = new UserMaster()
                     {
-                        Username = model.Username,
+                        Username = model.Email,
                         LastName = model.LastName,
                         FirstName = model.FirstName,
                         ContactNumber = AppCommon.RemoveExtra(model.ContactNumber),
-                        RoleId = (int)Enumeration.Role.Agent,
+                        RoleId = model.RoleId,
                         IsFirstTimeLogin = true,
                         TwoStepAuth = false,
                         IsActive = true,
@@ -139,7 +140,7 @@ namespace CFP.Provider.Provider
                 }
                 else
                 {
-                    _temp.UserMaster.Username = model.Username;
+                    _temp.UserMaster.Username = model.Email;
                     _temp.UserMaster.LastName = model.LastName;
                     _temp.UserMaster.FirstName = model.FirstName;
                     _temp.UserMaster.ContactNumber = AppCommon.RemoveExtra(model.ContactNumber);
@@ -229,8 +230,95 @@ namespace CFP.Provider.Provider
             }
             return model;
         }
+        public ResponseModel ResetPassword(ResetPasswordModel userData, string IP)
+        {
+            ResponseModel model = new ResponseModel();
+            try
+            {
+                userData.UserMasterId = _commonProvider.UnProtect(userData.EncId);
+                var validate = ValidatePassword(userData,false);
+                if (validate.IsSuccess)
+                {
+                    var user = unitOfWork.UserMaster.Get(x => x.UserMasterId == userData.UserMasterId);
+                    if (user != null)
+                    {
+                        user.UserPassword = PasswordHash.CreateHash(userData.Password);
+                        unitOfWork.UserMaster.Update(user, user.UserMasterId, IP);
+                        unitOfWork.Save();
+                        model.Message = "Password reset successfully.";
+                        model.IsSuccess = true;
+                    }
+                    else
+                        model.Message = "User record not found";
+                }
+                else
+                    return validate;
+            }
+            catch (Exception)
+            {
+                model.IsSuccess = false;
+                model.Message = AppCommon.ErrorMessage;
+            }
+            return model;
+        }
 
+        public ResponseModel ValidatePassword(ResetPasswordModel userData, bool isChangePwd)
+        {
+            try
+            {
+                ResponseModel model = new ResponseModel();
+                if (userData.UserMasterId == 0 && isChangePwd)
+                {
+                    model.IsSuccess = false;
+                    model.Message = "User not exist.";
+                    return model;
+                }
+                else if (userData.Password.Length < 8)
+                {
+                    model.IsSuccess = false;
+                    model.Message = "Password must be 8 character long";
+                    return model;
+                }
+                else if (userData.Password != userData.ConfirmPassword)
+                {
+                    model.IsSuccess = false;
+                    model.Message = "New & confirm password is not matched.";
+                    return model;
+                }
+                else
+                {
+                    if (isChangePwd)
+                    {
+                        var user = unitOfWork.UserMaster.GetAll(x => x.UserMasterId == userData.UserMasterId).FirstOrDefault();
+                        if (user != null)
+                        {
+                            if (PasswordHash.ValidatePassword(userData.OldPassword, user.UserPassword))
+                                model.IsSuccess = true;
+                            else
+                            {
+                                model.IsSuccess = false;
+                                model.Message = "Invalid old password";
+                                return model;
+                            }
+                        }
+                        else
+                        {
+                            model.IsSuccess = false;
+                            model.Message = "User not exist.";
+                            return model;
+                        }
+                    }
+                    else
+                        model.IsSuccess = true;
+                }
+                return model;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
+        }
         #endregion
     }
 }

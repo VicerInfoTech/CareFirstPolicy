@@ -24,7 +24,7 @@ CFP.Agent = new function () {
                 "columns": [
                     { data: "firstName", name: "FirstName", autoWidth: true },
                     { data: "lastName", name: "LastName", autoWidth: true },
-                    { data: "username", name: "Username", autoWidth: true },
+                    { data: "email", name: "Email", autoWidth: true },
 
                     {
                         data: "isActive", name: "IsActive", className: "col-1  text-center",
@@ -44,7 +44,7 @@ CFP.Agent = new function () {
                             <i class="ri-pencil-line text-white"></i>
                         </button>`;
 
-                            let btnChangePassword = `<button class="btn btn-warning btn-sm mr-1 ml-1" title="Change Password" type="button" onclick="CFP.Common.ChangePassword('${row.userMasterId}')">
+                            let btnChangePassword = `<button class="btn btn-warning btn-sm mr-1 ml-1" title="Change Password" type="button" onclick="CFP.Agent.Reset('${row.userMasterId}')">
                                     <i class="ri-key-line text-white"></i>
                                 </button>`;
 
@@ -81,9 +81,10 @@ CFP.Agent = new function () {
             type: "GET",
             url: UrlContent("Agent/_Details/" + id),
             success: function (data) {
-                $("#common-md-dialogContent").html(data);
+                $("#common-lg-dialogContent").html(data);
                 $.validator.unobtrusive.parse($("#AgentMasterForm"));
-                $("#common-md-dialog").modal('show');
+                $("#common-lg-dialog").modal('show');
+                CFP.Common.InitDatePicker();
                 $(".preloader").hide();
             }
         })
@@ -102,7 +103,7 @@ CFP.Agent = new function () {
                     if (result.isSuccess) {
                         CFP.Agent.Option.Table.ajax.reload();
                         CFP.Common.ToastrSuccess(result.message);
-                        $("#common-md-dialog").modal('hide');
+                        $("#common-lg-dialog").modal('hide');
                     } else {
                         CFP.Common.ToastrError(result.message);
                     }
@@ -180,12 +181,12 @@ CFP.Agent = new function () {
     }
 
     this.SavePassword = function () {
-        if ($("#ChangePwdForm").valid()) {
+        if ($("#resetPwdForm").valid()) {
             $(".preloader").show();
-            var formdata = $("#ChangePwdForm").serialize();
+            var formdata = $("#resetPwdForm").serialize();
             $.ajax({
                 type: "POST",
-                url: UrlContent("Common/ChangePassword/"),
+                url: UrlContent("Agent/ResetPassword/"),
                 data: formdata,
                 success: function (result) {
                     $(".preloader").hide();
@@ -201,5 +202,28 @@ CFP.Agent = new function () {
                 }
             });
         }
+    }
+
+    this.Reset = function (id) {
+        $.ajax({
+            type: "GET",
+            url: UrlContent("Agent/_Reset/" + id),
+            success: function (data) {
+                $(".preloader").hide();
+                $("#common-md-dialogContent").html(data);
+                $.validator.unobtrusive.parse($("#resetPwdForm"));
+                $("#common-md-dialog").modal('show');
+                $(".password").click(function () {
+                    if ($(this).children().hasClass("ri-eye-line")) {
+                        $(this).children().removeClass().addClass("ri-eye-off-line");
+                        $(this).parent().next().attr("type", "text");
+                    }
+                    else {
+                        $(this).children().removeClass().addClass("ri-eye-line");
+                        $(this).parent().next().attr("type", "password");
+                    }
+                });
+            }
+        })
     }
 }
