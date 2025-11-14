@@ -1,13 +1,12 @@
 using CFP.Common.Utility;
 using CFP.Provider;
+using CFP.Web.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-
-
+builder.Services.AddSignalR();
 builder.Services.AddProviderServices(builder.Configuration);
 
 #region Session
@@ -44,5 +43,7 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
        pattern: "{controller=Account}/{action=Index}/{id?}");
+
+app.MapHub<ChatHub>("/chathub");
 
 app.Run();

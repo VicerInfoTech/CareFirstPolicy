@@ -1,77 +1,121 @@
-﻿
-@using CFP.Common.Utility
+﻿@using CFP.Common.Utility
 @* <html lang="en" data-layout="horizontal" data-layout-style="detached" data-sidebar="light" data-topbar="light" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="enable" data-bs-theme="light" data-layout-width="fluid" data-layout-position="fixed" data-sidebar-visibility="show"> *@
 <html lang="en" data-layout="vertical" data-layout-style="default" data-sidebar="light" data-topbar="light" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="enable" data-bs-theme="light" data-layout-width="fluid" data-layout-position="fixed" data-sidebar-visibility="show">
 
 <head>
-    @RenderSection("CSS", required: false)
-    @await Html.PartialAsync("_HeaderScriptPartial")
-    <title>@AppCommon.ApplicationTitle - @ViewData["Title"] </title>
-    @RenderSection("Style", required: false)   
+	@RenderSection("CSS", required: false)
+	@await Html.PartialAsync("_HeaderScriptPartial")
+	<title>@AppCommon.ApplicationTitle - @ViewData["Title"] </title>
+	@RenderSection("Style", required: false)
 </head>
 <body class="">
-    <div class="preloader" style="margin: 0 auto;position: absolute;z-index: 9998;height: 100%;width: 100%;opacity: 0.5;">
-        <div class="spinner-grow" style="width: 5rem; height: 5rem;position: absolute;left: 50%;top: 50%;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-    <div id="layout-wrapper">
-        @await Html.PartialAsync("_Header")
-        @await Component.InvokeAsync("Menu")
+	<div class="preloader" style="margin: 0 auto;position: absolute;z-index: 9998;height: 100%;width: 100%;opacity: 0.5;">
+		<div class="spinner-grow" style="width: 5rem; height: 5rem;position: absolute;left: 50%;top: 50%;" role="status">
+			<span class="sr-only">Loading...</span>
+		</div>
+	</div>
+	@{
+		var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+		if (!(!string.IsNullOrEmpty(controller) && controller.Trim() == "Chat"))
+		{
+			<style>
+				.jump-icon {
+					display: inline-block;
+					animation: jump 1.2s infinite ease-in-out;
+				}
 
-        <div class="main-content">
-            <div class="page-content">
-                <div class="container-fluid">
-                    @await Html.PartialAsync("_PageTitle")
-                    @RenderBody()
-                </div>
-            </div>
-             
-            <div id="common-md-dialog" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-md">
-                    <div class="modal-content" id="common-md-dialogContent">
-                    </div>
-                </div>
-            </div>
-            <div id="common-xl-dialog" class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content" id="common-xl-dialogContent">
-                    </div>
-                </div>
-            </div>
-            <div id="common-lg-dialog" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content" id="common-lg-dialogContent">
-                    </div>
-                </div>
-            </div>
-            <div id="common-dialog" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
-                <div class="modal-dialog">
-                    <div class="modal-content" id="common-dialogContent">
-                    </div>
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
+				@@keyframes jump {
+					0% {
+						transform: translateY(0);
+					}
+
+					20% {
+						transform: translateY(-10px);
+					}
+
+					40% {
+						transform: translateY(0);
+					}
+
+					60% {
+						transform: translateY(-6px);
+					}
+
+					80% {
+						transform: translateY(0);
+					}
+
+					100% {
+						transform: translateY(0);
+					}
+				}
+			</style>
+			<div class="customizer-setting d-none d-md-block">
+				<a href="@(Url.Content("Chat"))">
+					<span class="btn-success rounded-pill shadow-lg btn btn-icon btn-lg p-2 jump-icon">
+						<i class='ri-chat-3-line fs-22'></i>
+					</span>
+				</a>
+			</div>
+		}
+	}
+	<div id="layout-wrapper">
+		@await Html.PartialAsync("_Header")
+		@await Component.InvokeAsync("Menu")
+
+		<div class="main-content">
+			<div class="page-content">
+				<div class="container-fluid">
+					@await Html.PartialAsync("_PageTitle")
+					@RenderBody()
+				</div>
+			</div>
+
+			<div id="common-md-dialog" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-md">
+					<div class="modal-content" id="common-md-dialogContent">
+					</div>
+				</div>
+			</div>
+			<div id="common-xl-dialog" class="modal fade bs-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content" id="common-xl-dialogContent">
+					</div>
+				</div>
+			</div>
+			<div id="common-lg-dialog" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content" id="common-lg-dialogContent">
+					</div>
+				</div>
+			</div>
+			<div id="common-dialog" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false">
+				<div class="modal-dialog">
+					<div class="modal-content" id="common-dialogContent">
+					</div>
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
 
 
-        </div>
-    </div>
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-6">
-                    @AppCommon.CurrentDate.Year © @AppCommon.ApplicationTitle.
-                </div>
-                <div class="col-sm-6">
-                  @*   <div class="text-sm-end d-none d-sm-block">
+		</div>
+	</div>
+	<footer class="footer">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-6">
+					@AppCommon.CurrentDate.Year © @AppCommon.ApplicationTitle.
+				</div>
+				<div class="col-sm-6">
+					@*   <div class="text-sm-end d-none d-sm-block">
                         Powered by Arudha IT Solutions
                     </div> *@
-                </div>
-            </div>
-        </div>
-    </footer>
-    @await Html.PartialAsync("_FooterScriptPartial")
-    @RenderSection("scripts", required: false)
+				</div>
+			</div>
+		</div>
+	</footer>
+	@await Html.PartialAsync("_FooterScriptPartial")
+	@RenderSection("scripts", required: false)
 </body>
 </html>
 
