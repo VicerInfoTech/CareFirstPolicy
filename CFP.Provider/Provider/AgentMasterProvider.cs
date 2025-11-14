@@ -48,6 +48,7 @@ namespace CFP.Provider.Provider
                         UserMasterId = x.UserMasterId,
                         EncId = _commonProvider.Protect(x.AgentMasterId),
                         AgentMasterId=x.AgentMasterId,
+                        RoleName=AppCommon.GetEnumDisplayName((Enumeration.Role)x.UserMaster.RoleId)
                     }).OrderByDescending(x=>x.AgentMasterId).ToList();
 
                 list.recordsTotal = dataList.Count();
@@ -122,7 +123,7 @@ namespace CFP.Provider.Provider
                 {
                     UserMaster userMaster = new UserMaster()
                     {
-                        Username = model.Email,
+                        Username = model.Email.ToLower(),
                         LastName = model.LastName,
                         FirstName = model.FirstName,
                         ContactNumber = AppCommon.RemoveExtra(model.ContactNumber),
@@ -135,6 +136,7 @@ namespace CFP.Provider.Provider
                     unitOfWork.UserMaster.Insert(userMaster, sessionProviderModel.UserId, sessionProviderModel.Ip);
                     unitOfWork.Save();
                     agent.UserMasterId = userMaster.UserMasterId;
+                    agent.Email = model.Email.ToLower();
                     response.Message = "Agent added successfully";
                     unitOfWork.AgentMaster.Insert(agent, sessionProviderModel.UserId, sessionProviderModel.Ip);
                 }

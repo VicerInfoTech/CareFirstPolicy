@@ -19,7 +19,7 @@ namespace CFP.Common.Utility
         public static string Protection = "CFP";
         public static string SessionName = "CFP.Session";
         public static string ConnectionString = "";
-        public static string CommonPassword = "Test@123";
+        public static string CommonPassword = "Admin@2025";
         public static string SMTPHost = "smtp.office365.com";
         public static int SMTPPort = 587;
         public static string SMTPUserName = "";

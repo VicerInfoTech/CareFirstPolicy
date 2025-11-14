@@ -32,15 +32,15 @@
                     <label asp-for="LastName"></label>
                     <input asp-for="LastName" class="form-control req-border" placeholder="Last Name" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="LastName"></span>
-                </div>
-                <div class="col-md-6 mt-2">
-                    <label asp-for="Dob"></label>
-                    <input asp-for="Dob" placeholder="Select dob" class="form-control  date-picker" />
-                </div>
+                </div>                
                 <div class="col-6 mt-2">
                     <label asp-for="Email"></label>
                     <input asp-for="Email" class="form-control req-border" placeholder="Login Username" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="Email"></span>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <label asp-for="Dob"></label>
+                    <input asp-for="Dob" placeholder="Select dob" class="form-control  date-picker" />
                 </div>
                 <div class="col-6 mt-2">
                     <label asp-for="Ssn"></label>
@@ -55,7 +55,6 @@
                 <div class="col-6 mt-2">
                     <label asp-for="Designation"></label>
                     <input asp-for="Designation" class="form-control " placeholder="Designation" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="Designation"></span>
                 </div>
                 <div class="col-6 mt-2">
                     <label asp-for="Npn"></label>

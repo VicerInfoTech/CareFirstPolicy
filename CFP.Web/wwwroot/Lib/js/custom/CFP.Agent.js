@@ -25,6 +25,7 @@ CFP.Agent = new function () {
                     { data: "firstName", name: "FirstName", autoWidth: true },
                     { data: "lastName", name: "LastName", autoWidth: true },
                     { data: "email", name: "Email", autoWidth: true },
+                    { data: "roleName", name: "RoleName", autoWidth: true },
 
                     {
                         data: "isActive", name: "IsActive", className: "col-1  text-center",

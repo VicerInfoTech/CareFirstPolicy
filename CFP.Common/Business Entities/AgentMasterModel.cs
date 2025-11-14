@@ -12,6 +12,7 @@ namespace CFP.Common.Business_Entities
     {
         public int AgentMasterId { get; set; }
         public string? EncId { get; set; }
+        [DisplayName("DOB")]
         public DateOnly? Dob { get; set; }
         [DisplayName("Email")]
         [Required(ErrorMessage = "Email is required.")]
@@ -38,9 +39,9 @@ namespace CFP.Common.Business_Entities
         [MaxLength(15, ErrorMessage = "Contact Number should not exceed 15 digits.")]
         public string? ContactNumber { get; set; }
         [DisplayName("Designation")]
-        [Required(ErrorMessage = "Designation is required.")]
         [MaxLength(100, ErrorMessage = "Designation cannot exceed 100 characters.")]
-        public string Designation { get; set; } = null!;
+        public string? Designation { get; set; } = null!;
+        [DisplayName("NPN")]
         [MaxLength(50, ErrorMessage = "NPN cannot exceed 50 characters.")]
         public string? Npn { get; set; }
         [DisplayName("Chase Ext.")]
@@ -84,6 +85,7 @@ namespace CFP.Common.Business_Entities
         public DateTime? UpdatedOn { get; set; }
 
         public string Ip { get; set; } = null!;
+        public string RoleName { get; set; } = null!;
         [DisplayName("Role")]
         public int RoleId { get; set; }
         public virtual UserMasterModel CreatedByNavigation { get; set; } = null!;
