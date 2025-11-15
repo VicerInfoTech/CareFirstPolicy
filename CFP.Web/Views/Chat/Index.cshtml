@@ -15,6 +15,15 @@
 			height: calc(100vh - 70px - 60px - -4px) !important;
 		}
 	}
+
+	#users-conversation {
+		display: flex;
+		flex-direction: column;
+	}
+
+	
+
+
 </style>
 <div class="chat-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
 	<div class="chat-leftsidebar">
@@ -306,7 +315,7 @@
 									</div>
 								</div>
 
-							</div>
+							</div>=
 						</form>
 					</div>
 
@@ -600,6 +609,7 @@
 
 				// refresh sidebar user list
 				loadUserList();
+				setTimeout(scrollBottom, 50);
 			});
 
 			connection.start()
@@ -680,7 +690,7 @@
 
 				msgs.forEach(m => appendMessageToChat(m));
 
-				scrollBottom();
+				setTimeout(scrollBottom, 100);
 			});
 		}
 
@@ -724,7 +734,6 @@
 			}
 
 			$("#users-conversation").append(html);
-			scrollBottom();
 		}
 
 
@@ -749,6 +758,24 @@
 
 			$("#chatInput").val("");
 		});
+
+				// Send message on Enter key
+		$("#chatInput").on("keypress", function (e) {
+			if (e.which === 13) {   // 13 = Enter key
+				e.preventDefault(); // prevent new line
+				$("#sendMessageBtn").click(); // Trigger send
+			}
+		});
+
+
+							function scrollBottom() {
+			const wrapper = document.querySelector("#chat-conversation .simplebar-content-wrapper");
+			if (wrapper) {
+				wrapper.scrollTop = wrapper.scrollHeight;
+			}
+		}
+
+
 
 
 		// ---------------------------
