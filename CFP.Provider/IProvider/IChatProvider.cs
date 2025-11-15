@@ -11,5 +11,15 @@ namespace CFP.Provider.IProvider
     public interface IChatProvider
     {
         void SaveConnection(string connectionId, SessionProviderModel sessionProviderModel);
+
+        string GetConnectionId(int userId);
+
+        long SaveMessage(int fromUserId, int toUserId, string message);
+
+        List<ChatMessageModel> GetMessages(int currentUserId, int targetUserId);
+
+        List<ChatUserListModel> GetChatUsers(int userId);
+        void RemoveConnection(string connectionId,SessionProviderModel sessionProviderModel);
+        void MarkMessagesRead(int currentUserId, int targetUserId);
     }
 }

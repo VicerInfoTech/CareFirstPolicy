@@ -1,11 +1,12 @@
-﻿@{
+﻿@model ChatViewModel
+
+@{
 	ViewData["Title"] = "Chat";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	ViewBag.ParentPageName = "<a href='#'><i class='ri-home-2-line'></i> Home</a>";
 	ViewBag.PageName = "<i class='ri-chat-3-line'></i>  Chat";
 }
 
-<link rel="stylesheet" href="~/assets/libs/glightbox/css/glightbox.min.css">
 <style>
 	@@media(min-width: 992px) {
 		.chat-leftsidebar {
@@ -15,7 +16,6 @@
 		}
 	}
 </style>
-
 <div class="chat-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
 	<div class="chat-leftsidebar">
 		<div class="px-4 pt-4 mb-4">
@@ -91,11 +91,11 @@
 						</div>
 					</div>
 
-					<div class="chat-message-list">
+					@* <div class="chat-message-list">
 
 						<ul class="list-unstyled chat-list chat-user-list mb-0" id="channelList">
 						</ul>
-					</div>
+					</div> *@
 					<!-- End chat-message-list -->
 				</div>
 			</div>
@@ -134,8 +134,8 @@
 													<span class="user-status"></span>
 												</div>
 												<div class="flex-grow-1 overflow-hidden">
-													<h5 class="text-truncate mb-0 fs-16"><a class="text-reset username" data-bs-toggle="offcanvas" href="#userProfileCanvasExample" aria-controls="userProfileCanvasExample">Lisa Parker</a></h5>
-													<p class="text-truncate text-muted mb-0 userStatus"><small>Online</small></p>
+													<h5 class="text-truncate mb-0 fs-16"><a class="text-reset username" data-bs-toggle="offcanvas" href="#userProfileCanvasExample" aria-controls="userProfileCanvasExample"></a></h5>
+
 												</div>
 											</div>
 										</div>
@@ -294,12 +294,12 @@
 									<div class="chat-input-feedback">
 										Please Enter a Message
 									</div>
-									<input type="text" class="form-control chat-input bg-light border-light" id="chat-input" placeholder="Type your message..." autocomplete="off">
+									<input type="text" id="chatInput" class="form-control chat-input bg-light border-light" placeholder="Type your message..." autocomplete="off">
 								</div>
 								<div class="col-auto">
 									<div class="chat-input-links ms-2">
 										<div class="links-list-item">
-											<button type="submit" class="btn btn-success chat-send waves-effect waves-light">
+											<button type="button" id="sendMessageBtn" class="btn btn-success chat-send waves-effect waves-light">
 												<i class="ri-send-plane-2-fill align-bottom"></i>
 											</button>
 										</div>
@@ -566,9 +566,10 @@
 	</div>
 	<!--end offcanvas-body-->
 </div>
-@section scripts {
 
-	<!-- glightbox js -->
+
+
+@section Scripts {
 	<script src="~/assets/libs/glightbox/js/glightbox.min.js"></script>
 
 	<!-- fgEmojiPicker js -->
@@ -576,5 +577,191 @@
 
 	<!-- chat init js -->
 	<script src="~/assets/js/pages/chat.init.js"></script>
+	<script>
+
+		let selectedUserId = null;
+		let connection = null;
+		let currentUserId = @Model.CurrentUserId;
+
+		// ---------------------------
+		// START SIGNALR
+		// ---------------------------
+		function startConnection() {
+
+			connection = new signalR.HubConnectionBuilder()
+				.withUrl("/chathub")
+				.withAutomaticReconnect()
+				.build();
+
+			// Receive message
+			connection.on("ReceiveMessage", function (msg) {
+
+				appendMessageToChat(msg);
+
+				// refresh sidebar user list
+				loadUserList();
+			});
+
+			connection.start()
+				.then(() => console.log("SignalR Connected"))
+				.catch(err => console.error(err));
+		}
+
+
+		// ---------------------------
+		// LOAD USERS LIST (sidebar)
+		// ---------------------------
+		function loadUserList() {
+
+			$.get("/Chat/GetChatUsers", function (users) {
+
+				let html = "";
+
+				users.forEach((u, index) => {
+					html += `
+							<li class="chat-user-item" onclick="openChat(${u.userId}, '${u.userName}', ${u.isOnline})"		>
+						<a class="d-flex align-items-center" href="javascript:void(0)">
+							<div class="chat-user-img me-2">
+								<img src="/assets/images/users/avatar-1.jpg" class="rounded-circle avatar-xs" />
+							</div>
+							<div class="flex-grow-1">
+										<h6 class="mb-0">			${u.userName}
+			<span class="badge rounded-pill bg-success" title="Online"
+				  style="display: ${u.isOnline ? 'inline' : 'none'}">●</span>
+		</h6>
+
+								<p class="small text-muted mb-0">${u.lastMessage ?? ""}</p>
+							</div>
+							<small class="text-muted">
+									   ${u.lastMessageTime ? new Date(u.lastMessageTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }): ""}
+							</small>
+						</a>
+					</li>`;
+					 if (index === 0) {
+				selectedUserId = u.userId;
+				$(".username").text(u.userName);
+			}
+				});
+
+				$("#userList").html(html);
+				  // If there is at least one user, load their messages
+		if (users.length > 0) {
+			loadMessages();
+		}
+			});
+		}
+
+
+		// ---------------------------
+		// OPEN CHAT
+		// ---------------------------
+		function openChat(userId, name) {
+
+			selectedUserId = userId;
+
+			$(".username").text(name);
+		loadMessages();
+
+
+		$(".userStatus small").text(isOnline ? "Online" : "Offline");
+		$(".userStatus small").css("color", isOnline ? "green" : "gray");
+		}
+
+
+		// ---------------------------
+		// LOAD MESSAGES
+		// ---------------------------
+		function loadMessages() {
+			if (!selectedUserId) return;
+
+			$.get(`/Chat/GetMessages?targetUserId=${selectedUserId}`, function (msgs) {
+
+				$("#users-conversation").html("");
+
+				msgs.forEach(m => appendMessageToChat(m));
+
+				scrollBottom();
+			});
+		}
+
+		// ---------------------------
+		// APPEND MESSAGE TO UI
+		// ---------------------------
+		function appendMessageToChat(msg) {
+
+			let time = new Date(msg.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+
+
+			let html = "";
+
+			if (msg.isOwnMessage) {
+				html = `
+				<li class="right">
+					<div class="conversation-list">
+						<div class="user-chat-content">
+							<div class="ctext-wrap">
+								<div class="ctext-wrap-content">${msg.message}</div>
+							</div>
+							<div><small class="text-muted">${time}</small></div>
+						</div>
+					</div>
+				</li>`;
+			} else {
+				html = `
+				<li>
+					<div class="conversation-list">
+						<div class="chat-avatar">
+							<img src="/assets/images/users/avatar-1.jpg" class="rounded-circle avatar-xs" />
+						</div>
+						<div class="user-chat-content">
+							<div class="ctext-wrap">
+								<div class="ctext-wrap-content">${msg.message}</div>
+							</div>
+							<div><small class="text-muted">${time}</small></div>
+						</div>
+					</div>
+				</li>`;
+			}
+
+			$("#users-conversation").append(html);
+			scrollBottom();
+		}
+
+
+		// ---------------------------
+		// AUTO SCROLL
+		// ---------------------------
+		function scrollBottom() {
+			let div = document.getElementById("chat-conversation");
+			div.scrollTop = div.scrollHeight;
+		}
+
+
+		// ---------------------------
+		// SEND MESSAGE
+		// ---------------------------
+		$("#sendMessageBtn").click(function () {
+
+			let text = $("#chatInput").val().trim();
+			if (!text || !selectedUserId) return;
+
+			connection.invoke("SendMessage", selectedUserId, text);
+
+			$("#chatInput").val("");
+		});
+
+
+		// ---------------------------
+		// ON PAGE LOAD
+		// ---------------------------
+		$(document).ready(function () {
+
+			loadUserList();
+			startConnection();
+
+		});
+
+	</script>
 
 }
+

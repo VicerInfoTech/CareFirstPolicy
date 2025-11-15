@@ -239,7 +239,7 @@ public partial class EndeavorCRMContext : DbContext
 
         modelBuilder.Entity<LeadMaster>(entity =>
         {
-            entity.HasKey(e => e.LeadId).HasName("PK__LeadMast__73EF78FA64DB377E");
+            entity.HasKey(e => e.LeadId).HasName("PK__LeadMast__73EF78FAAB1564B4");
 
             entity.ToTable("LeadMaster");
 

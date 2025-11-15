@@ -24,6 +24,7 @@ namespace CFP.Provider
             services.AddTransient<IUserMasterProvider, UserMasterProvider>();
             services.AddTransient<IAgentMasterProvider, AgentMasterProvider>();
             services.AddTransient<IDealProvider, DealProvider>();
+            services.AddTransient<IChatProvider, ChatProvider>();
            
         }
 

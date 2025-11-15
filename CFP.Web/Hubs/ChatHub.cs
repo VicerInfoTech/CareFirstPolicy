@@ -1,4 +1,5 @@
-﻿using CFP.Common.Common_Entities;
+﻿using CFP.Common.Business_Entities;
+using CFP.Common.Common_Entities;
 using CFP.Common.Utility;
 using CFP.Provider.IProvider;
 using Microsoft.AspNetCore.Mvc;
@@ -46,13 +47,71 @@ namespace CFP.Web.Hubs
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            //var user = _db.Users.FirstOrDefault(u => u.ConnectionId == Context.ConnectionId);
-            //if (user != null)
-            //{
-            //    user.ConnectionId = null!;
-            //    _db.SaveChanges();
-            //}
+            _chatProvider.RemoveConnection(Context.ConnectionId, GetSessionProviderParameters());
+
             await base.OnDisconnectedAsync(exception);
+        }
+
+        // Called by client to send a message
+        public async Task SendMessage(int toUserId, string message)
+        {
+            var session = GetSessionProviderParameters();
+            if (session == null || session.UserId == 0) return;
+
+            int fromUserId = session.UserId;
+
+            // Save message
+            var msgId = _chatProvider.SaveMessage(fromUserId, toUserId, message);
+
+            // Build payload
+            var payload = new
+            {
+                MessageId = msgId,
+                FromUserId = fromUserId,
+                ToUserId = toUserId,
+                Message = message,
+                SentAt = DateTime.UtcNow
+            };
+
+            // Send back to caller (so UI can show it instantly)
+            await Clients.Caller.SendAsync("ReceiveMessage", new
+            {
+                MessageId = msgId,
+                FromUserId = fromUserId,
+                ToUserId = toUserId,
+                Message = message,
+                SentAt = DateTime.UtcNow,
+                isOwnMessage = true
+
+            });
+
+            // Send to receiver if connected
+            var receiverConnectionId = _chatProvider.GetConnectionId(toUserId);
+            if (!string.IsNullOrEmpty(receiverConnectionId))
+            {
+                await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", new
+                {
+                    MessageId = msgId,
+                    FromUserId = fromUserId,
+                    ToUserId = toUserId,
+                    Message = message,
+                    SentAt = DateTime.UtcNow,
+                    isOwnMessage = false
+
+                });
+            }
+        }
+
+        // Optional: client can call to load previous messages via hub instead of controller
+        public Task<List<ChatMessageModel>> LoadMessages(int targetUserId, int page = 1)
+        {
+            var session = GetSessionProviderParameters();
+            if (session == null) return Task.FromResult(new List<ChatMessageModel>());
+
+            var msgs = _chatProvider.GetMessages(session.UserId, targetUserId);
+            // mark read
+            _chatProvider.MarkMessagesRead(session.UserId, targetUserId);
+            return Task.FromResult(msgs);
         }
     }
 }
