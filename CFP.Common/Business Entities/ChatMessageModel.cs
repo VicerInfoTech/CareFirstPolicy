@@ -21,7 +21,7 @@ namespace CFP.Common.Business_Entities
         public DateTime SentAt { get; set; }
         public bool isOwnMessage { get; set; }
 
-
+        public bool IsRead { get; set; }
         public virtual UserMasterModel FromUser { get; set; } = null!;
 
         public virtual UserMasterModel? ToUser { get; set; }

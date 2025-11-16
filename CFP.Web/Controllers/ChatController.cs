@@ -1,4 +1,5 @@
-﻿using CFP.Common.Utility;
+﻿using CFP.Common.Common_Entities;
+using CFP.Common.Utility;
 using CFP.Patient.Controllers;
 using CFP.Provider.IProvider;
 using CFP.Web.Models;
@@ -42,5 +43,32 @@ namespace CFP.Web.Controllers
             _chatProvider.MarkMessagesRead(userId, targetUserId);
             return Json(messages);
         }
+
+        [HttpGet]
+        public IActionResult MarkMessagesRead(int targetUserId)
+        {
+            var userId = _sessionManager.UserId;
+
+            _chatProvider.MarkMessagesRead(userId, targetUserId);
+
+            return Json(new { success = true });
+        }
+        [HttpPost]
+        public IActionResult RemoveConnection([FromBody] string connectionId)
+        {
+            if (!string.IsNullOrEmpty(connectionId))
+            {
+                _chatProvider.RemoveConnection(connectionId, new SessionProviderModel());
+            }
+            return Json("");
+        }
+        [HttpGet]
+        public IActionResult GetContacts()
+        {
+            var contacts = _chatProvider.GetContacts(_sessionManager.UserId);
+
+            return Json(contacts);
+        }
+
     }
 }

@@ -8,6 +8,7 @@ using CFP.Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -114,19 +115,14 @@ namespace CFP.Provider.Provider
         public List<ChatUserListModel> GetChatUsers(int userId)
         {
             // Step 1: Fetch all users with roles 2 or 3 except current user
-            var users = unitOfWork.UserMaster.GetAll()
-                .Where(u => (u.RoleId == (int)Enumeration.Role.Agent || u.RoleId == (int)Enumeration.Role.AgentLead)
-                            && u.UserMasterId != userId)
-                .ToList();
+            var users = unitOfWork.UserMaster.GetAll(u => u.UserMasterId != userId).ToList();
 
             // Step 2: Fetch all messages involving current user
-            var messages = unitOfWork.ChatMessage.GetAll()
-                .Where(m => m.FromUserId == userId || m.ToUserId == userId)
+            var messages = unitOfWork.ChatMessage.GetAll(m => m.FromUserId == userId || m.ToUserId == userId)
                 .ToList();
 
             // Step 3: Fetch all active connections
-            var connections = unitOfWork.ChatConnection.GetAll()
-                .Where(c => c.UserMasterId != userId)
+            var connections = unitOfWork.ChatConnection.GetAll(c => c.UserMasterId != userId)
                 .ToList();
 
             // Step 4: Prepare the user list with last message, last message time, and online status
@@ -141,17 +137,21 @@ namespace CFP.Provider.Provider
                 // Check if user has any active connection
                 bool isOnline = connections.Any(c => c.UserMasterId == user.UserMasterId);
 
+                int unreadCount = messages.Where(m =>
+              m.FromUserId == user.UserMasterId &&     // message sent BY the other user
+              m.ToUserId == userId &&                 // message sent TO current user
+              m.IsRead == false                       // unread
+          ).Count();
                 return new ChatUserListModel
                 {
                     UserId = user.UserMasterId,
                     UserName = user.FirstName,
                     LastMessage = lastMsg?.Message ?? "",
                     LastMessageTime = lastMsg?.SentAt,
-                    IsOnline = isOnline // new property in model
+                    IsOnline = isOnline,
+                    UnreadCount = unreadCount // new property in model
                 };
-            })
-            .OrderByDescending(x => x.LastMessageTime ?? DateTime.MinValue)
-            .ToList();
+            }).OrderByDescending(x => x.IsOnline).ThenByDescending(x => x.LastMessageTime ?? DateTime.MinValue).ToList();
 
             return list;
         }
@@ -160,9 +160,10 @@ namespace CFP.Provider.Provider
         public void MarkMessagesRead(int currentUserId, int targetUserId)
         {
             var unread = unitOfWork.ChatMessage.GetAll()
-                .Where(x => x.FromUserId == targetUserId && x.ToUserId == currentUserId)
+                .Where(x => x.FromUserId == targetUserId && x.ToUserId == currentUserId && x.IsRead == false)
                 .ToList();
-
+            unread.ForEach(m => m.IsRead = true);
+            unitOfWork.Save();
 
         }
 
@@ -185,6 +186,16 @@ namespace CFP.Provider.Provider
 
                 throw;
             }
+        }
+
+        public List<ContactUserDto> GetContacts(int loggedInUserId)
+        {
+            return unitOfWork.UserMaster.GetAll(c => c.UserMasterId != loggedInUserId)
+                 .Select(c => new ContactUserDto
+                 {
+                     ContactUserId = c.UserMasterId,
+                     Name = c.FirstName + " " + c.LastName,
+                 }).OrderBy(x=>x.Name).ToList();
         }
 
         #endregion

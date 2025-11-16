@@ -21,5 +21,6 @@ namespace CFP.Provider.IProvider
         List<ChatUserListModel> GetChatUsers(int userId);
         void RemoveConnection(string connectionId,SessionProviderModel sessionProviderModel);
         void MarkMessagesRead(int currentUserId, int targetUserId);
+        List<ContactUserDto> GetContacts(int loggedInUserId);
     }
 }

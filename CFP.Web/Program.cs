@@ -6,7 +6,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.KeepAliveInterval = TimeSpan.FromSeconds(10);       // heartbeat ping
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(20);    // declare connection dead
+    options.HandshakeTimeout = TimeSpan.FromSeconds(5);
+});
+
 builder.Services.AddProviderServices(builder.Configuration);
 
 #region Session

@@ -21,11 +21,12 @@
 		flex-direction: column;
 	}
 
-	
-
+	.chat-user-img.online .user-status {
+		background-color: #67b173;
+	}
 
 </style>
-<div class="chat-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
+<<div class="chat-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
 	<div class="chat-leftsidebar">
 		<div class="px-4 pt-4 mb-4">
 			<div class="d-flex align-items-start">
@@ -111,6 +112,7 @@
 			<div class="tab-pane" id="contacts" role="tabpanel">
 				<div class="chat-room-list pt-3" data-simplebar>
 					<div class="sort-contact">
+						<ul class="list-unstyled contact-list" id="contactList"></ul>
 					</div>
 				</div>
 			</div>
@@ -578,6 +580,7 @@
 
 
 
+
 @section Scripts {
 	<script src="~/assets/libs/glightbox/js/glightbox.min.js"></script>
 
@@ -605,16 +608,66 @@
 			// Receive message
 			connection.on("ReceiveMessage", function (msg) {
 
-				appendMessageToChat(msg);
+					   // If the incoming message is from the user currently opened in chat, append it
+		if (selectedUserId && selectedUserId === msg.fromUserId) {
+			appendMessageToChat(msg);
+			setTimeout(scrollBottom, 50);
 
-				// refresh sidebar user list
-				loadUserList();
-				setTimeout(scrollBottom, 50);
+				 $.get("/Chat/MarkMessagesRead", { targetUserId: msg.fromUserId });
+
+		// Remove unread badge (if existed)
+		removeUnreadBadge(msg.fromUserId);
+		}
+		else {
+			// Chat with this sender is NOT open. Do NOT open it automatically.
+			// Instead update sidebar preview/unread UI without reloading the whole list.
+			// Minimal helpers below will update unread count and last message preview.
+			increaseUnreadCount(msg.fromUserId);
+		}
+
+		// Update last message preview for that user (without refreshing entire list)
+		updateLastMessageInSidebar(msg);
 			});
 
 			connection.start()
 				.then(() => console.log("SignalR Connected"))
 				.catch(err => console.error(err));
+		}
+
+				// Increase unread count badge (create if not present)
+		function increaseUnreadCount(userId) {
+			// find the user list item by the data you render; we used .chat-user-item earlier
+			const row = $(`#userList .chat-user-item`).filter(function () {
+				// this assumes your <li> was created with onclick="openChat(userId, 'name', isOnline)"
+				// we don't have data-userid attribute in your markup, so match by the onclick string:
+				return $(this).attr("onclick") && $(this).attr("onclick").indexOf(`openChat(${userId},`) !== -1;
+			});
+
+			if (!row || row.length === 0) return;
+
+			// try to find existing badge inside the row, otherwise append to the right place
+			let badge = row.find(".unread-badge");
+			if (badge.length === 0) {
+				// append badge similar to your theme markup
+				row.find("a").append(`<div class="ms-auto"><span class="badge bg-dark-subtle text-body rounded p-1 unread-badge">1</span></div>`);
+			} else {
+				let count = parseInt(badge.text() || "0");
+				badge.text(count + 1);
+			}
+		}
+
+		// Update last message preview text in sidebar (without reloading whole list)
+		function updateLastMessageInSidebar(msg) {
+			const row = $(`#userList .chat-user-item`).filter(function () {
+				return $(this).attr("onclick") && $(this).attr("onclick").indexOf(`openChat(${msg.fromUserId},`) !== -1;
+			});
+
+			if (!row || row.length === 0) return;
+
+			// update the small text you already render
+			row.find("p.small.text-muted").text(msg.message ?? "");
+			// update time if you have element for that (you render time inside <small class="text-muted">)
+			row.find("small.text-muted").first().text(new Date(msg.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
 		}
 
 
@@ -631,25 +684,38 @@
 					html += `
 							<li class="chat-user-item" onclick="openChat(${u.userId}, '${u.userName}', ${u.isOnline})"		>
 						<a class="d-flex align-items-center" href="javascript:void(0)">
-							<div class="chat-user-img me-2">
-								<img src="/assets/images/users/avatar-1.jpg" class="rounded-circle avatar-xs" />
-							</div>
-							<div class="flex-grow-1">
-										<h6 class="mb-0">			${u.userName}
-			<span class="badge rounded-pill bg-success" title="Online"
-				  style="display: ${u.isOnline ? 'inline' : 'none'}">●</span>
-		</h6>
 
-								<p class="small text-muted mb-0">${u.lastMessage ?? ""}</p>
-							</div>
-							<small class="text-muted">
-									   ${u.lastMessageTime ? new Date(u.lastMessageTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }): ""}
-							</small>
+							 <!-- Theme Avatar + Status -->
+					<div class="chat-user-img me-2 ${u.isOnline ? "online" : ""}">
+							<img src="/assets/images/users/avatar-1.jpg"
+								 class="rounded-circle avatar-xs" />
+							<span class="user-status"></span>
+						</div>
+
+						<div class="flex-grow-1">
+							<h6 class="mb-0">${u.userName}</h6>
+
+						</div>
+
+
+
+						<div class="ms-auto">
+							${u.unreadCount > 0
+								? `<span class="badge bg-dark-subtle text-body rounded p-1 unread-badge">${u.unreadCount}</span>`
+								: ``
+							}
+						</div>
+
 						</a>
 					</li>`;
 					 if (index === 0) {
 				selectedUserId = u.userId;
 				$(".username").text(u.userName);
+				if (u.isOnline) {
+			$(".user-own-img").addClass("online");
+		} else {
+			$(".user-own-img").removeClass("online");
+		}
 			}
 				});
 
@@ -665,16 +731,22 @@
 		// ---------------------------
 		// OPEN CHAT
 		// ---------------------------
-		function openChat(userId, name) {
+		function openChat(userId, name,isOnline) {
 
 			selectedUserId = userId;
 
 			$(".username").text(name);
 		loadMessages();
 
+		removeUnreadBadge(userId);
 
-		$(".userStatus small").text(isOnline ? "Online" : "Offline");
-		$(".userStatus small").css("color", isOnline ? "green" : "gray");
+
+		// Update header user-profile green dot
+		if (isOnline) {
+			$(".user-own-img").addClass("online");
+		} else {
+			$(".user-own-img").removeClass("online");
+		}
 		}
 
 
@@ -691,7 +763,16 @@
 				msgs.forEach(m => appendMessageToChat(m));
 
 				setTimeout(scrollBottom, 100);
+				removeUnreadBadge(selectedUserId);
 			});
+		}
+				function removeUnreadBadge(userId) {
+			const row = $(`#userList .chat-user-item`).filter(function () {
+				return $(this).attr("onclick")?.includes(`openChat(${userId},`);
+			});
+
+			row.find(".unread-badge").remove();
+
 		}
 
 		// ---------------------------
@@ -754,7 +835,20 @@
 			let text = $("#chatInput").val().trim();
 			if (!text || !selectedUserId) return;
 
+
+				 // Show instantly
+		appendMessageToChat({
+			fromUserId: currentUserId,
+			toUserId: selectedUserId,
+			message: text,
+			sentAt: new Date(),
+			isOwnMessage: true
+		});
+
+		scrollBottom();
+
 			connection.invoke("SendMessage", selectedUserId, text);
+
 
 			$("#chatInput").val("");
 		});
@@ -774,6 +868,56 @@
 				wrapper.scrollTop = wrapper.scrollHeight;
 			}
 		}
+						function loadContacts() {
+			$.get("/chat/getcontacts", function (contacts) {
+
+				let html = "";
+				const grouped = {};
+				debugger;
+				contacts.forEach(c => {
+					const letter = c.name[0].toUpperCase();
+					if (!grouped[letter]) grouped[letter] = [];
+					grouped[letter].push(c);
+				});
+
+				Object.keys(grouped).sort().forEach(letter => {
+					html += `
+						<li class="mt-3 mb-1">
+							<div class="text-muted text-uppercase fs-12">${letter}</div>
+						</li>
+					`;
+
+					grouped[letter].forEach(c => {
+						const initials = c.name
+							.split(" ").map(x => x[0]).join("").substring(0, 2).toUpperCase();
+
+						const img =
+							`<img src="assets/images/users/avatar-3.jpg" class="avatar-xs rounded-circle">` ;
+
+						html += `
+							<li>
+								<div class="d-flex align-items-center">
+									<div class="flex-shrink-0 me-2">${img}</div>
+									<div class="flex-grow-1">
+										<p class="text-truncate mb-0 fs-14">${c.name}</p>
+									</div>
+								</div>
+							</li>`;
+					});
+				});
+
+				$("#contactList").html(html);
+			});
+		}
+
+		// Load on tab click
+		$('a[data-bs-toggle="tab"]').on("shown.bs.tab", function (e) {
+			if ($(e.target).attr("href") === "#contacts") {
+				loadContacts();
+			}
+		});
+
+
 
 
 
@@ -786,6 +930,14 @@
 			loadUserList();
 			startConnection();
 
+		});
+					window.addEventListener("beforeunload", function () {
+			if (connection && connection.connectionId) {
+				navigator.sendBeacon(
+					"/chat/remove-connection",
+					connection.connectionId
+				);
+			}
 		});
 
 	</script>

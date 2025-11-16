@@ -17,6 +17,8 @@ public partial class ChatMessage
 
     public DateTime SentAt { get; set; }
 
+    public bool IsRead { get; set; }
+
     public virtual ChatRoom? ChatRoom { get; set; }
 
     public virtual UserMaster FromUser { get; set; } = null!;
