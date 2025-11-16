@@ -31,6 +31,8 @@ namespace CFP.Provider.Provider
         #endregion
 
         #region Methods
+
+        #region PrivateMessage
         public void SaveConnection(string connectionId, SessionProviderModel sessionProviderModel)
         {
             try
@@ -99,10 +101,8 @@ namespace CFP.Provider.Provider
                 .OrderBy(x => x.ChatMessageId)
                 .ToList();
 
-            // Map to model
             var chatMessages = _mapper.Map<List<ChatMessageModel>>(chatData);
 
-            // Set IsOwnMessage for each message
             foreach (var msg in chatMessages)
             {
                 msg.isOwnMessage = msg.FromUserId == currentUserId;
@@ -114,33 +114,22 @@ namespace CFP.Provider.Provider
 
         public List<ChatUserListModel> GetChatUsers(int userId)
         {
-            // Step 1: Fetch all users with roles 2 or 3 except current user
             var users = unitOfWork.UserMaster.GetAll(u => u.UserMasterId != userId).ToList();
 
-            // Step 2: Fetch all messages involving current user
-            var messages = unitOfWork.ChatMessage.GetAll(m => m.FromUserId == userId || m.ToUserId == userId)
-                .ToList();
+            var messages = unitOfWork.ChatMessage.GetAll(m => m.FromUserId == userId || m.ToUserId == userId).ToList();
 
-            // Step 3: Fetch all active connections
-            var connections = unitOfWork.ChatConnection.GetAll(c => c.UserMasterId != userId)
-                .ToList();
-
-            // Step 4: Prepare the user list with last message, last message time, and online status
+            var connections = unitOfWork.ChatConnection.GetAll(c => c.UserMasterId != userId).ToList();
             var list = users.Select(user =>
             {
-                var lastMsg = messages
-                    .Where(m => (m.FromUserId == user.UserMasterId && m.ToUserId == userId) ||
-                                (m.ToUserId == user.UserMasterId && m.FromUserId == userId))
-                    .OrderByDescending(m => m.ChatMessageId)
-                    .FirstOrDefault();
+                var lastMsg = messages.Where(m => (m.FromUserId == user.UserMasterId && m.ToUserId == userId) ||
+                                (m.ToUserId == user.UserMasterId && m.FromUserId == userId)).OrderByDescending(m => m.ChatMessageId).FirstOrDefault();
 
-                // Check if user has any active connection
                 bool isOnline = connections.Any(c => c.UserMasterId == user.UserMasterId);
 
                 int unreadCount = messages.Where(m =>
-              m.FromUserId == user.UserMasterId &&     // message sent BY the other user
-              m.ToUserId == userId &&                 // message sent TO current user
-              m.IsRead == false                       // unread
+              m.FromUserId == user.UserMasterId &&
+              m.ToUserId == userId &&
+              m.IsRead == false
           ).Count();
                 return new ChatUserListModel
                 {
@@ -195,8 +184,73 @@ namespace CFP.Provider.Provider
                  {
                      ContactUserId = c.UserMasterId,
                      Name = c.FirstName + " " + c.LastName,
-                 }).OrderBy(x=>x.Name).ToList();
+                 }).OrderBy(x => x.Name).ToList();
         }
+        #endregion
+        #region RoomMessage
+        public List<ChatRoomModel> GetAllRooms()
+        {
+            return unitOfWork.ChatRoom
+                .GetAll(x => x.IsActive)
+                .Select(x => new ChatRoomModel
+                {
+                    ChatRoomId = x.ChatRoomId,
+                    RoomName = x.RoomName,
+                    CreatedOn = x.CreatedOn
+                }).ToList();
+        }
+
+        public int CreateRoom(string roomName,List<int> users, SessionProviderModel providerModel)
+        {
+            ChatRoom room = new ChatRoom
+            {
+                RoomName = roomName,
+                IsActive = true,
+            };
+            foreach (var uid in users)
+            {
+                room.ChatRoomMembers.Add(new ChatRoomMember
+                {
+                    UserMasterId=uid,
+                });
+            }
+            unitOfWork.ChatRoom.Insert(room, providerModel.UserId, providerModel.Ip);
+            unitOfWork.Save();
+
+            return room.ChatRoomId;
+        }
+
+        // ADD MEMBER
+        public void AddMemberToRoom(int roomId, int userId)
+        {
+            if (!unitOfWork.ChatRoomMember.Any(m => m.ChatRoomId == roomId && m.UserMasterId == userId))
+            {
+                ChatRoomMember cm = new ChatRoomMember
+                {
+                    ChatRoomId = roomId,
+                    UserMasterId = userId
+                };
+
+                unitOfWork.ChatRoomMember.Insert(cm);
+                unitOfWork.Save();
+            }
+        }
+
+        public List<UserMasterModel> GetRoomMembers(int roomId)
+        {
+            var members = (from m in unitOfWork.ChatRoomMember.GetAll(x => x.ChatRoomId == roomId)
+                           join u in unitOfWork.UserMaster.GetAll()
+                           on m.UserMasterId equals u.UserMasterId
+                           select new UserMasterModel
+                           {
+                               UserMasterId = u.UserMasterId,
+                               FullName = u.FirstName + " " + u.LastName
+                           }).ToList();
+
+            return members;
+        }
+
+        #endregion
 
         #endregion
     }

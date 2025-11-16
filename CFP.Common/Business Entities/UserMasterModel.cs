@@ -61,6 +61,7 @@ namespace CFP.Common.Business_Entities
         public string? UserCode { get; set; }
         public string? RoleName { get; set; }
         public DateTime? DateOfBirth { get; set; }
+        public string FullName { get; set; }
         public string CreatedOnString
         {
             get

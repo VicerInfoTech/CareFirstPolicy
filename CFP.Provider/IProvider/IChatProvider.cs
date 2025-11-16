@@ -10,6 +10,7 @@ namespace CFP.Provider.IProvider
 {
     public interface IChatProvider
     {
+        #region PrivateMessage
         void SaveConnection(string connectionId, SessionProviderModel sessionProviderModel);
 
         string GetConnectionId(int userId);
@@ -22,5 +23,15 @@ namespace CFP.Provider.IProvider
         void RemoveConnection(string connectionId,SessionProviderModel sessionProviderModel);
         void MarkMessagesRead(int currentUserId, int targetUserId);
         List<ContactUserDto> GetContacts(int loggedInUserId);
+        #endregion
+
+        #region RoomMessage
+        List<ChatRoomModel> GetAllRooms();
+        int CreateRoom(string roomName, List<int> users, SessionProviderModel providerModel);
+        void AddMemberToRoom(int roomId, int userId);
+        List<UserMasterModel> GetRoomMembers(int roomId);
+        #endregion
+
+
     }
 }

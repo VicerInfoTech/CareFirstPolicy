@@ -1,4 +1,5 @@
 ﻿using CFP.Common.Business_Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CFP.Web.Models
 {
@@ -8,5 +9,7 @@ namespace CFP.Web.Models
         public List<ChatMessageModel> Messages { get; set; }
         public int SelectedUserId { get; set; }
         public int CurrentUserId { get; set; }
+        public string ConnectionId { get; set; }
+        public List<SelectListItem> SelectUserList { get; set; }
     }
 }

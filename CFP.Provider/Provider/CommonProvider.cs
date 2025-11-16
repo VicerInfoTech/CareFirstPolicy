@@ -140,6 +140,27 @@ namespace CFP.Provider.Provider
             return list;
         }
 
+        public List<DropDownModel> GetUserList()
+        {
+            List<DropDownModel> list = new List<DropDownModel>();
+            try
+            {
+
+
+                list = unitOfWork.UserMaster.GetAll(x => x.IsActive == true).Select(
+                                       x => new DropDownModel
+                                       {
+                                           Text = x.FirstName + " " + x.LastName,
+                                           Value = x.UserMasterId.ToString()
+                                       }).OrderBy(x => x.Text).ToList();
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "CommonProvider=>GetUserList");
+            }
+            return list;
+        }
+
 
 
         public List<MenuModel> GetMenuList(SessionProviderModel sessionProviderModel)

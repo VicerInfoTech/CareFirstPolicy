@@ -62,12 +62,12 @@
         "profile": "assets/images/users/avatar-7.jpg"
       }
     ],
-    "channels": [
-      { "id": 10, "name": "Landing Design", "members": 12, "messagecount": 7 },
-      { "id": 11, "name": "General", "members": 10 },
-      { "id": 12, "name": "Project Tasks", "members": 24,"messagecount": 2 },
-      { "id": 13, "name": "Meeting", "members": 8 },
-      { "id": 14, "name": "Reporting", "members": 16 }
-    ]
+    //"channels": [
+    //  { "id": 10, "name": "Landing Design", "members": 12, "messagecount": 7 },
+    //  { "id": 11, "name": "General", "members": 10 },
+    //  { "id": 12, "name": "Project Tasks", "members": 24,"messagecount": 2 },
+    //  { "id": 13, "name": "Meeting", "members": 8 },
+    //  { "id": 14, "name": "Reporting", "members": 16 }
+    //]
   }
 ]

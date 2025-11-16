@@ -21,47 +21,49 @@ namespace CFP.Web.Controllers
             _chatProvider = chatProvider;
         }
         #endregion
+
+        #region PrivateMessage
         public IActionResult Index()
         {
             ChatViewModel viewModel = new ChatViewModel();
             viewModel.CurrentUserId = _sessionManager.UserId;
+            viewModel.SelectUserList = GetSelectUserList();
             return View(viewModel);
         }
         [HttpGet]
         public IActionResult GetChatUsers()
         {
-            var userId = _sessionManager.UserId;
-            var users = _chatProvider.GetChatUsers(userId);
+            var users = _chatProvider.GetChatUsers(_sessionManager.UserId);
             return Json(users);
         }
         [HttpGet]
         public IActionResult GetMessages(int targetUserId)
         {
-            var userId = _sessionManager.UserId;
-            var messages = _chatProvider.GetMessages(userId, targetUserId);
-            // mark as read (server side)
-            _chatProvider.MarkMessagesRead(userId, targetUserId);
+            var messages = _chatProvider.GetMessages(_sessionManager.UserId, targetUserId);
+            _chatProvider.MarkMessagesRead(_sessionManager.UserId, targetUserId);
             return Json(messages);
         }
 
         [HttpGet]
         public IActionResult MarkMessagesRead(int targetUserId)
         {
-            var userId = _sessionManager.UserId;
-
-            _chatProvider.MarkMessagesRead(userId, targetUserId);
+            _chatProvider.MarkMessagesRead(_sessionManager.UserId, targetUserId);
 
             return Json(new { success = true });
         }
         [HttpPost]
-        public IActionResult RemoveConnection([FromBody] string connectionId)
+        [Route("Chat/RemoveConnection")]
+        public IActionResult RemoveConnection([FromBody] ChatViewModel model)
         {
-            if (!string.IsNullOrEmpty(connectionId))
+            if (!string.IsNullOrEmpty(model.ConnectionId))
             {
-                _chatProvider.RemoveConnection(connectionId, new SessionProviderModel());
+                _chatProvider.RemoveConnection(model.ConnectionId, new SessionProviderModel());
             }
-            return Json("");
+
+            return Json(true);
         }
+
+        
         [HttpGet]
         public IActionResult GetContacts()
         {
@@ -69,6 +71,40 @@ namespace CFP.Web.Controllers
 
             return Json(contacts);
         }
+        #endregion
+        #region RoomMessage
+        [HttpGet("/chat/getrooms")]
+        public IActionResult GetRooms()
+        {
+            return Json(_chatProvider.GetAllRooms());
+        }
 
+
+        [HttpPost("/chat/createroom")]
+        public IActionResult CreateRoom(string roomName, List<int> users)
+        {
+            if (string.IsNullOrWhiteSpace(roomName) || users == null || users.Count < 1)
+            {
+                return Json(new { success = false, message = "Room name and at least 1 user required" });
+            }
+
+            var roomId = _chatProvider.CreateRoom(roomName, users, GetSessionProviderParameters());
+
+            return Json(new { success = true, roomId });
+        }
+
+        [HttpPost]
+        public IActionResult AddMember(int roomId, int userId)
+        {
+            _chatProvider.AddMemberToRoom(roomId, userId);
+            return Json(new { success = true });
+        }
+        [HttpGet]
+        public IActionResult GetRoomMembers(int roomId)
+        {
+            var members = _chatProvider.GetRoomMembers(roomId);
+            return Json(members);
+        }
+        #endregion
     }
 }
