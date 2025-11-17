@@ -68,7 +68,7 @@ CFP.Agent = new function () {
                     }
 
                 ],
-                order: [[0, "DESC"]],
+                order: [[0, "ASC"]],
             });
     }
 

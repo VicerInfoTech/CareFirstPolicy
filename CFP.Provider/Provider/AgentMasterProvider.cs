@@ -47,9 +47,9 @@ namespace CFP.Provider.Provider
                         Email = x.Email,
                         UserMasterId = x.UserMasterId,
                         EncId = _commonProvider.Protect(x.AgentMasterId),
-                        AgentMasterId=x.AgentMasterId,
-                        RoleName=AppCommon.GetEnumDisplayName((Enumeration.Role)x.UserMaster.RoleId)
-                    }).OrderByDescending(x=>x.AgentMasterId).ToList();
+                        AgentMasterId = x.AgentMasterId,
+                        RoleName = AppCommon.GetEnumDisplayName((Enumeration.Role)x.UserMaster.RoleId)
+                    }).OrderBy(x => x.FirstName).ToList();
 
                 list.recordsTotal = dataList.Count();
 
@@ -116,7 +116,7 @@ namespace CFP.Provider.Provider
                 var _temp = unitOfWork.AgentMaster.Get(x => x.AgentMasterId == model.AgentMasterId);
 
                 //string code = _commonProvider.GetUserCode();
-                model.ContactNumber = AppCommon.RemoveExtra(model.ContactNumber);
+                model.ContactNumber = AppCommon.RemoveExtra(model.ContactNumber ?? "");
                 var agent = _mapper.Map<AgentMasterModel, AgentMaster>(model, _temp);
                 agent.IsActive = true;
                 if (_temp == null)
@@ -238,7 +238,7 @@ namespace CFP.Provider.Provider
             try
             {
                 userData.UserMasterId = _commonProvider.UnProtect(userData.EncId);
-                var validate = ValidatePassword(userData,false);
+                var validate = ValidatePassword(userData, false);
                 if (validate.IsSuccess)
                 {
                     var user = unitOfWork.UserMaster.Get(x => x.UserMasterId == userData.UserMasterId);
@@ -247,8 +247,9 @@ namespace CFP.Provider.Provider
                         user.UserPassword = PasswordHash.CreateHash(userData.Password);
                         unitOfWork.UserMaster.Update(user, user.UserMasterId, IP);
                         unitOfWork.Save();
-                        model.Message = "Password reset successfully.";
+                        model.Message = "Password updated successfully.";
                         model.IsSuccess = true;
+                        RemoveLoginFailure(userData.Username);
                     }
                     else
                         model.Message = "User record not found";
@@ -262,6 +263,22 @@ namespace CFP.Provider.Provider
                 model.Message = AppCommon.ErrorMessage;
             }
             return model;
+        }
+        private void RemoveLoginFailure(string userName)
+        {
+            try
+            {
+                var loginFailHistory = unitOfWork.LoginFailure.GetAll(x => x.Username == userName);
+                if (loginFailHistory != null)
+                {
+                    unitOfWork.LoginFailure.DeleteAll(loginFailHistory);
+                    unitOfWork.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "AgentMasterProvider => RemoveLoginFailure");
+            }
         }
 
         public ResponseModel ValidatePassword(ResetPasswordModel userData, bool isChangePwd)
