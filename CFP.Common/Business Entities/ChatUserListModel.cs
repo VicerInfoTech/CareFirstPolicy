@@ -22,6 +22,7 @@ namespace CFP.Common.Business_Entities
         public int ContactUserId { get; set; }
         public string Name { get; set; }
         public string ProfileImage { get; set; }
+        public bool IsOnline { get; set; }
     }
 
 

@@ -134,7 +134,7 @@ namespace CFP.Provider.Provider
                 return new ChatUserListModel
                 {
                     UserId = user.UserMasterId,
-                    UserName = user.FirstName,
+                    UserName = user.FirstName + " " + user.LastName,
                     LastMessage = lastMsg?.Message ?? "",
                     LastMessageTime = lastMsg?.SentAt,
                     IsOnline = isOnline,
@@ -184,6 +184,7 @@ namespace CFP.Provider.Provider
                  {
                      ContactUserId = c.UserMasterId,
                      Name = c.FirstName + " " + c.LastName,
+                     IsOnline=c.ChatConnections.Any()
                  }).OrderBy(x => x.Name).ToList();
         }
         #endregion

@@ -40,7 +40,7 @@
 
     this.IncreaseUnreadCount = function (userId) {
         debugger;
-        const row = $(`#userList .chat-user-item`).filter(function () {
+        const row = $(`#chatUserList .chat-user-item`).filter(function () {
             return $(this).attr("onclick") && $(this).attr("onclick").indexOf(`CFP.ChatClient.OpenChat(${userId},`) !== -1;
         });
 
@@ -56,7 +56,7 @@
     }
 
     this.UpdateLastMessageInSidebar = function (msg) {
-        const row = $(`#userList .chat-user-item`).filter(function () {
+        const row = $(`#chatUserList .chat-user-item`).filter(function () {
             return $(this).attr("onclick") && $(this).attr("onclick").indexOf(`CFP.ChatClient.OpenChat(${msg.fromUserId},`) !== -1;
         });
 
@@ -78,7 +78,7 @@
 
 							 <!-- Theme Avatar + Status -->
 					<div class="chat-user-img me-2 ${u.isOnline ? "online" : ""}">
-							<img src="/assets/images/users/avatar-1.jpg"
+							<img src="/assets/images/users/user-dummy-img.jpg"
 								 class="rounded-circle avatar-xs" />
 							<span class="user-status"></span>
 						</div>
@@ -110,7 +110,7 @@
                 }
             });
 
-            $("#userList").html(html);
+            $("#chatUserList").html(html);
             // If there is at least one user, load their messages
             if (users.length > 0) {
                 CFP.ChatClient.LoadMessages();
@@ -146,7 +146,7 @@
     }
 
     this.RemoveUnreadBadge = function (userId) {
-        const row = $(`#userList .chat-user-item`).filter(function () {
+        const row = $(`#chatUserList .chat-user-item`).filter(function () {
             return $(this).attr("onclick")?.includes(`CFP.ChatClient.OpenChat(${userId},`);
         });
 
@@ -178,7 +178,7 @@
 				<li>
 					<div class="conversation-list">
 						<div class="chat-avatar">
-							<img src="/assets/images/users/avatar-1.jpg" class="rounded-circle avatar-xs" />
+							<img src="/assets/images/users/user-dummy-img.jpg" class="rounded-circle avatar-xs" />
 						</div>
 						<div class="user-chat-content">
 							<div class="ctext-wrap">
@@ -224,10 +224,9 @@
 
     this.LoadContacts = function () {
         $.get("/chat/getcontacts", function (contacts) {
-
             let html = "";
             const grouped = {};
-            debugger;
+            
             contacts.forEach(c => {
                 const letter = c.name[0].toUpperCase();
                 if (!grouped[letter]) grouped[letter] = [];
@@ -246,10 +245,15 @@
                         .split(" ").map(x => x[0]).join("").substring(0, 2).toUpperCase();
 
                     const img =
-                        `<img src="assets/images/users/avatar-3.jpg" class="avatar-xs rounded-circle">`;
+                        `<div class="chat-user-img me-2 ${c.isOnline ? "online" : ""}">
+							<img src="/assets/images/users/user-dummy-img.jpg"
+								 class="rounded-circle avatar-xs" />
+							<span class="user-status"></span>
+						</div>`
+                        //   `<img src="assets/images/users/user-dummy-img.jpg" class="avatar-xs rounded-circle">`;
 
                     html += `
-							<li>
+							<li onclick="CFP.ChatClient.OpenChat(${c.contactUserId}, '${c.name}', ${c.isOnline})">
 								<div class="d-flex align-items-center">
 									<div class="flex-shrink-0 me-2">${img}</div>
 									<div class="flex-grow-1">

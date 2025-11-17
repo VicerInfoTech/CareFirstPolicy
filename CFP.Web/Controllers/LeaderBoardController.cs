@@ -34,7 +34,7 @@ namespace CFP.Web.Controllers
         }
         public JsonResult LeaderBoard()
         {
-            return Json(_commonProvider.GetLeaderBoard().Select(x => new { x.Text, x.ExtraValue }).OrderByDescending(x => x.ExtraValue).Take(8).ToList());
+            return Json(_commonProvider.GetLeaderBoard().Select(x => new { x.Text, x.ExtraValue }).OrderByDescending(x => x.ExtraValue).ToList());
         }
         [HttpGet]
         public IActionResult _LeaderBoard()
