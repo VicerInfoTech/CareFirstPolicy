@@ -62,18 +62,7 @@ namespace CFP.Provider.Provider
                      .FirstOrDefault();
         }
 
-        //public void SaveMessage(int toUserId, string msg, SessionProviderModel sessionProviderModel)
-        //{
-        //    try
-        //    {
-
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
+      
         public long SaveMessage(int fromUserId, int toUserId, string message)
         {
             var msg = new ChatMessage
@@ -81,7 +70,7 @@ namespace CFP.Provider.Provider
                 FromUserId = fromUserId,
                 ToUserId = toUserId,
                 Message = message,
-                SentAt = DateTime.Now
+                SentAt = DateTime.UtcNow
             };
 
             unitOfWork.ChatMessage.Insert(msg);
@@ -189,19 +178,22 @@ namespace CFP.Provider.Provider
         }
         #endregion
         #region RoomMessage
-        public List<ChatRoomModel> GetAllRooms()
+        public List<ChatRoomModel> GetAllRooms(SessionProviderModel sessionProviderModel)
         {
             return unitOfWork.ChatRoom
-                .GetAll(x => x.IsActive)
+                .GetAll(x => x.IsActive &&
+                             x.ChatRoomMembers.Any(u => u.UserMasterId == sessionProviderModel.UserId))
                 .Select(x => new ChatRoomModel
                 {
                     ChatRoomId = x.ChatRoomId,
                     RoomName = x.RoomName,
                     CreatedOn = x.CreatedOn
-                }).ToList();
+                })
+                .ToList();
         }
 
-        public int CreateRoom(string roomName,List<int> users, SessionProviderModel providerModel)
+
+        public int CreateRoom(string roomName, List<int> users, SessionProviderModel providerModel)
         {
             ChatRoom room = new ChatRoom
             {
@@ -212,7 +204,7 @@ namespace CFP.Provider.Provider
             {
                 room.ChatRoomMembers.Add(new ChatRoomMember
                 {
-                    UserMasterId=uid,
+                    UserMasterId = uid,
                 });
             }
             unitOfWork.ChatRoom.Insert(room, providerModel.UserId, providerModel.Ip);
@@ -249,6 +241,44 @@ namespace CFP.Provider.Provider
                            }).ToList();
 
             return members;
+        }
+        public ChatRoomModel GetRoomById(int roomId)
+        {
+            ChatRoomModel roomModel = new ChatRoomModel();
+            var charRoom = unitOfWork.ChatRoom.GetAll(x => x.ChatRoomId == roomId).FirstOrDefault();
+            roomModel = _mapper.Map<ChatRoomModel>(charRoom);
+            roomModel.MemberCount = charRoom.ChatRoomMembers.Count();
+            return roomModel;
+        }
+        public List<ChatMessageModel> GetRoomMessages(int roomId)
+        {
+            List<ChatMessageModel> chatMessages = new List<ChatMessageModel>();
+            var roomMessage = unitOfWork.ChatMessage.GetAll(x => x.ChatRoomId == roomId)
+                .OrderBy(x => x.SentAt).ToList();
+            chatMessages = _mapper.Map<List<ChatMessageModel>>(roomMessage);
+            foreach(var item in chatMessages)
+            {
+                item.SenderName = item.FromUser.FirstName + " " + item.FromUser.LastName;
+            }
+            return chatMessages;
+        }
+
+        public long SaveRoomMessage(ChatMessageModel model)
+        {
+            var entity = new ChatMessage
+            {
+                FromUserId = model.FromUserId,
+                ToUserId = null,                 // Room message → no direct user
+                ChatRoomId = model.ChatRoomId,   // Important
+                Message = model.Message,
+                SentAt = DateTime.UtcNow,
+                IsRead = false
+            };
+
+            unitOfWork.ChatMessage.Insert(entity);
+            unitOfWork.Save();
+
+            return entity.ChatMessageId;
         }
 
         #endregion

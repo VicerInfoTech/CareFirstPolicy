@@ -1,7 +1,10 @@
 ﻿using CFP.Common.Business_Entities;
 using CFP.Common.Utility;
 using CFP.Provider.IProvider;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CFP.Patient.Controllers
 {
@@ -52,6 +55,19 @@ namespace CFP.Patient.Controllers
                         _sessionManager.FirstName = response.FirstName;
                         _sessionManager.LastName = response.LastName;
                         _sessionManager.FullName = response.FullName;
+
+
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, response.UserId.ToString()),
+                            new Claim(ClaimTypes.Name, response.FullName),
+                            new Claim(ClaimTypes.Role, response.RoleId.ToString())
+                        };
+                        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var principal = new ClaimsPrincipal(identity);
+
+                        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
                         return RedirectToAction("Index", "Dashboard");
                     }
                 }

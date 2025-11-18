@@ -26,10 +26,14 @@ namespace CFP.Provider.IProvider
         #endregion
 
         #region RoomMessage
-        List<ChatRoomModel> GetAllRooms();
+        List<ChatRoomModel> GetAllRooms(SessionProviderModel sessionProviderModel);
         int CreateRoom(string roomName, List<int> users, SessionProviderModel providerModel);
         void AddMemberToRoom(int roomId, int userId);
         List<UserMasterModel> GetRoomMembers(int roomId);
+        ChatRoomModel GetRoomById(int roomId);
+        List<ChatMessageModel> GetRoomMessages(int roomId);
+        long SaveRoomMessage(ChatMessageModel model);
+
         #endregion
 
 

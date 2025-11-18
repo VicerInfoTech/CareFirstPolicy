@@ -76,7 +76,7 @@ namespace CFP.Web.Controllers
         [HttpGet("/chat/getrooms")]
         public IActionResult GetRooms()
         {
-            return Json(_chatProvider.GetAllRooms());
+            return Json(_chatProvider.GetAllRooms(GetSessionProviderParameters()));
         }
 
 
@@ -105,6 +105,19 @@ namespace CFP.Web.Controllers
             var members = _chatProvider.GetRoomMembers(roomId);
             return Json(members);
         }
+
+        [HttpGet("/chat/getroom")]
+        public IActionResult GetRoom(int roomId)
+        {
+            return Json(_chatProvider.GetRoomById(roomId));
+        }
+        [HttpGet("/chat/getroommessages")]
+        public IActionResult GetRoomMessages(int roomId)
+        {
+            var messages = _chatProvider.GetRoomMessages(roomId);
+            return Json(messages);
+        }
+
         #endregion
     }
 }

@@ -22,6 +22,7 @@ namespace CFP.Common.Business_Entities
         public bool isOwnMessage { get; set; }
 
         public bool IsRead { get; set; }
+        public string SenderName { get; set; }
         public virtual UserMasterModel FromUser { get; set; } = null!;
 
         public virtual UserMasterModel? ToUser { get; set; }

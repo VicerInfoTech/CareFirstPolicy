@@ -3,17 +3,22 @@
     let selectedUserId = null;
     let connection = null;
     let currentUserId = parseInt($("#currentUserId").val());
-
+    currentChatType = null;   // IMPORTANT
+    currentRoomId = null;          // Reset room
 
     //---------------------------------------------------------
     // Start SignalR Connection
     //---------------------------------------------------------
     this.StartConnection = function () {
+        debugger;
 
         connection = new signalR.HubConnectionBuilder()
-            .withUrl("/chathub")
+            .withUrl("/chathub", {
+                withCredentials: true
+            })
             .withAutomaticReconnect()
             .build();
+
 
         // Receive message
         connection.on("ReceiveMessage", function (msg) {
@@ -31,6 +36,24 @@
             }
 
             CFP.ChatClient.UpdateLastMessageInSidebar(msg);
+        });
+
+        connection.on("ReceiveRoomMessage", function (message) {
+
+            let isOwn = (message.fromUserId === currentUserId);
+
+            // Only show if user is inside this room right now
+            if (currentChatType === "room" && message.chatRoomId === currentRoomId) {
+                $("#users-conversation").append(
+                    CFP.ChatClient.BuildMessageHtml(message.message, message.sentAt, isOwn)
+                );
+                CFP.ChatClient.ScrollBottom();
+            }
+
+            // Optional: If user is NOT in room, increase unread badge
+            else {
+                CFP.ChatClient.IncreaseRoomBadge(message.chatRoomId);
+            }
         });
 
         connection.start()
@@ -102,10 +125,13 @@
                 if (index === 0) {
                     selectedUserId = u.userId;
                     $(".username").text(u.userName);
+                   
                     if (u.isOnline) {
                         $(".user-own-img").addClass("online");
+                        $(".member-count").text("Online");   // Show Online in member-count
                     } else {
                         $(".user-own-img").removeClass("online");
+                        $(".member-count").text("Offline");  // Show Offline
                     }
                 }
             });
@@ -119,14 +145,18 @@
     }
 
     this.OpenChat = function (userId, name, isOnline) {
+        currentChatType = "private";   // IMPORTANT
+        currentRoomId = null;          // Reset room
         selectedUserId = userId;
         $(".username").text(name);
         CFP.ChatClient.LoadMessages();
         CFP.ChatClient.RemoveUnreadBadge(userId);
         if (isOnline) {
             $(".user-own-img").addClass("online");
+            $(".member-count").text("Online");   // Show Online in member-count
         } else {
             $(".user-own-img").removeClass("online");
+            $(".member-count").text("Offline");  // Show Offline
         }
     }
 
@@ -199,20 +229,26 @@
     //    div.scrollTop = div.scrollHeight;
     //}
     this.SendPrivateMessage = function () {
-        let text = $("#chatInput").val().trim();
-        if (!text || !selectedUserId) return;
+        debugger;
+        if (currentChatType === "room") {
+            CFP.ChatClient.SendRoomMessage();
+        } else {
 
-        CFP.ChatClient.AppendMessageToChat({
-            fromUserId: currentUserId,
-            toUserId: selectedUserId,
-            message: text,
-            sentAt: new Date(),
-            isOwnMessage: true
-        });
+            let text = $("#chatInput").val().trim();
+            if (!text || !selectedUserId) return;
 
-        CFP.ChatClient.ScrollBottom();
-        connection.invoke("SendMessage", selectedUserId, text);
-        $("#chatInput").val("");
+            CFP.ChatClient.AppendMessageToChat({
+                fromUserId: currentUserId,
+                toUserId: selectedUserId,
+                message: text,
+                sentAt: new Date(),
+                isOwnMessage: true
+            });
+
+            CFP.ChatClient.ScrollBottom();
+            connection.invoke("SendMessage", selectedUserId, text);
+            $("#chatInput").val("");
+        }
     }
 
     this.ScrollBottom = function () {
@@ -269,7 +305,7 @@
     }
 
 
-  
+
     this.LoadRooms = function () {
         $.get("/chat/getrooms", function (rooms) {
 
@@ -278,7 +314,7 @@
             rooms.forEach(r => {
 
                 html += `
-                <li id="channel-${r.chatRoomId}" data-name="channel" class="channel-item">
+                <li id="channel-${r.chatRoomId}" data-name="channel" data-roomid="${r.chatRoomId}"  class="channel-item">
                     <a href="javascript:void(0);">
                         <div class="d-flex align-items-center">
                             
@@ -338,9 +374,128 @@
 
 
     $(document).on("click", ".channel-item", function () {
+        debugger;
         let roomId = $(this).data("roomid");
         CFP.ChatClient.OpenRoom(roomId);
     });
+
+    this.SendRoomMessage = function () {
+
+        let msg = $("#chatInput").val().trim();
+        if (!msg || !currentRoomId) return;
+
+        let payload = {
+            chatRoomId: currentRoomId,
+            message: msg,
+            fromUserId: currentUserId
+        };
+
+        // Send to Hub
+        connection.invoke("SendRoomMessage", payload);
+
+        // Clear input
+        $("#chatInput").val("");
+
+        // Show own message instantly
+        CFP.ChatClient.AppendMessageToChat({
+            fromUserId: currentUserId,
+            message: msg,
+            sentAt: new Date(),
+            isOwnMessage: true
+        });
+
+        CFP.ChatClient.ScrollBottom();
+    };
+    this.OpenRoom = function (roomId) {
+        debugger
+        currentChatType = "room";     // NEW FLAG
+        currentRoomId = roomId;       // SET SELECTED ROOM
+        selectedUserId = null;  
+        // Highlight selected room
+        $(".channel-item").removeClass("active");
+        $(`.channel-item[data-roomid='${roomId}']`).addClass("active");
+
+        // Load room messages
+        $.get("/chat/getroommessages?roomId=" + roomId, function (messages) {
+
+            let html = "";
+
+            messages.forEach(m => {
+                debugger;
+                let isOwn = (m.fromUserId === currentUserId);
+
+                html += CFP.ChatClient.BuildMessageHtml(
+                    m.message,
+                    m.sentAt,
+                    isOwn,
+                    m.senderName   
+                );
+            });
+
+            $("#users-conversation").html(html);
+            CFP.ChatClient.ScrollBottom();
+        });
+        debugger;
+        // Load room name in header
+        $.get("/chat/getroom?roomId=" + roomId, function (room) {
+            debugger;
+            $(".username").text(room.roomName);
+            $(".member-count").text("Members: " + room.memberCount);
+        });
+
+    };
+
+
+    this.BuildMessageHtml = function (message, sentAt, isOwn, senderName) {
+
+        let time = moment(sentAt).format("hh:mm A");
+
+        if (isOwn) {
+            return `
+        <li class="right">
+            <div class="conversation-list">
+                <div class="user-chat-content">
+                 <small class="text-muted d-block text-end">${senderName}</small>
+                    <div class="ctext-wrap">
+                        <div class="ctext-wrap-content">
+                            ${message}
+                        </div>
+                    </div>
+
+                    <div><small class="text-muted">${time}</small></div>
+
+                </div>
+            </div>
+        </li>`;
+        }
+        else {
+            return `
+        <li>
+            <div class="conversation-list">
+
+                <div class="chat-avatar">
+                    <img src="/assets/images/users/avatar-1.jpg" class="rounded-circle avatar-xs" />
+                </div>
+
+                <div class="user-chat-content">
+                  <small class="text-muted d-block">${senderName}</small>
+                    <div class="ctext-wrap">
+                        <div class="ctext-wrap-content">
+                            ${message}
+                        </div>
+                    </div>
+
+                    <div><small class="text-muted">${time}</small></div>
+
+                </div>
+
+            </div>
+        </li>`;
+        }
+    };
+
+
+
 
     window.addEventListener("beforeunload", function () {
         if (connection && connection.connectionId) {

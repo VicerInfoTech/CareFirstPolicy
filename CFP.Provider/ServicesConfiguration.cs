@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CFP.Common.Utility;
 using CFP.Provider.IProvider;
 using CFP.Provider.Mapping;
 using CFP.Provider.Provider;
@@ -25,7 +26,9 @@ namespace CFP.Provider
             services.AddTransient<IAgentMasterProvider, AgentMasterProvider>();
             services.AddTransient<IDealProvider, DealProvider>();
             services.AddTransient<IChatProvider, ChatProvider>();
-           
+
+            AppCommon.APP_URL = configuration.GetSection("AppCommonSettings:APP_URL").Value;
+
         }
 
     }

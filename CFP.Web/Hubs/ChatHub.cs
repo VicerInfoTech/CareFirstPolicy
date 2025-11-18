@@ -2,12 +2,15 @@
 using CFP.Common.Common_Entities;
 using CFP.Common.Utility;
 using CFP.Provider.IProvider;
+using CFP.Web.Filter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using OfficeOpenXml.FormulaParsing.Utilities;
 
 namespace CFP.Web.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         #region Variables
@@ -40,14 +43,47 @@ namespace CFP.Web.Hubs
         }
         public override async Task OnConnectedAsync()
         {
-            _chatProvider.SaveConnection(Context.ConnectionId, GetSessionProviderParameters());
+            try
+            {
+                // Block unauthenticated connections
+                if (Context.User?.Identity == null || !Context.User.Identity.IsAuthenticated)
+                {
+                    Context.Abort();
+                    return;
+                }
+                // Validate internal session
+                var session = GetSessionProviderParameters();
+                if (session == null || session.UserId == 0)
+                {
+                    Context.Abort();
+                    return;
+                }
+                _chatProvider.SaveConnection(Context.ConnectionId, session);
+            }
+            catch
+            {
+                Context.Abort();
+                return;
+            }
+
             await base.OnConnectedAsync();
         }
 
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            _chatProvider.RemoveConnection(Context.ConnectionId, GetSessionProviderParameters());
+            try
+            {
+                var session = GetSessionProviderParameters();
+                if (session != null)
+                {
+                    _chatProvider.RemoveConnection(Context.ConnectionId, session);
+                }
+            }
+            catch
+            {
+                // ignore disconnect errors
+            }
 
             await base.OnDisconnectedAsync(exception);
         }
@@ -113,5 +149,20 @@ namespace CFP.Web.Hubs
             _chatProvider.MarkMessagesRead(session.UserId, targetUserId);
             return Task.FromResult(msgs);
         }
+
+        public async Task SendRoomMessage(ChatMessageModel model)
+        {
+            var messageId = _chatProvider.SaveRoomMessage(model);
+
+            await Clients.Group(model.ChatRoomId.ToString())
+                .SendAsync("ReceiveRoomMessage", new
+                {
+                    model.Message,
+                    model.ChatRoomId,
+                    model.FromUserId,
+                    SentAt = DateTime.UtcNow
+                });
+        }
+
     }
 }

@@ -15,7 +15,7 @@ namespace CFP.Common.Utility
         public static int CommonUserId = 1;
         public static string IP = "AUTO";
         public static string ErrorMessage = "Something Went Wrong. Please Contact Administrator!";
-        public static string ApplicationTitle = "Care First Policy";
+        public static string ApplicationTitle = "Think Insurance First";
         public static string Protection = "CFP";
         public static string SessionName = "CFP.Session";
         public static string ConnectionString = "";
@@ -34,7 +34,7 @@ namespace CFP.Common.Utility
         private static byte[] _salt = Encoding.ASCII.GetBytes("o6806642kbM7c5");
         private static string _encSecret = "CFP";
         public static string EmailMessage = @"";
-        public static string EmailFooterName = "Care First Policy";
+        public static string EmailFooterName = "Think Insurance First";
         public static string ErrorTempKeyName = "Temp_Error";
         public static string SuccessTempKeyName = "Temp_Success";
         #endregion

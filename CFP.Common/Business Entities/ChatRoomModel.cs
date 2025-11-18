@@ -23,7 +23,7 @@ namespace CFP.Common.Business_Entities
         public DateTime? UpdatedOn { get; set; }
 
         public string Ip { get; set; } = null!;
-
+        public int MemberCount { get; set; }
         public virtual ICollection<ChatMessageModel> ChatMessages { get; set; } = new List<ChatMessageModel>();
 
 
