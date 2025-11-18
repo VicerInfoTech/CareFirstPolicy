@@ -10,7 +10,6 @@
     // Start SignalR Connection
     //---------------------------------------------------------
     this.StartConnection = function () {
-        debugger;
 
         connection = new signalR.HubConnectionBuilder()
             .withUrl("/chathub", {
@@ -96,7 +95,7 @@
 
             users.forEach((u, index) => {
                 html += `
-							<li class="chat-user-item" onclick="CFP.ChatClient.OpenChat(${u.userId}, '${u.userName}', ${u.isOnline})"		>
+							<li class="chat-user-item" id="private${u.userId}" onclick="CFP.ChatClient.OpenChat(${u.userId}, '${u.userName}', ${u.isOnline})"		>
 						<a class="d-flex align-items-center" href="javascript:void(0)">
 
 							 <!-- Theme Avatar + Status -->
@@ -128,7 +127,7 @@
                    
                     if (u.isOnline) {
                         $(".user-own-img").addClass("online");
-                        $(".member-count").text("Online");   // Show Online in member-count
+                        $(".member-count").text("Online");   // Show Online in member-count                        
                     } else {
                         $(".user-own-img").removeClass("online");
                         $(".member-count").text("Offline");  // Show Offline
@@ -137,6 +136,7 @@
             });
 
             $("#chatUserList").html(html);
+            $("#private" + selectedUserId).addClass("active");
             // If there is at least one user, load their messages
             if (users.length > 0) {
                 CFP.ChatClient.LoadMessages();
@@ -151,6 +151,9 @@
         $(".username").text(name);
         CFP.ChatClient.LoadMessages();
         CFP.ChatClient.RemoveUnreadBadge(userId);
+        $(".chat-user-item").removeClass("active");
+        $(".channel-item").removeClass("active");
+            $("#private" + userId).addClass("active");
         if (isOnline) {
             $(".user-own-img").addClass("online");
             $(".member-count").text("Online");   // Show Online in member-count
@@ -186,42 +189,61 @@
 
     this.AppendMessageToChat = function (msg) {
 
-        let time = new Date(msg.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+        const msgDate = new Date(msg.sentAt);
+        const now = new Date();
 
+        // Format time
+        let time = msgDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+
+        // Check if message is today or yesterday
+        let dateLabel = "";
+        const isToday = msgDate.toDateString() === now.toDateString();
+        const yesterday = new Date(now);
+        yesterday.setDate(now.getDate() - 1);
+        const isYesterday = msgDate.toDateString() === yesterday.toDateString();
+
+        if (isToday) {
+            dateLabel = "Today";
+        } else if (isYesterday) {
+            dateLabel = "Yesterday";
+        } else {
+            dateLabel = msgDate.toLocaleDateString(); // fallback to full date
+        }
 
         let html = "";
 
         if (msg.isOwnMessage) {
             html = `
-				<li class="right">
-					<div class="conversation-list">
-						<div class="user-chat-content">
-							<div class="ctext-wrap">
-								<div class="ctext-wrap-content">${msg.message}</div>
-							</div>
-							<div><small class="text-muted">${time}</small></div>
+			<li class="right">
+				<div class="conversation-list">
+					<div class="user-chat-content">
+						<div class="ctext-wrap">
+							<div class="ctext-wrap-content">${msg.message}</div>
 						</div>
+						<small class="text-muted">${dateLabel}, ${time}</small>
 					</div>
-				</li>`;
+				</div>
+			</li>`;
         } else {
             html = `
-				<li>
-					<div class="conversation-list">
-						<div class="chat-avatar">
-							<img src="/assets/images/users/user-dummy-img.jpg" class="rounded-circle avatar-xs" />
-						</div>
-						<div class="user-chat-content">
-							<div class="ctext-wrap">
-								<div class="ctext-wrap-content">${msg.message}</div>
-							</div>
-							<div><small class="text-muted">${time}</small></div>
-						</div>
+			<li>
+				<div class="conversation-list">
+					<div class="chat-avatar">
+						<img src="/assets/images/users/user-dummy-img.jpg" class="rounded-circle avatar-xs" />
 					</div>
-				</li>`;
+					<div class="user-chat-content">
+						<div class="ctext-wrap">
+							<div class="ctext-wrap-content">${msg.message}</div>
+						</div>
+						<small class="text-muted ms-1">${dateLabel}, ${time}</small>
+					</div>
+				</div>
+			</li>`;
         }
 
         $("#users-conversation").append(html);
     }
+
 
 
     //this.ScrollBottom = function () {
@@ -412,6 +434,7 @@
         currentRoomId = roomId;       // SET SELECTED ROOM
         selectedUserId = null;  
         // Highlight selected room
+        $(".chat-user-item").removeClass("active");
         $(".channel-item").removeClass("active");
         $(`.channel-item[data-roomid='${roomId}']`).addClass("active");
 
@@ -421,7 +444,6 @@
             let html = "";
 
             messages.forEach(m => {
-                debugger;
                 let isOwn = (m.fromUserId === currentUserId);
 
                 html += CFP.ChatClient.BuildMessageHtml(
@@ -448,51 +470,62 @@
 
     this.BuildMessageHtml = function (message, sentAt, isOwn, senderName) {
 
-        let time = moment(sentAt).format("hh:mm A");
+        const msgMoment = moment(sentAt);
+        const now = moment();
+
+        // Format time
+        let time = msgMoment.format("hh:mm A");
+
+        // Determine date label
+        let dateLabel = "";
+        if (msgMoment.isSame(now, 'day')) {
+            dateLabel = "Today";
+        } else if (msgMoment.isSame(moment().subtract(1, 'days'), 'day')) {
+            dateLabel = "Yesterday";
+        } else {
+            dateLabel = msgMoment.format("MMM D, YYYY"); // e.g., Nov 18, 2025
+        }
 
         if (isOwn) {
             return `
-        <li class="right">
-            <div class="conversation-list">
-                <div class="user-chat-content">
-                 <small class="text-muted d-block text-end">${senderName}</small>
-                    <div class="ctext-wrap">
-                        <div class="ctext-wrap-content">
-                            ${message}
-                        </div>
-                    </div>
+     <li class="right">
+         <div class="conversation-list">
+             <div class="user-chat-content">                 
+                 <div class="ctext-wrap">
+                     <div class="ctext-wrap-content">
+                         ${message}
+                     </div>
+                 </div>
 
-                    <div><small class="text-muted">${time}</small></div>
+                 <div><small class="text-muted">${dateLabel}, ${time}</small></div>
 
-                </div>
-            </div>
-        </li>`;
-        }
-        else {
+             </div>
+         </div>
+     </li>`;
+        } else {
             return `
-        <li>
-            <div class="conversation-list">
+     <li>
+         <div class="conversation-list">
 
-                <div class="chat-avatar">
-                    <img src="/assets/images/users/avatar-1.jpg" class="rounded-circle avatar-xs" />
-                </div>
+             <div class="chat-avatar">
+                 <img src="/assets/images/users/user-dummy-img.jpg" class="rounded-circle avatar-xs" />
+             </div>
 
-                <div class="user-chat-content">
-                  <small class="text-muted d-block">${senderName}</small>
-                    <div class="ctext-wrap">
-                        <div class="ctext-wrap-content">
-                            ${message}
-                        </div>
-                    </div>
+             <div class="user-chat-content">
+                 <div class="text-muted d-block pb-1">${senderName} </div>
+                 <div class="ctext-wrap">
+                     <div class="ctext-wrap-content">
+                         ${message}
+                     </div>
+                 </div>
+                 <small class="text-muted ms-1">${dateLabel}, ${time}</small>
+             </div>
 
-                    <div><small class="text-muted">${time}</small></div>
-
-                </div>
-
-            </div>
-        </li>`;
+         </div>
+     </li>`;
         }
     };
+
 
 
 

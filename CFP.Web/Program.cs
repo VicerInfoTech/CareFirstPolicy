@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("CFPCors", policy =>
     {
         policy
-            .WithOrigins("https://localhost:44348")
+            .WithOrigins(AppCommon.APP_URL)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
