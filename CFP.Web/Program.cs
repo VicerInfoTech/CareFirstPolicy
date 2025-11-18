@@ -23,7 +23,16 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("cors", builder =>
+    {
+        builder.WithOrigins("https://thinkinsurancefirst.com")
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials();
+    });
+});
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<ISessionManager, SessionManager>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
@@ -43,6 +52,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors("cors");
 
 app.UseAuthorization();
 app.UseSession();
