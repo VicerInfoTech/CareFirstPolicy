@@ -123,7 +123,7 @@
 					</li>`;
                 if (index === 0) {
                     selectedUserId = u.userId;
-                    $(".username").text(u.userName);
+                    $(".username").text(u.userName);                   
                    
                     if (u.isOnline) {
                         $(".user-own-img").addClass("online");
@@ -153,7 +153,8 @@
         CFP.ChatClient.RemoveUnreadBadge(userId);
         $(".chat-user-item").removeClass("active");
         $(".channel-item").removeClass("active");
-            $("#private" + userId).addClass("active");
+        $("#private" + userId).addClass("active");
+        $(".user-own-img img").attr("src", "/assets/images/users/user-dummy-img.jpg");
         if (isOnline) {
             $(".user-own-img").addClass("online");
             $(".member-count").text("Online");   // Show Online in member-count
@@ -251,7 +252,6 @@
     //    div.scrollTop = div.scrollHeight;
     //}
     this.SendPrivateMessage = function () {
-        debugger;
         if (currentChatType === "room") {
             CFP.ChatClient.SendRoomMessage();
         } else {
@@ -396,7 +396,6 @@
 
 
     $(document).on("click", ".channel-item", function () {
-        debugger;
         let roomId = $(this).data("roomid");
         CFP.ChatClient.OpenRoom(roomId);
     });
@@ -429,7 +428,6 @@
         CFP.ChatClient.ScrollBottom();
     };
     this.OpenRoom = function (roomId) {
-        debugger
         currentChatType = "room";     // NEW FLAG
         currentRoomId = roomId;       // SET SELECTED ROOM
         selectedUserId = null;  
@@ -437,6 +435,7 @@
         $(".chat-user-item").removeClass("active");
         $(".channel-item").removeClass("active");
         $(`.channel-item[data-roomid='${roomId}']`).addClass("active");
+        $(".user-own-img img").attr("src", "/assets/images/users/multi-user.jpg");
 
         // Load room messages
         $.get("/chat/getroommessages?roomId=" + roomId, function (messages) {
