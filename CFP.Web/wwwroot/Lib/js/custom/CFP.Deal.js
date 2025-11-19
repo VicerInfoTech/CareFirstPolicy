@@ -94,7 +94,10 @@
                 $("#common-lg-dialogContent").html(data);
                 //$(".select2").select2();
                 $.validator.unobtrusive.parse($("#DealMasterForm"));
-                $('#multipleSelect').select2();
+                //$('#multipleSelect').select2();
+                $('#multipleSelect').select2({
+                    dropdownParent: $('#common-lg-dialog')
+                });
                 //$('.datepicker').datepicker({
                 //    autoclose: true,
                 //    format: 'mm/dd/yyyy',
