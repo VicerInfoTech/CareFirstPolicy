@@ -1,4 +1,6 @@
-﻿namespace CFP.Web.Middleware
+﻿using CFP.Common.Utility;
+
+namespace CFP.Web.Middleware
 {
     public class SimpleIpRateLimiter
     {
@@ -15,7 +17,7 @@
 
         public bool TryRequest(string ip)
         {
-            var now = DateTime.UtcNow;
+            var now = AppCommon.CurrentDate;
 
             _counters.AddOrUpdate(ip,
                 addValueFactory: _ => (1, now),

@@ -41,31 +41,33 @@
 								</div>
 							</div>
 							<div class="mt-4 pt-1">
-								<h4 class="fs-22 fw-semibold ff-secondary mb-0"><span class="counter-value" data-target="2657">2657</span> </h4>
+								<h4 class="fs-22 fw-semibold ff-secondary mb-0"><span class="counter-value" data-target="0">00</span> </h4>
 								<p class="mt-4 mb-0 text-muted"><span class="badge bg-danger-subtle text-danger mb-0 me-1"> Overall Leads </span> </p>
 							</div>
 						</div>
 					</div>
 				</div><!--end col-->
 				<div class="col-xl-3 col-md-6">
-					<div class="card card-height-100">
-						<div class="card-body">
-							<div class="d-flex align-items-center">
-								<div class="avatar-sm flex-shrink-0">
-									<span class="avatar-title bg-info-subtle rounded fs-3">
-										<i class="ri-shake-hands-line text-info"></i>
-									</span>
+					<a href="@Url.Content("Deal")">
+						<div class="card card-height-100">
+							<div class="card-body">
+								<div class="d-flex align-items-center">
+									<div class="avatar-sm flex-shrink-0">
+										<span class="avatar-title bg-info-subtle rounded fs-3">
+											<i class="ri-shake-hands-line text-info"></i>
+										</span>
+									</div>
+									<div class="flex-grow-1 ps-3">
+										<h5 class="text-muted text-uppercase fs-13 mb-0">Total Deals</h5>
+									</div>
 								</div>
-								<div class="flex-grow-1 ps-3">
-									<h5 class="text-muted text-uppercase fs-13 mb-0">Total Deals</h5>
+								<div class="mt-4 pt-1">
+									<h4 class="fs-22 fw-semibold ff-secondary mb-0"><span class="counter-value" data-target="@Model.DealCount">@Model.DealCount</span> </h4>
+									<p class="mt-4 mb-0 text-muted"><span class="badge bg-success-subtle text-success mb-0"> Overall Deals </span></p>
 								</div>
-							</div>
-							<div class="mt-4 pt-1">
-								<h4 class="fs-22 fw-semibold ff-secondary mb-0"><span class="counter-value" data-target="1458">1458</span> </h4>
-								<p class="mt-4 mb-0 text-muted"><span class="badge bg-success-subtle text-success mb-0"> Overall Deals </span></p>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
 			</div>
 			<div class="row">

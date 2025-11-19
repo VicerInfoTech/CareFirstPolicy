@@ -106,7 +106,7 @@ namespace CFP.Web.Hubs
                 FromUserId = fromUserId,
                 ToUserId = toUserId,
                 Message = message,
-                SentAt = DateTime.UtcNow
+                SentAt = AppCommon.CurrentDate
             };
 
             // Send back to caller (so UI can show it instantly)
@@ -116,7 +116,7 @@ namespace CFP.Web.Hubs
                 FromUserId = fromUserId,
                 ToUserId = toUserId,
                 Message = message,
-                SentAt = DateTime.UtcNow,
+                SentAt = AppCommon.CurrentDate,
                 isOwnMessage = true
 
             });
@@ -131,7 +131,7 @@ namespace CFP.Web.Hubs
                     FromUserId = fromUserId,
                     ToUserId = toUserId,
                     Message = message,
-                    SentAt = DateTime.UtcNow,
+                    SentAt = AppCommon.CurrentDate,
                     isOwnMessage = false
 
                 });
@@ -160,7 +160,7 @@ namespace CFP.Web.Hubs
                     model.Message,
                     model.ChatRoomId,
                     model.FromUserId,
-                    SentAt = DateTime.UtcNow
+                    SentAt = AppCommon.CurrentDate
                 });
         }
 

@@ -1,10 +1,11 @@
+using System.Diagnostics;
 using CFP.Common.Utility;
 using CFP.Patient.Controllers;
 using CFP.Provider.IProvider;
+using CFP.Provider.Provider;
 using CFP.Web.Filter;
 using CFP.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace CFP.Web.Controllers
 {
@@ -29,7 +30,8 @@ namespace CFP.Web.Controllers
             DashboardViewModel model = new DashboardViewModel()
             {
                 RoleId = _sessionManager.RoleId,
-                
+                DealCount= _commonProvider.GetDealCount(GetSessionProviderParameters())
+
             };
             return View(model);
         }       

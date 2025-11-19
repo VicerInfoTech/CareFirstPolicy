@@ -124,13 +124,11 @@ namespace CFP.Provider.Provider
             List<DropDownModel> list = new List<DropDownModel>();
             try
             {
-
-
                 list = unitOfWork.AgentMaster.GetAll(x => x.IsActive == true).Select(
                                        x => new DropDownModel
                                        {
                                            Text = x.FirstName + " " + x.LastName,
-                                           ExtraValue = x.Deals.Count()
+                                           ExtraValue = x.Deals.Where(x => x.IsActive).Count()
                                        }).OrderBy(x => x.Text).ToList();
             }
             catch (Exception ex)
@@ -138,6 +136,22 @@ namespace CFP.Provider.Provider
                 AppCommon.LogException(ex, "CommonProvider=>GetAgentList");
             }
             return list;
+        }
+        public int GetDealCount(SessionProviderModel sessionProviderModel)
+        {
+            int dealCount = 0;
+            try
+            {
+                var dealList = unitOfWork.Deal.GetAll(x => x.IsActive);
+                if (sessionProviderModel.RoleId != (short)Enumeration.Role.Super_Admin)
+                    dealList = dealList.Where(x => x.AgentId == sessionProviderModel.AgentId);
+                dealCount = dealList.Count();
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "CommonProvider=>GetAgentList");
+            }
+            return dealCount;
         }
 
         public List<DropDownModel> GetUserList()

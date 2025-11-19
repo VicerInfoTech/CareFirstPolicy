@@ -11,7 +11,7 @@ namespace CFP.Provider.IProvider
 {
     public interface IDealProvider
     {
-        DatatablePageResponseModel<DealModel> GetUserList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel);
+        DatatablePageResponseModel<DealModel> GetDealList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel);
         ResponseModel Save(DealModel model, List<DealDocModel> docList, SessionProviderModel sessionProviderModel);
         DealModel GetById(int id);
         ResponseModel DeActivate(int id, SessionProviderModel sessionProviderModel);

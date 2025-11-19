@@ -26,6 +26,7 @@ namespace CFP.Provider.IProvider
         List<MenuModel> GetMenuList(SessionProviderModel sessionProviderModel);
         List<DropDownModel> GetAgentList();
         List<DropDownModel> GetLeaderBoard();
+        int GetDealCount(SessionProviderModel sessionProviderModel);
         bool IsAuthorized(int roleId, int menuId);
         List<DropDownModel> GetUserList();
         #endregion

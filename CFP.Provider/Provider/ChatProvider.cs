@@ -62,7 +62,7 @@ namespace CFP.Provider.Provider
                      .FirstOrDefault();
         }
 
-      
+
         public long SaveMessage(int fromUserId, int toUserId, string message)
         {
             var msg = new ChatMessage
@@ -70,9 +70,9 @@ namespace CFP.Provider.Provider
                 FromUserId = fromUserId,
                 ToUserId = toUserId,
                 Message = message,
-                SentAt = DateTime.UtcNow
+                SentAt = AppCommon.CurrentDate
             };
-
+            
             unitOfWork.ChatMessage.Insert(msg);
             unitOfWork.Save();
             return msg.ChatMessageId;
@@ -173,7 +173,7 @@ namespace CFP.Provider.Provider
                  {
                      ContactUserId = c.UserMasterId,
                      Name = c.FirstName + " " + c.LastName,
-                     IsOnline=c.ChatConnections.Any()
+                     IsOnline = c.ChatConnections.Any()
                  }).OrderBy(x => x.Name).ToList();
         }
         #endregion
@@ -265,7 +265,7 @@ namespace CFP.Provider.Provider
             var roomMessage = unitOfWork.ChatMessage.GetAll(x => x.ChatRoomId == roomId)
                 .OrderBy(x => x.SentAt).ToList();
             chatMessages = _mapper.Map<List<ChatMessageModel>>(roomMessage);
-            foreach(var item in chatMessages)
+            foreach (var item in chatMessages)
             {
                 item.SenderName = item.FromUser.FirstName + " " + item.FromUser.LastName;
             }
@@ -280,7 +280,7 @@ namespace CFP.Provider.Provider
                 ToUserId = null,                 // Room message → no direct user
                 ChatRoomId = model.ChatRoomId,   // Important
                 Message = model.Message,
-                SentAt = DateTime.UtcNow,
+                SentAt = AppCommon.CurrentDate,
                 IsRead = false
             };
 

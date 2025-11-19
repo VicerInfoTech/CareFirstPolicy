@@ -10,6 +10,7 @@ namespace CFP.Web.Models
         public bool IsEdit { get; set; }
         public bool IsView { get; set; }
         public DealModel DealModel { get; set; } = new DealModel();
+        public int DealCount { get; set; } = 0;
         public List<DealDocModel> DealDocList { get; set; } = new List<DealDocModel>();
         public List<DropDownModel> LeaderBoard { get; set; }
         public List<SelectListItem> AgentList { get; set; }

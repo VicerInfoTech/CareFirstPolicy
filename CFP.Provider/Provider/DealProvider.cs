@@ -35,7 +35,7 @@ namespace CFP.Provider.Provider
         #endregion
 
         #region Method
-        public DatatablePageResponseModel<DealModel> GetUserList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel)
+        public DatatablePageResponseModel<DealModel> GetDealList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel)
         {
             DatatablePageResponseModel<DealModel> list = new DatatablePageResponseModel<DealModel>()
             {

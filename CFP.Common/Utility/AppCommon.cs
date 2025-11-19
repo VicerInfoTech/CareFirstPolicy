@@ -48,8 +48,8 @@ namespace CFP.Common.Utility
         {
             get
             {
-                TimeZoneInfo centralZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, centralZone);
+                TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
             }
         }
 

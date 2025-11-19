@@ -107,10 +107,7 @@
 
 						<div class="flex-grow-1">
 							<h6 class="mb-0">${u.userName}</h6>
-
 						</div>
-
-
 
 						<div class="ms-auto">
 							${u.unreadCount > 0

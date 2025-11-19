@@ -39,7 +39,7 @@ namespace CFP.Web.Controllers
 
         public JsonResult GetList()
         {
-            return Json(_provider.GetUserList(GetPagingRequestModel(), GetSessionProviderParameters()));
+            return Json(_provider.GetDealList(GetPagingRequestModel(), GetSessionProviderParameters()));
         }
 
         public IActionResult _Details(string id, bool isView = false)
