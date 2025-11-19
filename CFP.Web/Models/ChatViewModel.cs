@@ -11,5 +11,6 @@ namespace CFP.Web.Models
         public int CurrentUserId { get; set; }
         public string ConnectionId { get; set; }
         public List<SelectListItem> SelectUserList { get; set; }
+        public List<int>? UserIds { get; set; }
     }
 }

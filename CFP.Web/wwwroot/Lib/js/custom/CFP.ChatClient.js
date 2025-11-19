@@ -377,6 +377,9 @@
     // OPEN MODAL
     $("#btnCreateRoom").click(function () {
         $("#roomNameInput").val("");
+        $('.select2').select2({
+            dropdownParent: $('#createRoomModal')
+        });
         $("#createRoomModal").modal("show");
     });
 
@@ -391,6 +394,8 @@
             data: { roomName, users },
             success: function (res) {
                 $("#createRoomModal").modal("hide");
+                $("#roomName").val("");                // clear room name
+                $("#roomUsers").val(null).trigger('change'); // clear select2 values
                 CFP.ChatClient.LoadRooms(); // refresh list
             }
         });
