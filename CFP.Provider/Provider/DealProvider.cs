@@ -45,7 +45,7 @@ namespace CFP.Provider.Provider
 
             try
             {
-                var dataList = unitOfWork.Deal.GetAll(x => x.IsActive && x.AgentId == sessionProviderModel.AgentId)
+                var dataList = unitOfWork.Deal.GetAll(x => x.IsActive)
                     .Select(x => new DealModel()
                     {
                         EncId = _commonProvider.Protect(x.DealId),
@@ -79,7 +79,7 @@ namespace CFP.Provider.Provider
                         IsShowDelBtn = sessionProviderModel.RoleId == (int)Enumeration.Role.Super_Admin,
 
                     }).OrderByDescending(x => x.DealId).ToList();
-                if (sessionProviderModel.RoleId == (int)Enumeration.Role.Agent)
+                if (sessionProviderModel.RoleId != (int)Enumeration.Role.Super_Admin)
                 {
                     dataList = dataList.Where(x => x.AgentId == sessionProviderModel.AgentId).ToList();
                 }

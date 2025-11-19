@@ -48,14 +48,14 @@ namespace CFP.Common.Utility
         {
             get
             {
-                TimeZoneInfo centralZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+                TimeZoneInfo centralZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
                 return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, centralZone);
             }
         }
 
         public static DateTime ConvertToCST(DateTime date)
         {
-            return TimeZoneInfo.ConvertTimeFromUtc(date.ToUniversalTime(), TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            return TimeZoneInfo.ConvertTimeFromUtc(date.ToUniversalTime(), TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
         }
         public static void LogException(Exception ex, string source = "")
         {

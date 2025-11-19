@@ -14,7 +14,7 @@ CFP.Common = new function () {
     }
 
     this.TimeZoneOptions = {
-        timeZone: "America/Chicago",
+        timeZone: "America/New_York",
         year: "numeric",
         month: "2-digit",
         day: "2-digit",

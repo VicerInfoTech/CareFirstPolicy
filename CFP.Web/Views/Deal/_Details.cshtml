@@ -15,13 +15,13 @@
     }
 
     /*  .select2-container .select2-search--inline .select2-search__field {
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        margin: 0 14.4px;
-                    }
-                 */
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    margin: 0 14.4px;
+                                }
+                             */
     .select2-container .select2-search--inline .select2-search__field {
         position: relative !important;
         top: auto !important;
@@ -37,16 +37,31 @@
         padding: 0 6px !important;
     }
 
+    .disableDiv {
+        /* remove pointer-events here */
+    }
+
+        /* Disable ONLY form elements */
+        .disableDiv input,
+        .disableDiv select,
+        .disableDiv textarea,
+        .disableDiv button:not(.allow-click) {
+            pointer-events: none;
+            background-color: #EFF2F7 !important;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
 </style>
 
 <div class="modal-header">
-    <h4 class="modal-title fw-600" id="myModalLabel"><i class="ri-shake-hands-line font-20"></i> @(Model.DealModel.AgentId > 0 ? "Edit Deal" : "Create New Deal")</h4>
+    <h4 class="modal-title fw-600" id="myModalLabel">  <i class="ri-shake-hands-line font-20"></i> @(Model.IsView ? "View Deal" : (Model.DealModel.AgentId > 0 ? "Edit Deal" : "Create New Deal"))  </h4>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
 </div>
 
 <div class="card" style="margin-bottom:0px !important">
     <div class="card-body" style="padding-left:1rem;padding-right:1rem;">
-        <form class="form-horizontal form-material mb-0" id="DealMasterForm">
+        <form class="form-horizontal form-material mb-0 @(Model.IsView ? "disableDiv" : "")" id="DealMasterForm">
 
 
             <input asp-for="DealModel.EncId" type="hidden" class="form-control" id="txtEncId" />
@@ -57,16 +72,37 @@
 
 
             <div class="row">
-                <div class="col-md-12 mt-2">
-                    <label asp-for="DealModel.TypeOfCoverages"></label>
-                    <select asp-for="DealModel.TypeOfCoverages" class="form-select req-border" id="multipleSelect" multiple data-placeholder="Select">
-                        <option value="1">DENTAL</option>
-                        <option value="2">VISION</option>
-                        <option value="3">MEDICAL</option>
-                    </select>
-                    <span asp-validation-for="DealModel.TypeOfCoverages" class="text-danger"></span>
-                </div>
+                @if (Model.IsView)
+                {
+                    var selectedNames = string.Join(", ",
+                    (Model.DealModel.TypeOfCoverages ?? Array.Empty<string>())
+                    .Select(x =>
+                    x == "1" ? "DENTAL" :
+                    x == "2" ? "VISION" :
+                    x == "3" ? "MEDICAL" :
+                    ""
+                    )
+                    );
 
+                    <div class="col-md-12 mt-2">
+                        <label asp-for="DealModel.TypeOfCoverages"></label>
+                        <input type="text" class="form-control" value="@selectedNames" disabled />
+                    </div>
+                }
+                else
+                {
+
+                    <div class="col-md-12 mt-2">
+                        <label asp-for="DealModel.TypeOfCoverages"></label>
+                        <select asp-for="DealModel.TypeOfCoverages" class="form-select req-border" id="multipleSelect" multiple data-placeholder="Select" >
+                            <option value="1">DENTAL</option>
+                            <option value="2">VISION</option>
+                            <option value="3">MEDICAL</option>
+                        </select>
+                        <span asp-validation-for="DealModel.TypeOfCoverages" class="text-danger"></span>
+                    </div>
+
+                }
                 <div class="col-md-6 mt-2">
                     <label asp-for="DealModel.FirstName"></label>
                     <input asp-for="DealModel.FirstName" class="form-control req-border" placeholder="First Name" autocomplete="off" />
@@ -187,7 +223,7 @@
 
                 <div class="col-sm-12 mt-2" id="workOrderImagediv">
 
-                    <label asp-for="DealModel.DealDocList">Deal Documents</label>
+                    @*  <label asp-for="DealModel.DealDocList">Deal Documents</label> *@
                     <div class="row">
                         @if (!Model.IsView)
                         {
