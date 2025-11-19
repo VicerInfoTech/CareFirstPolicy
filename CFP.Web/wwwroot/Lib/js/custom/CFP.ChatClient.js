@@ -55,6 +55,11 @@
             }
         });
 
+        connection.on("ForceLogout", () => {
+            console.log("Your session has expired. Logging out...");
+            window.location.href = "/Account/Logout";
+        });
+
         connection.start()
             .then(() => console.log("SignalR Connected"))
             .catch(err => console.error(err));

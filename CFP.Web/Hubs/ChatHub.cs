@@ -40,7 +40,7 @@ namespace CFP.Web.Hubs
                 LastName = _sessionManager.LastName,
             };
             return sessionProviderModel;
-        }
+        }        
         public override async Task OnConnectedAsync()
         {
             try
@@ -92,7 +92,12 @@ namespace CFP.Web.Hubs
         public async Task SendMessage(int toUserId, string message)
         {
             var session = GetSessionProviderParameters();
-            if (session == null || session.UserId == 0) return;
+            if (session == null || session.UserId == 0)
+            {
+                await Clients.Caller.SendAsync("ForceLogout");
+                Context.Abort();
+                return;
+            }
 
             int fromUserId = session.UserId;
 
@@ -142,7 +147,12 @@ namespace CFP.Web.Hubs
         public Task<List<ChatMessageModel>> LoadMessages(int targetUserId, int page = 1)
         {
             var session = GetSessionProviderParameters();
-            if (session == null) return Task.FromResult(new List<ChatMessageModel>());
+            if (session == null || session.UserId == 0)
+            {
+                Clients.Caller.SendAsync("ForceLogout").RunSynchronously();
+                Context.Abort();
+                return Task.FromResult(new List<ChatMessageModel>());
+            }
 
             var msgs = _chatProvider.GetMessages(session.UserId, targetUserId);
             // mark read
