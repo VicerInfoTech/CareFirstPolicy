@@ -14,14 +14,14 @@
         padding: .5rem .9rem !important;
     }
 
-   /*  .select2-container .select2-search--inline .select2-search__field {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        margin: 0 14.4px;
-    }
- */
+    /*  .select2-container .select2-search--inline .select2-search__field {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        margin: 0 14.4px;
+                    }
+                 */
     .select2-container .select2-search--inline .select2-search__field {
         position: relative !important;
         top: auto !important;
@@ -37,7 +37,6 @@
         padding: 0 6px !important;
     }
 
-
 </style>
 
 <div class="modal-header">
@@ -49,10 +48,13 @@
     <div class="card-body" style="padding-left:1rem;padding-right:1rem;">
         <form class="form-horizontal form-material mb-0" id="DealMasterForm">
 
-            <input asp-for="DealModel.EncId" type="hidden" />
+
+            <input asp-for="DealModel.EncId" type="hidden" class="form-control" id="txtEncId" />
             <input asp-for="DealModel.IsActive" type="hidden" />
             <input asp-for="DealModel.CreatedBy" type="hidden" />
             <input asp-for="DealModel.CreatedOn" type="hidden" />
+            <input type="hidden" id="isViewId" value="@Model.IsView.ToString().ToLower()" />
+
 
             <div class="row">
                 <div class="col-md-12 mt-2">
@@ -182,6 +184,24 @@
                     <label asp-for="DealModel.Notes"></label>
                     <textarea asp-for="DealModel.Notes" rows="3" class="form-control req-border" placeholder="Notes"></textarea>
                 </div>
+
+                <div class="col-sm-12 mt-2" id="workOrderImagediv">
+
+                    <label asp-for="DealModel.DealDocList">Deal Documents</label>
+                    <div class="row">
+                        @if (!Model.IsView)
+                        {
+                            <div class="col-sm-12">
+
+                                <input class="form-control" type="file" id="PictureofProblemId" accept=".jpg, .jpeg, .png, .pdf" multiple="multiple" onchange="CFP.Deal.SaveDocument()" />
+                            </div>
+                        }
+
+                        <div class="col-sm-12 mt-2" id="PictureofProblemDivId">
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </form>
     </div>
@@ -189,5 +209,8 @@
 
 <div class="modal-footer" style="margin-right: 1%;margin-top: 2%;">
     <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal"><i class="ri-close-line"></i> Cancel</button>
-    <button type="button" class="btn btn-success" onclick="CFP.Deal.Save()"><i class="ri-save-line"></i> Submit</button>
+    @if (!Model.IsView)
+    {
+        <button type="button" class="btn btn-success" onclick="CFP.Deal.Save()"><i class="ri-save-line"></i> Submit</button>
+    }
 </div>

@@ -37,6 +37,7 @@ namespace CFP.Common.Utility
         public static string EmailFooterName = "Think Insurance First";
         public static string ErrorTempKeyName = "Temp_Error";
         public static string SuccessTempKeyName = "Temp_Success";
+        public static string FileNameSeperator = "__--__";
         #endregion
 
         #region Temp Data Variables
@@ -47,9 +48,11 @@ namespace CFP.Common.Utility
         {
             get
             {
-                return DateTime.UtcNow;
+                TimeZoneInfo centralZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+                return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, centralZone);
             }
         }
+
         public static DateTime ConvertToCST(DateTime date)
         {
             return TimeZoneInfo.ConvertTimeFromUtc(date.ToUniversalTime(), TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));

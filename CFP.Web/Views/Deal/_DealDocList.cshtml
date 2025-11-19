@@ -1,0 +1,69 @@
+﻿@using CFP.Common.Business_Entities
+@model DashboardViewModel
+
+<style>
+
+
+    .close-button {
+        position: absolute;
+        top: 0;
+        padding: 2px;
+        background-color: red;
+        color: white;
+        cursor: pointer;
+        border-radius: 10px;
+        width: 24px;
+        height: 24px;
+        text-align: center;
+    }
+</style>
+
+<div class="table">
+    <table class="table table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th style="text-align:left"><b>Deal Documents</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @if (Model != null && Model.DealDocList.Count > 0)
+                {
+                    <td>
+                        <div class="row">
+                            @foreach (var item in Model.DealDocList)
+                            {
+                                @*  <div class="col-sm-2" style="padding-right:91px">
+                                    <img src="@item.DocName" alt="Problem Image" style="height: 100px;width: 100px;" />
+                                    <div class="close-button cancel" style="margin-left:76px;" onclick="SANRC.Policies.DeleteDocument('@item.Tempid')">X</div>
+                                </div> *@
+                                var parts = item.DocName?.Split(new[] { "__--__" }, StringSplitOptions.None);
+                                var fileId = parts != null && parts.Length > 0 ? parts[0] : "";
+                                var fileName = parts != null && parts.Length > 1 ? parts[1] : "";
+                                <div class="d-flex align-items-center justify-content-between border p-2 mb-1">
+                                    <div>
+                                        <i class="ri-file-pdf-fill text-danger"></i>
+                                        <a type="button" class="font-13" style="font-weight: 500;" href="~/ExtraFiles/DealDoc/@item.DocName" download="@item.DocName" title="Download">@fileName</a>
+                                        @* <span>@fileName</span> *@
+                                    </div>
+                                    @if (!Model.IsView)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                                onclick="CFP.Deal.DeleteDocument(@item.Tempid)">
+                                            <i class="ri-close-line"></i>
+                                        </button>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </td>
+                }
+                else
+                {
+                    <td class="text-left" colspan="3"><b>No Documents Available</b></td>
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>
+

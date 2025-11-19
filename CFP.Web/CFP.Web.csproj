@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="14.9.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.0" />
   </ItemGroup>
 
@@ -16,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\ExtraFiles\DealDoc\" />
     <Folder Include="wwwroot\ExtraFiles\Templates\" />
     <Folder Include="wwwroot\ExtraFiles\TestResults\" />
   </ItemGroup>

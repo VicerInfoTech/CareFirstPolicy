@@ -117,7 +117,7 @@ namespace CFP.Patient.Controllers
             if (TempData[TempDataKey] != null)
             {
                 data = TempData[TempDataKey].ToString();
-                //KeepTempData(TempDataKey);
+                KeepTempData(TempDataKey);
             }
             return data;
         }

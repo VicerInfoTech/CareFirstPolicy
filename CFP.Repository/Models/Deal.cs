@@ -51,5 +51,7 @@ public partial class Deal
 
     public virtual UserMaster CreatedByNavigation { get; set; } = null!;
 
+    public virtual ICollection<DealDocument> DealDocuments { get; set; } = new List<DealDocument>();
+
     public virtual UserMaster? UpdatedByNavigation { get; set; }
 }

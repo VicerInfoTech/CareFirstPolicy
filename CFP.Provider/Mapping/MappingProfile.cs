@@ -27,6 +27,9 @@ namespace CFP.Provider.Mapping
             CreateMap<ChatRoomModel, ChatRoom>();
             CreateMap<ChatRoom, ChatRoomModel>();
 
+            CreateMap<DealDocModel, DealDocument>();
+            CreateMap<DealDocument, DealDocModel>();
+
 
         }
     }

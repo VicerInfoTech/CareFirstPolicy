@@ -28,6 +28,8 @@ public partial class EndeavorCRMContext : DbContext
 
     public virtual DbSet<Deal> Deals { get; set; }
 
+    public virtual DbSet<DealDocument> DealDocuments { get; set; }
+
     public virtual DbSet<LeadMaster> LeadMasters { get; set; }
 
     public virtual DbSet<LoginFailure> LoginFailures { get; set; }
@@ -237,9 +239,25 @@ public partial class EndeavorCRMContext : DbContext
                 .HasConstraintName("FK_Deal_UserMaster");
         });
 
+        modelBuilder.Entity<DealDocument>(entity =>
+        {
+            entity.HasKey(e => e.DealDocId);
+
+            entity.ToTable("DealDocument");
+
+            entity.Property(e => e.DocName)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Deal).WithMany(p => p.DealDocuments)
+                .HasForeignKey(d => d.DealId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DealDocument_Deal");
+        });
+
         modelBuilder.Entity<LeadMaster>(entity =>
         {
-            entity.HasKey(e => e.LeadId).HasName("PK__LeadMast__73EF78FAAB1564B4");
+            entity.HasKey(e => e.LeadId).HasName("PK__LeadMast__73EF78FA64DB377E");
 
             entity.ToTable("LeadMaster");
 

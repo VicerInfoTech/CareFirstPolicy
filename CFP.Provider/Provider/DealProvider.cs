@@ -12,7 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Twilio.Jwt.Taskrouter;
+using Microsoft.AspNetCore.Hosting;
 namespace CFP.Provider.Provider
 {
     public class DealProvider : IDealProvider
@@ -20,13 +21,15 @@ namespace CFP.Provider.Provider
         #region Variable
         private UnitOfWork unitOfWork = new UnitOfWork();
         private ICommonProvider _commonProvider;
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMapper _mapper;
         #endregion
 
         #region Constructor
-        public DealProvider(IMapper mapper, ICommonProvider commonProvider)
+        public DealProvider(IMapper mapper, ICommonProvider commonProvider, IHostingEnvironment hostingEnvironment)
         {
             _commonProvider = commonProvider;
+            _hostingEnvironment = hostingEnvironment;
             _mapper = mapper;
         }
         #endregion
@@ -42,13 +45,13 @@ namespace CFP.Provider.Provider
 
             try
             {
-                var dataList = unitOfWork.Deal.GetAll()
+                var dataList = unitOfWork.Deal.GetAll(x => x.IsActive && x.AgentId == sessionProviderModel.AgentId)
                     .Select(x => new DealModel()
                     {
                         EncId = _commonProvider.Protect(x.DealId),
                         FirstName = x.FirstName,
                         LastName = x.LastName,
-                        FullName=x.FirstName+" "+x.LastName,
+                        FullName = x.FirstName + " " + x.LastName,
                         TypeOfCoverage = x.TypeOfCoverage,
                         CreatedOn = x.CreatedOn,
                         NoOfApplicants = x.NoOfApplicants,
@@ -63,10 +66,19 @@ namespace CFP.Provider.Provider
                         AgentId = x.AgentId,
                         AgentName = $"{x.Agent.FirstName} {x.Agent.LastName}",
                         IsActive = x.IsActive,
-                        CreatedBy= x.CreatedBy,
-                        CreatedByString=x.CreatedByNavigation.FirstName+" "+x.CreatedByNavigation.LastName,
-                       DealId=x.DealId,
-                    }).OrderByDescending(x=>x.DealId).ToList();
+                        CreatedBy = x.CreatedBy,
+                        CreatedByString = x.CreatedByNavigation.FirstName + " " + x.CreatedByNavigation.LastName,
+                        DealId = x.DealId,
+                        RoleId = sessionProviderModel.RoleId,
+                        IsShowEditBtn = sessionProviderModel.RoleId == (int)Enumeration.Role.Super_Admin ||
+                                       (
+                                           (sessionProviderModel.RoleId == (int)Enumeration.Role.Agent ||
+                                            sessionProviderModel.RoleId == (int)Enumeration.Role.AgentLead)
+                                           && x.CreatedOn.AddHours(24) >= AppCommon.CurrentDate
+                                       ),
+                        IsShowDelBtn = sessionProviderModel.RoleId == (int)Enumeration.Role.Super_Admin,
+
+                    }).OrderByDescending(x => x.DealId).ToList();
                 if (sessionProviderModel.RoleId == (int)Enumeration.Role.Agent)
                 {
                     dataList = dataList.Where(x => x.AgentId == sessionProviderModel.AgentId).ToList();
@@ -102,9 +114,9 @@ namespace CFP.Provider.Provider
                 list.data = dataList.Skip(requestModel.StartIndex).Take(requestModel.PageSize).Select(x =>
                 {
                     x.TypeOfCoverages = x.TypeOfCoverage.Split(',');
-                    x.CreatedOnString = x.CreatedOn.ToString("MM/dd/yyyy HH:mm tt");
+                    x.CreatedOnString = x.CreatedOn.ToString("MM/dd/yyyy hh:mm tt");
                     x.CareerName = AppCommon.GetEnumDisplayName((Enumeration.Career)x.Career);
-                    x.CloseDateString = x.CloseDate.ToString("MM/dd/yyyy HH:mm tt");
+                    x.CloseDateString = x.CloseDate.ToString("MM/dd/yyyy hh:mm tt");
                     x.DealIdString = x.DealId.ToString("000000");
                     return x;
                 }).ToList();
@@ -117,7 +129,7 @@ namespace CFP.Provider.Provider
             return list;
         }
 
-        public ResponseModel Save(DealModel model, SessionProviderModel sessionProviderModel)
+        public ResponseModel Save(DealModel model, List<DealDocModel> docList, SessionProviderModel sessionProviderModel)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -140,13 +152,47 @@ namespace CFP.Provider.Provider
                 agent.TypeOfCoverage = string.Join(",", model.TypeOfCoverages);
                 if (_temp == null)
                 {
-                    
+                    foreach (var item in docList)
+                    {
+                        agent.DealDocuments.Add(new DealDocument
+                        {
+                            DocName = item.DocName,
+                            UploadedDate = DateOnly.FromDateTime(agent.CreatedOn),
+                        });
+                    }
+
+
                     agent.IsActive = true;
                     response.Message = "Deal added successfully";
                     unitOfWork.Deal.Insert(agent, sessionProviderModel.UserId, sessionProviderModel.Ip);
                 }
                 else
                 {
+
+                    var curDoc = agent.DealDocuments.ToList();
+                    List<long> removedDoc = curDoc.Select(x => x.DealDocId).ToList();
+                    foreach (var item in docList)
+                    {
+                        if (item.DealDocId > 0)
+                        {
+                            var tmp = curDoc.Where(x => x.DealDocId == item.DealDocId).FirstOrDefault();
+                            if (tmp != null)
+
+                                removedDoc.Remove(tmp.DealDocId);
+
+                        }
+                        else
+                        {
+                            agent.DealDocuments.Add(new DealDocument
+                            {
+                                DocName = item.DocName,
+                                UploadedDate = DateOnly.FromDateTime(agent.CreatedOn),
+                            });
+                        }
+                    }
+                    if (removedDoc.Any())
+                        unitOfWork.DealDocument.DeleteAll(unitOfWork.DealDocument.GetAll(x => removedDoc.Contains(x.DealDocId)));
+
                     response.Message = "Deal updated successfully";
                     unitOfWork.Deal.Update(agent, sessionProviderModel.UserId, sessionProviderModel.Ip);
                 }
@@ -191,14 +237,33 @@ namespace CFP.Provider.Provider
                 var data = unitOfWork.Deal.Get(id);
                 if (data != null)
                 {
+
+                    var Doc = unitOfWork.DealDocument.GetAll(x => x.DealId == data.DealId).ToList();
+                    if (Doc != null && Doc.Count() > 0)
+                    {
+                        foreach (var item in Doc)
+                        {
+
+                            string fullPath = Path.Combine(_hostingEnvironment.WebRootPath, "ExtraFiles", "DealDoc", item.DocName);
+                            if (File.Exists(fullPath))
+                            {
+                                File.Delete(fullPath);
+                            }
+
+                        }
+                        unitOfWork.DealDocument.DeleteAll(Doc);
+                        unitOfWork.Save();
+
+                    }
+
                     data.IsActive = false;
                     unitOfWork.Deal.Update(data, sessionProviderModel.UserId, sessionProviderModel.Ip);
                     unitOfWork.Save();
                     model.IsSuccess = true;
-                    model.Message = "User De Activated Successfully";
+                    model.Message = "Deal deleted Successfully";
                 }
                 else
-                    model.Message = "User Records not found.";
+                    model.Message = "Deal records not found.";
             }
             catch (Exception ex)
             {
@@ -207,6 +272,25 @@ namespace CFP.Provider.Provider
                 AppCommon.LogException(ex, "DealProvider=>DeActivate");
             }
             return model;
+        }
+
+        public List<DealDocModel> GetDealDocList(int id)
+        {
+            List<DealDocModel> dealDocModels = new List<DealDocModel>();
+
+            var imagedata = unitOfWork.DealDocument.GetAll(x => x.DealId == id).ToList();
+            foreach (var item in imagedata)
+            {
+                dealDocModels.Add(new DealDocModel()
+                {
+                    DocName = item.DocName,
+                    DealId = id,
+                    Tempid = dealDocModels.Count + 1,
+                    DealDocId = item.DealDocId,
+                    DocumentPath = "ExtraFiles/DealDoc/" + item.DocName,
+                });
+            }
+            return dealDocModels;
         }
         #endregion
     }

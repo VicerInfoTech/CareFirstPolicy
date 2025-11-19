@@ -51,6 +51,7 @@ namespace CFP.Repository.Repository
         private GenericRepository<ChatMessage> _ChatMessage;
         private GenericRepository<ChatRoom> _ChatRoom;
         private GenericRepository<ChatRoomMember> _ChatRoomMember;
+        private GenericRepository<DealDocument> _DealDocument;
         #endregion
 
         #region Generic Classes Of DB Entities
@@ -161,6 +162,15 @@ namespace CFP.Repository.Repository
                 if (_ChatRoomMember == null)
                     _ChatRoomMember = new GenericRepository<ChatRoomMember>(context);
              return _ChatRoomMember;
+            }
+        }
+        public GenericRepository<DealDocument> DealDocument
+        {
+            get
+            {
+                if (_DealDocument == null)
+                    _DealDocument = new GenericRepository<DealDocument>(context);
+             return _DealDocument;
             }
         }
         #endregion

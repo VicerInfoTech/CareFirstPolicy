@@ -88,7 +88,10 @@ namespace CFP.Common.Business_Entities
         public string CreatedOnString { get; set; } = null!;
         public string CreatedByString { get; set; } = null!;
         public string DealIdString { get; set; } = null!;
-
+        public int RoleId { get; set; }
+        public bool IsShowEditBtn { get; set; }
+        public bool IsShowDelBtn { get; set; }
+        public List<DealDocModel> DealDocList { get; set; }
         public virtual AgentMasterModel Agent { get; set; } = null!;
 
         public virtual UserMasterModel CreatedByNavigation { get; set; } = null!;
