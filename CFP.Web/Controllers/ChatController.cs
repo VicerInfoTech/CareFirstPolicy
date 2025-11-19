@@ -72,6 +72,7 @@ namespace CFP.Web.Controllers
             return Json(contacts);
         }
         #endregion
+
         #region RoomMessage
         [HttpGet("/chat/getrooms")]
         public IActionResult GetRooms()

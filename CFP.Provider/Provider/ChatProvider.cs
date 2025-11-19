@@ -207,6 +207,15 @@ namespace CFP.Provider.Provider
                     UserMasterId = uid,
                 });
             }
+
+            //Add Current User While Creating New Room
+            if (!room.ChatRoomMembers.Any(x => x.UserMasterId == providerModel.UserId))
+            {
+                room.ChatRoomMembers.Add(new ChatRoomMember
+                {
+                    UserMasterId = providerModel.UserId,
+                });
+            }
             unitOfWork.ChatRoom.Insert(room, providerModel.UserId, providerModel.Ip);
             unitOfWork.Save();
 

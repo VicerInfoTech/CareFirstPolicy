@@ -191,7 +191,7 @@
     this.AppendMessageToChat = function (msg) {
 
         const msgDate = new Date(msg.sentAt);
-        const now = new Date();
+        const now = new Date(new Date().toLocaleString("en-US", CFP.Common.TimeZoneOptions));
 
         // Format time
         let time = msgDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -199,7 +199,7 @@
         // Check if message is today or yesterday
         let dateLabel = "";
         const isToday = msgDate.toDateString() === now.toDateString();
-        const yesterday = new Date(now);
+        const yesterday = now;
         yesterday.setDate(now.getDate() - 1);
         const isYesterday = msgDate.toDateString() === yesterday.toDateString();
 
@@ -263,7 +263,7 @@
                 fromUserId: currentUserId,
                 toUserId: selectedUserId,
                 message: text,
-                sentAt: new Date(),
+                sentAt: new Date(new Date().toLocaleString("en-US", CFP.Common.TimeZoneOptions)),
                 isOwnMessage: true
             });
 
@@ -421,7 +421,7 @@
         CFP.ChatClient.AppendMessageToChat({
             fromUserId: currentUserId,
             message: msg,
-            sentAt: new Date(),
+            sentAt: new Date(new Date().toLocaleString("en-US", CFP.Common.TimeZoneOptions)),
             isOwnMessage: true
         });
 

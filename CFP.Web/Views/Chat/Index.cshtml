@@ -12,7 +12,7 @@
 		.chat-leftsidebar {
 			min-width: 300px;
 			max-width: 300px;
-			height: calc(100vh - 70px - 60px - -5px) !important;
+			height: calc(100vh - 70px - 60px - -11px) !important;
 		}
 	}
 
@@ -72,7 +72,7 @@
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" data-bs-toggle="tab" href="#contacts" role="tab">
-					Contacts
+					Channels
 				</a>
 			</li>
 		</ul>
@@ -101,7 +101,7 @@
 						</ul>
 					</div>
 
-					<div class="d-flex align-items-center px-4 mt-4 pt-2 mb-2">
+					@* <div class="d-flex align-items-center px-4 mt-4 pt-2 mb-2">
 						<div class="flex-grow-1">
 							<h4 class="mb-0 fs-11 text-muted text-uppercase">Channels</h4>
 						</div>
@@ -116,15 +116,31 @@
 
 					<div class="chat-message-list">
 						<ul class="list-unstyled chat-list mb-0" id="channelList"></ul>
-					</div>
+					</div> *@
 
 
 				</div>
 			</div>
 			<div class="tab-pane" id="contacts" role="tabpanel">
 				<div class="chat-room-list pt-3" data-simplebar>
-					<div class="sort-contact1">
+					@* <div class="sort-contact1">
 						<ul class="list-unstyled contact-list" id="contactList"></ul>
+					</div> *@
+					<div class="d-flex align-items-center px-4 mb-2">
+						<div class="flex-grow-1">
+							<h4 class="mb-0 fs-11 text-muted text-uppercase">Channels</h4>
+						</div>
+						<div class="flex-shrink-0">
+							<div data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-placement="bottom" title="Create group">
+								<button type="button" class="btn btn-soft-success btn-sm" id="btnCreateRoom">
+									<i class="ri-add-line align-bottom"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="chat-message-list">
+						<ul class="list-unstyled chat-list mb-0" id="channelList"></ul>
 					</div>
 				</div>
 			</div>

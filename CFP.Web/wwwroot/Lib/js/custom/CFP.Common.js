@@ -13,6 +13,16 @@ CFP.Common = new function () {
         toastr.remove();
     }
 
+    this.TimeZoneOptions = {
+        timeZone: "America/Chicago",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+    };
+
     this.InitMask = function () {
         $(".fax-inputmask").inputmask("999 999-9999");
         $(".phone-inputmask").inputmask("(999) 999-9999");
