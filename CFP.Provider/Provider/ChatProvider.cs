@@ -72,7 +72,7 @@ namespace CFP.Provider.Provider
                 Message = message,
                 SentAt = AppCommon.CurrentDate
             };
-            
+
             unitOfWork.ChatMessage.Insert(msg);
             unitOfWork.Save();
             return msg.ChatMessageId;
@@ -193,33 +193,44 @@ namespace CFP.Provider.Provider
         }
 
 
-        public int CreateRoom(string roomName, List<int> users, SessionProviderModel providerModel)
+        public ResponseModel CreateRoom(ChatRoomModel inputModel, SessionProviderModel providerModel)
         {
-            ChatRoom room = new ChatRoom
+            ResponseModel response = new ResponseModel();
+            try
             {
-                RoomName = roomName,
-                IsActive = true,
-            };
-            foreach (var uid in users)
-            {
-                room.ChatRoomMembers.Add(new ChatRoomMember
-                {
-                    UserMasterId = uid,
-                });
-            }
 
-            //Add Current User While Creating New Room
-            if (!room.ChatRoomMembers.Any(x => x.UserMasterId == providerModel.UserId))
-            {
-                room.ChatRoomMembers.Add(new ChatRoomMember
+                ChatRoom room = new ChatRoom
                 {
-                    UserMasterId = providerModel.UserId,
-                });
-            }
-            unitOfWork.ChatRoom.Insert(room, providerModel.UserId, providerModel.Ip);
-            unitOfWork.Save();
+                    RoomName = inputModel.RoomName,
+                    IsActive = true,
+                };
+                foreach (var uid in inputModel.UserIds)
+                {
+                    room.ChatRoomMembers.Add(new ChatRoomMember
+                    {
+                        UserMasterId = uid,
+                    });
+                }
 
-            return room.ChatRoomId;
+                //Add Current User While Creating New Room
+                if (!room.ChatRoomMembers.Any(x => x.UserMasterId == providerModel.UserId))
+                {
+                    room.ChatRoomMembers.Add(new ChatRoomMember
+                    {
+                        UserMasterId = providerModel.UserId,
+                    });
+                }
+                unitOfWork.ChatRoom.Insert(room, providerModel.UserId, providerModel.Ip);
+                unitOfWork.Save();
+                response.IsSuccess = true;
+                response.Message = "Channel created successfully";
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return response;
         }
 
         // ADD MEMBER

@@ -128,7 +128,7 @@ namespace CFP.Provider.Provider
                                        x => new DropDownModel
                                        {
                                            Text = x.FirstName + " " + x.LastName,
-                                           ExtraValue = x.Deals.Where(x => x.IsActive).Count()
+                                           ExtraValue = x.Deals.Where(x => x.IsActive && x.CreatedOn.Date==AppCommon.CurrentDate.Date).Count()
                                        }).OrderBy(x => x.Text).ToList();
             }
             catch (Exception ex)
@@ -310,6 +310,69 @@ namespace CFP.Provider.Provider
         }
 
 
+        public List<DealChartViewModel> GetDealDataForChart(int agentId)
+        {
+            try
+            {
+
+                var query = unitOfWork.Deal.GetAll(x =>
+                    x.IsActive &&
+                    x.CreatedOn.Date >= AppCommon.CurrentDate.AddDays(-9) &&
+                    (agentId == -1 || x.AgentId == agentId)
+                ).ToList();
+
+                var result = query
+                    .GroupBy(x => x.CreatedOn.Date)
+                    .Select(g => new DealChartViewModel
+                    {
+                        Date = g.Key.ToString("MM/dd/yyyy"),
+                        TotalDeal = g.Count()
+                    })
+                    .OrderBy(x => x.Date)
+                    .ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "Error in GetDealDataForChart");
+                return new List<DealChartViewModel>();
+            }
+        }
+
+        public List<AgentDealChartViewModel> GetDealCountsByAgent(int days)
+        {
+            try
+            {
+                DateTime fromDate = AppCommon.CurrentDate.AddDays(-days); // last N days including today
+
+                var query = unitOfWork.Deal
+                    .GetAll(d => d.IsActive && d.CreatedOn.Date >= fromDate)
+                    .ToList();
+
+                var result = query
+                    .GroupBy(d => d.AgentId)
+                    .Select(g =>
+                    {
+                        var agent = unitOfWork.AgentMaster.GetAll(x=>x.AgentMasterId==g.Key).FirstOrDefault(); // adjust if you have cached agent list
+                        return new AgentDealChartViewModel
+                        {
+                            AgentId = g.Key,
+                            AgentName = agent != null ? agent.FirstName+" "+agent.LastName : $"Agent {g.Key}",
+                            DealCount = g.Count()
+                        };
+                    })
+                    .OrderByDescending(x => x.DealCount)
+                    .ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "Error in GetDealCountsByAgent");
+                return new List<AgentDealChartViewModel>();
+            }
+        }
 
 
         #endregion

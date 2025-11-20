@@ -30,11 +30,12 @@ namespace CFP.Web.Controllers
             DashboardViewModel model = new DashboardViewModel()
             {
                 RoleId = _sessionManager.RoleId,
-                DealCount= _commonProvider.GetDealCount(GetSessionProviderParameters())
-
+                AgentId = _sessionManager.AgentId,
+                DealCount = _commonProvider.GetDealCount(GetSessionProviderParameters()),
+                AgentList = GetAgentList()
             };
             return View(model);
-        }       
+        }
         public JsonResult SaveTempFilter(string KitId, string PatientId)
         {
             SetDataInTemp(AppCommon.TMP_ENC_KIT_ID, KitId);
@@ -44,6 +45,16 @@ namespace CFP.Web.Controllers
         public JsonResult LeaderBoard()
         {
             return Json(_commonProvider.GetLeaderBoard().Select(x => new { x.Text, x.ExtraValue }).OrderByDescending(x => x.ExtraValue).ToList());
+        }
+        public JsonResult FetchDealData(int agentId)
+        {
+            return Json(_commonProvider.GetDealDataForChart(agentId));
+        }
+
+        [HttpPost]
+        public JsonResult FetchDealDataAllAgents(int days)
+        {
+            return Json(_commonProvider.GetDealCountsByAgent(days));
         }
 
         #endregion

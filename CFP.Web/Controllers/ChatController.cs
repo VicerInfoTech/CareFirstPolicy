@@ -26,8 +26,7 @@ namespace CFP.Web.Controllers
         public IActionResult Index()
         {
             ChatViewModel viewModel = new ChatViewModel();
-            viewModel.CurrentUserId = _sessionManager.UserId;
-            viewModel.SelectUserList = GetSelectUserList();
+            viewModel.CurrentUserId = _sessionManager.UserId;           
             return View(viewModel);
         }
         [HttpGet]
@@ -63,7 +62,7 @@ namespace CFP.Web.Controllers
             return Json(true);
         }
 
-        
+
         [HttpGet]
         public IActionResult GetContacts()
         {
@@ -80,18 +79,23 @@ namespace CFP.Web.Controllers
             return Json(_chatProvider.GetAllRooms(GetSessionProviderParameters()));
         }
 
-
-        [HttpPost("/chat/createroom")]
-        public IActionResult CreateRoom(string roomName, List<int> users)
+        public PartialViewResult _RoomDetails(string id)
         {
-            if (string.IsNullOrWhiteSpace(roomName) || users == null || users.Count < 1)
+            ChatViewModel model = new ChatViewModel();
+            model.SelectUserList = GetSelectUserList();
+            if (!string.IsNullOrEmpty(id))
             {
-                return Json(new { success = false, message = "Room name and at least 1 user required" });
+                model.IsEdit = true;
+                model.ChatRoomModel = _chatProvider.GetRoomById(_commonProvider.UnProtect(id));
             }
 
-            var roomId = _chatProvider.CreateRoom(roomName, users, GetSessionProviderParameters());
+            return PartialView(model);
+        }
 
-            return Json(new { success = true, roomId });
+        [HttpPost]
+        public IActionResult SaveRoom(ChatViewModel model)
+        {
+            return Json(_chatProvider.CreateRoom(model.ChatRoomModel, GetSessionProviderParameters()));
         }
 
         [HttpPost]

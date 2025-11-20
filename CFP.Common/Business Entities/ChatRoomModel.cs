@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,8 @@ namespace CFP.Common.Business_Entities
     public class ChatRoomModel
     {
         public int ChatRoomId { get; set; }
-
+        [Required(ErrorMessage = "Please enter channel name ")]
+        [Display(Name = "Channel Name")]
         public string RoomName { get; set; } = null!;
 
         public bool IsActive { get; set; }
@@ -24,6 +26,9 @@ namespace CFP.Common.Business_Entities
 
         public string Ip { get; set; } = null!;
         public int MemberCount { get; set; }
+        [Required(ErrorMessage = "Please select members ")]
+        [Display(Name = "Members")]
+        public List<int> UserIds { get; set; }
         public virtual ICollection<ChatMessageModel> ChatMessages { get; set; } = new List<ChatMessageModel>();
 
 

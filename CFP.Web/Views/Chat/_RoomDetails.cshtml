@@ -1,0 +1,31 @@
+﻿@model ChatViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title" id="varyingcontentModalLabel"> @(Model.IsEdit ? "Edit" : "Add New") Channel</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="card">
+    <div class="card-body" style="padding-left:1rem;padding-right:1rem;">
+        <form class="validation-wizard form-horizontal form-material needs-validation" id="roomForm">
+            <div class="mb-3">
+                <label>Channel Name</label>
+                <input type="text" id="roomName" asp-for="ChatRoomModel.RoomName" class="form-control" />
+                @Html.ValidationMessageFor(x => x.ChatRoomModel.RoomName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-3">
+                <label>Members</label>
+                <select id="roomUsers" class="form-select select2" asp-for="ChatRoomModel.UserIds" multiple style="height:150px" asp-items="Model.SelectUserList">
+                </select>
+                @Html.ValidationMessageFor(x => x.ChatRoomModel.UserIds, "", new { @class = "text-danger" })
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i class=" ri-close-line"></i> Cancel</button>
+
+    <button type="button" id="btnSaveRoom" class="btn btn-primary" onclick="CFP.ChatClient.SaveRoom()"><i class="ri-save-fill"></i> Create</button>
+</div>

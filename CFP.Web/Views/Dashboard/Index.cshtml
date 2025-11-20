@@ -1,126 +1,202 @@
 ﻿@using CFP.Common.Utility
 @model DashboardViewModel
 @{
-	ViewData["Title"] = "Dashboard";
-	ViewBag.ParentPageName = "<a href='/Dashboard/Index'><i class='ri-home-2-line'></i> Home</a>";
-	ViewBag.PageName = "<i class='ri-dashboard-line'></i>  Dashboard";
+    ViewData["Title"] = "Dashboard";
+    ViewBag.ParentPageName = "<a href='/Dashboard/Index'><i class='ri-home-2-line'></i> Home</a>";
+    ViewBag.PageName = "<i class='ri-dashboard-line'></i>  Dashboard";
 }
+
+<style>
+    .chart-hidden {
+        visibility: hidden !important;
+        height: 0 !important;
+    }
+
+    .progress {
+        width: 300px !important;
+    }
+
+</style>
 
 @if (Model.RoleId == (int)Enumeration.Role.Agent || Model.RoleId == (int)Enumeration.Role.AgentLead)
 {
-	<link rel="stylesheet" href="~/assets/css/leaderboard.css" asp-append-version="true" />
-	<div class="row">
-		<div class="col-xxl-9">
-			<div class="row">
-				<div class="col-xl-6">
-					<div class="card overflow-hidden">
-						<div class="card-body bg-marketplace d-flex">
-							<div class="flex-grow-1">
-								<h4 class="fs-18 lh-base mb-0">Connecting Care with Confidence. <br> Lets achive your own <span class="text-success">Goal.</span> </h4>
-								<p class="mb-0 mt-2 pt-1 text-muted">Because Every Patient Deserves a Caring Voice.</p>
-								<div class="d-flex gap-3 mt-4">
-									<a href="https://www.healthsherpa.com/sessions/new" target="_blank" class="btn btn-primary">Goto HealthSherpa</a>
-									<a href="@Url.Content("Deal")" class="btn btn-success">Create Your Deal</a>
-								</div>
-							</div>
-							<img src="assets/images/bg-d.png" alt="" class="img-fluid">
-						</div>
-					</div>
-				</div><!--end col-->
-				<div class="col-xl-3 col-md-6">
-					<div class="card card-height-100">
-						<div class="card-body">
-							<div class="d-flex align-items-center">
-								<div class="avatar-sm flex-shrink-0">
-									<span class="avatar-title bg-info-subtle rounded fs-3">
-										<i class="bx bx-dollar-circle text-info"></i>
-									</span>
-								</div>
-								<div class="flex-grow-1 ps-3">
-									<h5 class="text-muted text-uppercase fs-13 mb-0">Total Leads</h5>
-								</div>
-							</div>
-							<div class="mt-4 pt-1">
-								<h4 class="fs-22 fw-semibold ff-secondary mb-0"><span class="counter-value" data-target="0">00</span> </h4>
-								<p class="mt-4 mb-0 text-muted"><span class="badge bg-danger-subtle text-danger mb-0 me-1"> Overall Leads </span> </p>
-							</div>
-						</div>
-					</div>
-				</div><!--end col-->
-				<div class="col-xl-3 col-md-6">
-					<a href="@Url.Content("Deal")">
-						<div class="card card-height-100">
-							<div class="card-body">
-								<div class="d-flex align-items-center">
-									<div class="avatar-sm flex-shrink-0">
-										<span class="avatar-title bg-info-subtle rounded fs-3">
-											<i class="ri-shake-hands-line text-info"></i>
-										</span>
-									</div>
-									<div class="flex-grow-1 ps-3">
-										<h5 class="text-muted text-uppercase fs-13 mb-0">Total Deals</h5>
-									</div>
-								</div>
-								<div class="mt-4 pt-1">
-									<h4 class="fs-22 fw-semibold ff-secondary mb-0"><span class="counter-value" data-target="@Model.DealCount">@Model.DealCount</span> </h4>
-									<p class="mt-4 mb-0 text-muted"><span class="badge bg-success-subtle text-success mb-0"> Overall Deals </span></p>
-								</div>
-							</div>
-						</div>
-					</a>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xxl-12">
-					<div class="card">
-						<div class="card-body p-0">
-							<div class="row g-0">
-								<div class="row g-0">
-									<div class="col-xxl-12">
-										<div class="">
-											<div class="card-header border-0 align-items-center d-flex">
-												<h4 class="card-title mb-0 flex-grow-1">🏆 Live Leaderboard</h4>
-											</div><!-- end card header -->
-											<div class="row g-0">
-												<div class="col-12 col-sm-12">
-													<div class="p-3 border border-dashed border-start-0 border-end-0 border-bottom-0" style="height: 500px;overflow: auto;">
-														<div class="list" id="leaderboard"></div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--end col-->
-			</div>
+    <link rel="stylesheet" href="~/assets/css/leaderboard.css" asp-append-version="true" />
+    <div class="row">
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card overflow-hidden">
+                    <div class="card-body bg-marketplace d-flex">
+                        <div class="flex-grow-1">
+                            <h4 class="fs-18 lh-base mb-0">Connecting Care with Confidence. <br> Lets achive your own <span class="text-success">Goal.</span> </h4>
+                            <p class="mb-0 mt-2 pt-1 text-muted">Because Every Patient Deserves a Caring Voice.</p>
+                            <div class="d-flex gap-3 mt-4">
+                                <a href="https://www.healthsherpa.com/sessions/new" target="_blank" class="btn btn-primary">Goto HealthSherpa</a>
+                                <a href="@Url.Content("Deal")" class="btn btn-success">Create Your Deal</a>
+                            </div>
+                        </div>
+                        <img src="assets/images/bg-d.png" alt="" class="img-fluid">
+                    </div>
+                </div>
+            </div><!--end col-->
+            <div class="col-xl-3 col-md-6">
+                <a href="@Url.Content("Deal")">
+                    <div class="card card-height-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-sm flex-shrink-0">
+                                    <span class="avatar-title bg-info-subtle rounded fs-3">
+                                        <i class="ri-shake-hands-line text-info"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1 ps-3">
+                                    <h5 class="text-muted text-uppercase fs-13 mb-0">Total Deals</h5>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-1">
+                                <h4 class="fs-22 fw-semibold ff-secondary mb-0"><span class="counter-value" data-target="@Model.DealCount">@Model.DealCount</span> </h4>
+                                <p class="mt-4 mb-0 text-muted"><span class="badge bg-success-subtle text-success mb-0"> Overall Deals </span></p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
 
-		</div>
-	</div>
+
+        <div class="row">
+            <div class="col-xl-6">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <div class="row g-0">
+                                <div class="col-xxl-12">
+                                    <div class="">
+                                        <div class="card-header border-0 align-items-center d-flex">
+                                            <h4 class="card-title mb-0 flex-grow-1">🏆 Live Leaderboard</h4>
+                                        </div><!-- end card header -->
+                                        <div class="row g-0">
+                                            <div class="col-12 col-sm-12">
+                                                <div class="p-3 border border-dashed border-start-0 border-end-0 border-bottom-0" style="height: 500px;overflow: auto;">
+                                                    <div class="list" id="leaderboard"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 ">
+                <div class="card card-animate" style="height:350px;">
+                    <div class="card-header py-2 mt-3 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0" style="font-size: 15px;">
+                            Deals (Recent 10 Days)
+                        </h5>
+
+                        <input asp-for="AgentId" hidden id="AgentId" />
+
+                    </div>
+
+                    <div class="card-body p-2" style="height: 273px;">
+                        <canvas id="dealLineChart" style="height: 100%; width: 100%;"></canvas>
+                        <div id="dealNoData" class="text-center text-muted mt-5" style="display:none; font-size:14px;">
+                            No deal data available.
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--end col-->
+        </div>
+    </div>
 }
 
+@if (Model.RoleId == (int)Enumeration.Role.Super_Admin)
+{
+    <div class="row g-4 mb-4">
+        <div class="col-xl-9 mt-4">
+            <div class="card card-animate" style="height:350px;">
+                <div class="card-header py-2 mt-3 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0" style="font-size: 15px;">
+                        Deals (Recent 10 Days)
+                    </h5>
+
+                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2 mt-2">
+
+                        <select class="form-select" id="AgentId" asp-items="Model.AgentList" onchange="CFP.Dashboard.BindDealChart()">
+                            <option value="-1">All Agents</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="card-body p-2" style="height: 273px;">
+                    <canvas id="dealLineChart" style="height: 100%; width: 100%;"></canvas>
+                    <div id="dealNoData" class="text-center text-muted mt-5" style="display:none; font-size:14px;">
+                        No deal data available.
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xxl-3">
+            <div class="card card-animate card-height-100">
+                <div class="card-header border-0 align-items-center d-flex">
+                    <h4 class="card-title mb-0 flex-grow-1">Deals Portfolio</h4>
+
+                    <div class="d-flex align-items-center">
+
+                        <div>
+                            <select id="portfolioRange" class="form-select form-select-sm" onchange="CFP.Dashboard.LoadPortfolioChart();">
+                                <option value="1">Last 1 Day</option>
+                                <option value="7" selected>Last 7 Days</option>
+                                <option value="30">Last 30 Days</option>
+                            </select>
+                        </div>
+                    </div>
+                </div><!-- end cardheader -->
+
+                <div class="card-body">
+                    <div id="portfolio_donut_charts" class="apex-charts" style="min-height: 227px;">
+                        <div id="portfolioDonut"></div>
+                    </div>
+
+                    <!-- Top 5 agents -->
+                    <ul id="portfolioTop5" class="list-group list-group-flush border-dashed mb-0 mt-3 pt-2">
+                        <!-- Filled by JS -->
+                    </ul>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div>
+
+    </div>
+}
 
 @section Scripts {
-	<script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
-	<script src="/assets/libs/swiper/swiper-bundle.min.js"></script>
-	<script src="/assets/js/pages/dashboard-crypto.init.js"></script>
-	<script src="/assets/js/pages/dashboard-projects.init.js"></script>
-	<script src="~/lib/js/custom/CFP.Dashboard.js" asp-append-version="true"></script>
-	<script src="~/lib/js/custom/CFP.Leaderboard.js" asp-append-version="true"></script>
-
-	<script>
-		$(document).ready(function () {
-		  //  CFP.Common.MenuLink("/Order/Dashboard");
-			CFP.Leaderboard.refreshScores();
-			CFP.Dashboard.Init('@Model.RoleId');
-			$("#txtSearch").on("keyup", function () {
-				CFP.Dashboard.Search();
-			});
-		});
-	</script>
+    <script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
+    <script src="assets/js/pages/dashboard-crypto.init.js"></script>
+    <script src="/assets/libs/swiper/swiper-bundle.min.js"></script>
+    <script src="/assets/js/pages/dashboard-crypto.init.js"></script>
+    <script src="/assets/js/pages/dashboard-projects.init.js"></script>
+    @* <script src="~/assets/libs/chart.js/chart.js"></script> *@
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/lib/js/custom/CFP.Dashboard.js" asp-append-version="true"></script>
+    <script src="~/lib/js/custom/CFP.Leaderboard.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+          //  CFP.Common.MenuLink("/Order/Dashboard");
+              CFP.Dashboard.BindDealChart();
+              CFP.Dashboard.LoadPortfolioChart();
+            CFP.Leaderboard.refreshScores();
+            CFP.Dashboard.Init('@Model.RoleId');
+            $("#txtSearch").on("keyup", function () {
+                CFP.Dashboard.Search();
+            });
+        });
+    </script>
 }
 
 

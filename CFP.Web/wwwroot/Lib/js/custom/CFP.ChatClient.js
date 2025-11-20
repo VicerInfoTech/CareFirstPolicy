@@ -125,8 +125,8 @@
 					</li>`;
                 if (index === 0) {
                     selectedUserId = u.userId;
-                    $(".username").text(u.userName);                   
-                   
+                    $(".username").text(u.userName);
+
                     if (u.isOnline) {
                         $(".user-own-img").addClass("online");
                         $(".member-count").text("Online");   // Show Online in member-count                        
@@ -286,7 +286,7 @@
         $.get("/chat/getcontacts", function (contacts) {
             let html = "";
             const grouped = {};
-            
+
             contacts.forEach(c => {
                 const letter = c.name[0].toUpperCase();
                 if (!grouped[letter]) grouped[letter] = [];
@@ -310,7 +310,7 @@
 								 class="rounded-circle avatar-xs" />
 							<span class="user-status"></span>
 						</div>`
-                        //   `<img src="assets/images/users/user-dummy-img.jpg" class="avatar-xs rounded-circle">`;
+                    //   `<img src="assets/images/users/user-dummy-img.jpg" class="avatar-xs rounded-circle">`;
 
                     html += `
 							<li onclick="CFP.ChatClient.OpenChat(${c.contactUserId}, '${c.name}', ${c.isOnline})">
@@ -375,31 +375,75 @@
 
 
     // OPEN MODAL
-    $("#btnCreateRoom").click(function () {
-        $("#roomNameInput").val("");
-        $('.select2').select2({
-            dropdownParent: $('#createRoomModal')
-        });
-        $("#createRoomModal").modal("show");
-    });
+    //$("#btnCreateRoom").click(function () {
+    //    $("#roomNameInput").val("");
+    //    $('.select2').select2({
+    //        dropdownParent: $('#createRoomModal')
+    //    });
+    //    $("#createRoomModal").modal("show");
+    //});
 
-    // CREATE ROOM
-    $("#btnSaveRoom").click(function () {
-        const roomName = $("#roomName").val();
-        const users = $("#roomUsers").val(); // array of userIds
-
+    this.AddRoom = function (id = '') {
+        $(".preloader").show();
         $.ajax({
-            url: "/chat/createroom",
-            type: "POST",
-            data: { roomName, users },
-            success: function (res) {
-                $("#createRoomModal").modal("hide");
-                $("#roomName").val("");                // clear room name
-                $("#roomUsers").val(null).trigger('change'); // clear select2 values
-                CFP.ChatClient.LoadRooms(); // refresh list
+            type: "GET",
+            url: UrlContent("Chat/_RoomDetails"),
+            data: {
+                id: id
+            },
+            success: function (data) {
+                $("#common-dialogContent").html(data);
+                $.validator.unobtrusive.parse($("#roomForm"));
+                $("#common-dialog").modal('show');
+                $(".preloader").hide();
+                $('.select2').select2({
+                    dropdownParent: $('#common-dialog')
+                });
+
             }
-        });
-    });
+        })
+    }
+
+    this.SaveRoom = function () {
+
+        if ($("#roomForm").valid()) {
+            $(".preloader").show();
+            var formdata = $("#roomForm").serialize();
+            $.ajax({
+                type: "Post",
+                url: UrlContent("Chat/SaveRoom/"),
+                data: formdata,
+                success: function (result) {
+                    $(".preloader").hide();
+                    if (result.isSuccess) {
+                        CFP.Common.ToastrSuccess(result.message);
+                        $("#common-dialog").modal("hide");
+                        CFP.ChatClient.LoadRooms();
+                    } else {
+                        CFP.Common.ToastrError(result.message);
+                    }
+                },
+            })
+        }
+    }
+
+    //// CREATE ROOM
+    //$("#btnSaveRoom").click(function () {
+    //    const roomName = $("#roomName").val();
+    //    const users = $("#roomUsers").val(); // array of userIds
+
+    //    $.ajax({
+    //        url: "/chat/createroom",
+    //        type: "POST",
+    //        data: { roomName, users },
+    //        success: function (res) {
+    //            $("#createRoomModal").modal("hide");
+    //            $("#roomName").val("");                // clear room name
+    //            $("#roomUsers").val(null).trigger('change'); // clear select2 values
+    //            CFP.ChatClient.LoadRooms(); // refresh list
+    //        }
+    //    });
+    //});
 
 
     $(document).on("click", ".channel-item", function () {
@@ -437,7 +481,7 @@
     this.OpenRoom = function (roomId) {
         currentChatType = "room";     // NEW FLAG
         currentRoomId = roomId;       // SET SELECTED ROOM
-        selectedUserId = null;  
+        selectedUserId = null;
         // Highlight selected room
         $(".chat-user-item").removeClass("active");
         $(".channel-item").removeClass("active");
@@ -456,7 +500,7 @@
                     m.message,
                     m.sentAt,
                     isOwn,
-                    m.senderName   
+                    m.senderName
                 );
             });
 
@@ -469,6 +513,7 @@
             debugger;
             $(".username").text(room.roomName);
             $(".member-count").text("Members: " + room.memberCount);
+           
         });
 
     };
@@ -533,6 +578,29 @@
     };
 
 
+    this.RenderRoomDropdown = function (room) {
+        debugger;
+        let html = `
+        <div class="dropdown ms-2">
+            <button class="btn btn-sm btn-light" data-bs-toggle="dropdown">
+                <i class="fa fa-ellipsis-v"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item" onclick="CFP.ChatClient.EditRoom(${room.roomId}, '${room.roomName}')">
+                        ✏ Edit Room
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item text-danger" onclick="CFP.ChatClient.DeleteRoom(${room.roomId})">
+                        🗑 Delete Room
+                    </a>
+                </li>
+            </ul>
+        </div>    `;
+
+        $(".chat-header-actions").html(html);
+    };
 
 
 

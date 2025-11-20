@@ -85,4 +85,241 @@
         CFP.Dashboard.Option.Table.ajax.reload();
     }
 
+    this.BindDealChart = function () {
+
+        var agentId = $("#AgentId").val();
+
+        $.ajax({
+            type: "POST",
+            url: UrlContent("Dashboard/FetchDealData"),
+            data: { agentId: agentId },
+
+            success: function (result) {
+
+                // NO DATA
+                if (!result || result.length === 0) {
+
+                    $("#dealLineChart").addClass("chart-hidden");
+                    $("#dealNoData").show();
+
+                    if (window.dealChart) window.dealChart.destroy();
+
+                    return;
+                }
+
+                // HAS DATA
+                $("#dealLineChart").removeClass("chart-hidden");
+                $("#dealNoData").hide();
+
+
+                // Backend already returns grouped data
+                const labels = result.map(x => x.date);
+                const data = result.map(x => x.totalDeal);
+
+                const ctx = document.getElementById('dealLineChart').getContext('2d');
+
+                // Destroy old chart
+                if (window.dealChart) {
+                    window.dealChart.destroy();
+                }
+
+
+                // Gradient effect for chart
+                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(23, 71, 159, 0.7)');
+                gradient.addColorStop(1, 'rgba(0, 204, 255, 0.3)');
+
+                window.dealChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Deal Data',
+                            data: data,
+                            fill: true,
+                            borderColor: '#17479f',
+                            backgroundColor: gradient,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#17479f'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+
+                        plugins: {
+                            legend: { display: false },
+
+                            tooltip: {
+                                callbacks: {
+                                    title: function (context) {
+                                        return context[0].label; // shows "11/20/2025"
+                                    }
+                                }
+                            }
+
+                        },
+
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    callback: function (value, index) {
+                                        const raw = this.chart.data.labels[index];  // "11/20/2025"
+
+                                        const [month, day, year] = raw.split("/");
+
+                                        // Format bottom label
+                                        const date = new Date(year, month - 1, day);
+
+                                        return `${day}-${date.toLocaleString("en-US", { month: "short" })}`;
+                                    }
+                                }
+
+
+                            },
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1 },
+                                grid: { color: 'rgba(230,230,230,0.5)' }
+                            }
+                        }
+                    }
+                });
+            },
+
+            error: function (xhr) {
+                console.error("Error loading deal data", xhr);
+            }
+        });
+    }
+
+    this.LoadPortfolioChart = function () {
+        const days = parseInt($('#portfolioRange').val() || '7', 10);
+
+        // show spinner / placeholder if you want
+        $.ajax({
+            type: 'POST',
+            url: UrlContent('Dashboard/FetchDealDataAllAgents'),
+            data: { days: days },
+            success: function (result) {
+                // result is array of AgentDealChartViewModel {AgentId, AgentName, DealCount}
+
+                // If no data
+                if (!result || result.length === 0) {
+                    CFP.Dashboard.RenderEmptyPortfolio();
+                    return;
+                }
+
+                // Prepare data: labels and series for donut
+                const labels = result.map(r => r.agentName);
+                const series = result.map(r => r.dealCount);
+
+                // Optionally limit slices shown and aggregate rest into "Other"
+                const maxSlices = 8; // show up to 8 slices
+                let finalLabels = labels;
+                let finalSeries = series;
+                if (labels.length > maxSlices) {
+                    const top = labels.slice(0, maxSlices);
+                    const topSeries = series.slice(0, maxSlices);
+                    const restTotal = series.slice(maxSlices).reduce((a, b) => a + b, 0);
+                    top.push('Others');
+                    topSeries.push(restTotal);
+                    finalLabels = top;
+                    finalSeries = topSeries;
+                }
+
+                // Colors from CSS variables (optional)
+                const colorCss = $('#portfolio_donut_charts').data('colors');
+                let colors = [];
+                try {
+                    colors = JSON.parse(colorCss.replace(/&quot;/g, '"'));
+                } catch (e) {
+                    colors = ['#3D78E3', '#29BADB', '#FFC84B', '#67B173'];
+                }
+
+                CFP.Dashboard.RenderDonut(finalLabels, finalSeries, colors);
+                CFP.Dashboard.RenderTop5List(result.slice(0, 5)); // top 5
+            },
+            error: function (err) {
+                console.error('Error fetching portfolio data', err);
+                CFP.Dashboard.RenderEmptyPortfolio();
+            }
+        });
+    };
+
+    this.RenderDonut = function (labels, series, colors) {
+        // destroy previous chart if present
+        if (window.portfolioDonutChart) {
+            window.portfolioDonutChart.destroy();
+            $('#portfolioDonut').empty();
+        }
+
+        const options = {
+            series: series,
+            chart: { type: 'donut', height: 227 },
+            labels: labels,
+            legend: {
+                show: false   // 🔥 HIDE LEGEND
+            },
+            colors: colors,
+            dataLabels: { enabled: false },
+            responsive: [{
+                breakpoint: 480,
+                options: { chart: { width: 200 }, legend: { show: false } }
+            }]
+        };
+
+        window.portfolioDonutChart = new ApexCharts(document.querySelector("#portfolioDonut"), options);
+        window.portfolioDonutChart.render();
+    };
+
+    this.RenderTop5List = function (top5Array) {
+        // top5Array: array of AgentDealChartViewModel ordered desc
+        const $list = $('#portfolioTop5');
+        $list.empty();
+
+        if (!top5Array || top5Array.length === 0) {
+            $list.append('<li class="list-group-item px-0 text-center text-muted">No agents found</li>');
+            return;
+        }
+
+        top5Array.forEach(item => {
+            const html = `
+      <li class="list-group-item px-0">
+        <div class="d-flex">
+          <div class="flex-grow-1 ms-2">
+            <h6 class="mb-1">${escapeHtml(item.agentName)}</h6>
+          </div>
+          <div class="flex-shrink-0 text-end">
+            <h6 class="fs-13 mb-0 text-muted">Deals: ${item.dealCount}</h6>
+          </div>
+        </div>
+      </li>`;
+            $list.append(html);
+        });
+    };
+
+    this.RenderEmptyPortfolio = function () {
+        if (window.portfolioDonutChart) {
+            window.portfolioDonutChart.destroy();
+            $('#portfolioDonut').empty();
+        }
+        $('#portfolioDonut').html('<div class="text-center text-muted" style="padding:70px 0;">No data available</div>');
+        $('#portfolioTop5').html('<li class="list-group-item px-0 text-center text-muted">No agents found</li>');
+    };
+
+    // small helper to avoid XSS if agent names are user-provided
+    function escapeHtml(text) {
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+
 }
