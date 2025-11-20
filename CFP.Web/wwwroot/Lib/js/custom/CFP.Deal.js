@@ -24,6 +24,7 @@
                 "columns": [
                     { data: "dealIdString", name: "DealIdString", autoWidth: true },
                     { data: "fullName", name: "FullName", autoWidth: true },
+                    { data: "noOfApplicants", name: "NoOfApplicants", autoWidth: true, className: "text-center col-1" },
                     { data: "careerName", name: "CareerName", autoWidth: true },
                     { data: "closeDateString", name: "CloaseDateString", autoWidth: true },
                     { data: "agentName", name: "Username", autoWidth: true },

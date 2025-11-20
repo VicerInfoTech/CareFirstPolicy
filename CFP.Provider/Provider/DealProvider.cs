@@ -134,6 +134,13 @@ namespace CFP.Provider.Provider
             ResponseModel response = new ResponseModel();
             try
             {
+                if (model.NoOfApplicants == null || model.NoOfApplicants == 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "No. of Applicants is invalid.";
+                    return response;
+                }
+
                 if (!string.IsNullOrEmpty(model.EncId))
                     model.DealId = _commonProvider.UnProtect(model.EncId);
 

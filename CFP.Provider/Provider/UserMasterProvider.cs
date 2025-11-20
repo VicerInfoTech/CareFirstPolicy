@@ -46,7 +46,7 @@ namespace CFP.Provider.Provider
                     if (loginAtmpt >= 3)
                     {
                         model.IsSuccess = false;
-                        model.Message = "Failed to Login, Your account is blocked for 15 min.!";
+                        model.Message = "Failed to Login, Your are locked for 15 min.!";
                         return model;
                     }
 

@@ -79,7 +79,6 @@ namespace CFP.Provider.Provider
 
         #endregion
 
-
         #region Methods
 
         //create drop down list method for user table
@@ -128,7 +127,7 @@ namespace CFP.Provider.Provider
                                        x => new DropDownModel
                                        {
                                            Text = x.FirstName + " " + x.LastName,
-                                           ExtraValue = x.Deals.Where(x => x.IsActive && x.CreatedOn.Date==AppCommon.CurrentDate.Date).Count()
+                                           ExtraValue = x.Deals.Where(x => x.IsActive && x.CreatedOn.Date == AppCommon.CurrentDate.Date).Sum(x => x.NoOfApplicants)
                                        }).OrderBy(x => x.Text).ToList();
             }
             catch (Exception ex)
@@ -145,7 +144,7 @@ namespace CFP.Provider.Provider
                 var dealList = unitOfWork.Deal.GetAll(x => x.IsActive);
                 if (sessionProviderModel.RoleId != (short)Enumeration.Role.Super_Admin)
                     dealList = dealList.Where(x => x.AgentId == sessionProviderModel.AgentId);
-                dealCount = dealList.Count();
+                dealCount = dealList.Sum(x => x.NoOfApplicants);
             }
             catch (Exception ex)
             {
@@ -153,7 +152,6 @@ namespace CFP.Provider.Provider
             }
             return dealCount;
         }
-
         public List<DropDownModel> GetUserList()
         {
             List<DropDownModel> list = new List<DropDownModel>();
@@ -174,9 +172,6 @@ namespace CFP.Provider.Provider
             }
             return list;
         }
-
-
-
         public List<MenuModel> GetMenuList(SessionProviderModel sessionProviderModel)
         {
             List<MenuModel> list = new List<MenuModel>();
@@ -195,7 +190,6 @@ namespace CFP.Provider.Provider
             }
             return list;
         }
-
         public bool IsAuthorized(int roleId, int menuId)
         {
             bool isAuthorized = false;
@@ -219,8 +213,6 @@ namespace CFP.Provider.Provider
             }
             return isAuthorized;
         }
-
-
         public ResponseModel CovertExcelToModel<TDATA>(Stream file, ref List<TDATA> tDATAs) where TDATA : new()
         {
             ResponseModel returnResult = new ResponseModel();
@@ -308,8 +300,6 @@ namespace CFP.Provider.Provider
             }
             return returnResult;
         }
-
-
         public List<DealChartViewModel> GetDealDataForChart(int agentId)
         {
             try
@@ -326,7 +316,7 @@ namespace CFP.Provider.Provider
                     .Select(g => new DealChartViewModel
                     {
                         Date = g.Key.ToString("MM/dd/yyyy"),
-                        TotalDeal = g.Count()
+                        TotalDeal = g.Sum(x=>x.NoOfApplicants)
                     })
                     .OrderBy(x => x.Date)
                     .ToList();
@@ -339,7 +329,6 @@ namespace CFP.Provider.Provider
                 return new List<DealChartViewModel>();
             }
         }
-
         public AgentDealDashboardViewModel GetAgentDealDashboard(int days)
         {
             try
@@ -361,7 +350,7 @@ namespace CFP.Provider.Provider
                 var agentList = allAgents
                     .Select(a =>
                     {
-                        int count = deals.Count(x => x.AgentId == a.AgentMasterId);
+                        int count = deals.Where(x => x.AgentId == a.AgentMasterId).Sum(x=>x.NoOfApplicants);
 
                         return new AgentDealChartViewModel
                         {
@@ -402,8 +391,6 @@ namespace CFP.Provider.Provider
                 return new AgentDealDashboardViewModel();
             }
         }
-
-
         #endregion
 
         #region Email & SMS Methods

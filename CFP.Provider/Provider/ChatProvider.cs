@@ -39,6 +39,16 @@ namespace CFP.Provider.Provider
         {
             try
             {
+                //var previousConnection = unitOfWork.ChatConnection
+                //    .GetAll(x => x.UserMasterId == sessionProviderModel.UserId && x.ConnectionId != connectionId)
+                //    .ToList();
+
+                //if (previousConnection != null && previousConnection.Any())
+                //{
+                //    unitOfWork.ChatConnection.DeleteAll(previousConnection);
+                //    unitOfWork.Save();
+                //}
+
                 ChatConnection conn = new ChatConnection
                 {
                     UserMasterId = sessionProviderModel.UserId,
@@ -47,6 +57,17 @@ namespace CFP.Provider.Provider
 
                 unitOfWork.ChatConnection.Insert(conn, sessionProviderModel.UserId, sessionProviderModel.Ip);
                 unitOfWork.Save();
+
+                //Delete old connections
+                var existingConnection = unitOfWork.ChatConnection
+                   .GetAll(x => x.CreatedOn < AppCommon.CurrentDate.AddDays(-1))
+                   .ToList();
+
+                if (existingConnection != null && existingConnection.Any())
+                {
+                    unitOfWork.ChatConnection.DeleteAll(existingConnection);
+                    unitOfWork.Save();
+                }
             }
             catch (Exception)
             {
@@ -266,7 +287,7 @@ namespace CFP.Provider.Provider
                     response.IsSuccess = true;
                     response.ChatRoomId = roomData.ChatRoomId;
                 }
-               
+
             }
             catch (Exception)
             {
@@ -305,7 +326,7 @@ namespace CFP.Provider.Provider
 
             return members;
         }
-        public ChatRoomModel GetRoomById(int roomId,SessionProviderModel providerModel)
+        public ChatRoomModel GetRoomById(int roomId, SessionProviderModel providerModel)
         {
             ChatRoomModel roomModel = new ChatRoomModel();
             var charRoom = unitOfWork.ChatRoom.GetAll(x => x.ChatRoomId == roomId).FirstOrDefault();
@@ -354,7 +375,7 @@ namespace CFP.Provider.Provider
             {
                 var data = unitOfWork.ChatRoom.Get(id);
                 if (data != null)
-                {                    
+                {
                     data.IsActive = false;
                     unitOfWork.ChatRoom.Update(data, sessionProviderModel.UserId, sessionProviderModel.Ip);
                     unitOfWork.Save();

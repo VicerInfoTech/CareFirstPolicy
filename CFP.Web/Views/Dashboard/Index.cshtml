@@ -117,7 +117,7 @@
 {
     <div class="row g-4 mb-4">
         <div class="col-xl-9 mt-4">
-            <div class="card card-animate" style="height:650px;">
+            <div class="card card-animate" style="height:545px;">
                 <div class="card-header py-2 mt-1 d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0" style="font-size: 15px;">
                         Deals (Recent 10 Days)
@@ -187,6 +187,7 @@
     <script src="~/lib/js/custom/CFP.Leaderboard.js" asp-append-version="true"></script>
     <script>
         $(document).ready(function () {
+            Chart.defaults.font.family = "'Montserrat', sans-serif";
           //  CFP.Common.MenuLink("/Order/Dashboard");
               CFP.Dashboard.BindDealChart();
               CFP.Dashboard.LoadPortfolioChart();
