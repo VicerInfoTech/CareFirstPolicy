@@ -5,12 +5,14 @@ using CFP.Common.Utility;
 using CFP.Provider.IProvider;
 using CFP.Repository.Models;
 using CFP.Repository.Repository;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Twilio.TwiML.Voice;
 
 namespace CFP.Provider.Provider
 {
@@ -198,32 +200,73 @@ namespace CFP.Provider.Provider
             ResponseModel response = new ResponseModel();
             try
             {
+                if (!string.IsNullOrEmpty(inputModel.EncChatRoomId))
+                    inputModel.ChatRoomId = _commonProvider.UnProtect(inputModel.EncChatRoomId);
 
-                ChatRoom room = new ChatRoom
+                if (unitOfWork.ChatRoom.Any(x => x.RoomName.ToLower() == inputModel.RoomName.ToLower() && x.ChatRoomId != inputModel.ChatRoomId))
                 {
-                    RoomName = inputModel.RoomName,
-                    IsActive = true,
-                };
-                foreach (var uid in inputModel.UserIds)
-                {
-                    room.ChatRoomMembers.Add(new ChatRoomMember
-                    {
-                        UserMasterId = uid,
-                    });
+                    response.IsSuccess = false;
+                    response.Message = "Channel name  already created.";
+                    return response;
                 }
 
-                //Add Current User While Creating New Room
-                if (!room.ChatRoomMembers.Any(x => x.UserMasterId == providerModel.UserId))
+                var _temp = unitOfWork.ChatRoom.Get(x => x.ChatRoomId == inputModel.ChatRoomId);
+                var roomData = _mapper.Map<ChatRoomModel, ChatRoom>(inputModel, _temp);
+                if (_temp == null)
                 {
-                    room.ChatRoomMembers.Add(new ChatRoomMember
+                    ChatRoom room = new ChatRoom
                     {
-                        UserMasterId = providerModel.UserId,
-                    });
+                        RoomName = inputModel.RoomName,
+                        IsActive = true,
+                    };
+                    foreach (var uid in inputModel.UserIds)
+                    {
+                        room.ChatRoomMembers.Add(new ChatRoomMember
+                        {
+                            UserMasterId = uid,
+                        });
+                    }
+                    //Add Current User While Creating New Room
+                    if (!room.ChatRoomMembers.Any(x => x.UserMasterId == providerModel.UserId))
+                    {
+                        room.ChatRoomMembers.Add(new ChatRoomMember
+                        {
+                            UserMasterId = providerModel.UserId,
+                        });
+                    }
+                    unitOfWork.ChatRoom.Insert(room, providerModel.UserId, providerModel.Ip);
+                    unitOfWork.Save();
+                    response.IsSuccess = true;
+                    response.Message = "Channel created successfully";
+                    response.ChatRoomId = room.ChatRoomId;
                 }
-                unitOfWork.ChatRoom.Insert(room, providerModel.UserId, providerModel.Ip);
-                unitOfWork.Save();
-                response.IsSuccess = true;
-                response.Message = "Channel created successfully";
+                else
+                {
+
+                    var curDoc = roomData.ChatRoomMembers.ToList();
+                    List<int> removedDoc = curDoc.Select(x => x.ChatRoomMemberId).ToList();
+                    foreach (var item in inputModel.UserIds)
+                    {
+                        var tmp = curDoc.Where(x => x.UserMasterId == item).FirstOrDefault();
+                        if (tmp != null)
+                            removedDoc.Remove(tmp.ChatRoomMemberId);
+                        else
+                        {
+                            roomData.ChatRoomMembers.Add(new ChatRoomMember
+                            {
+                                UserMasterId = item,
+                            });
+                        }
+                    }
+                    if (removedDoc.Any())
+                        unitOfWork.ChatRoomMember.DeleteAll(unitOfWork.ChatRoomMember.GetAll(x => removedDoc.Contains(x.ChatRoomMemberId)));
+                    response.Message = "Channel updated successfully";
+                    unitOfWork.ChatRoom.Update(roomData, providerModel.UserId, providerModel.Ip);
+                    unitOfWork.Save();
+                    response.IsSuccess = true;
+                    response.ChatRoomId = roomData.ChatRoomId;
+                }
+               
             }
             catch (Exception)
             {
@@ -262,12 +305,15 @@ namespace CFP.Provider.Provider
 
             return members;
         }
-        public ChatRoomModel GetRoomById(int roomId)
+        public ChatRoomModel GetRoomById(int roomId,SessionProviderModel providerModel)
         {
             ChatRoomModel roomModel = new ChatRoomModel();
             var charRoom = unitOfWork.ChatRoom.GetAll(x => x.ChatRoomId == roomId).FirstOrDefault();
             roomModel = _mapper.Map<ChatRoomModel>(charRoom);
+            roomModel.EncChatRoomId = _commonProvider.Protect(roomModel.ChatRoomId);
+            roomModel.UserIds = charRoom.ChatRoomMembers.Select(x => x.UserMasterId).ToList();
             roomModel.MemberCount = charRoom.ChatRoomMembers.Count();
+            roomModel.IsShowActionBtn = charRoom.CreatedBy == providerModel.UserId;
             return roomModel;
         }
         public List<ChatMessageModel> GetRoomMessages(int roomId)
@@ -299,6 +345,32 @@ namespace CFP.Provider.Provider
             unitOfWork.Save();
 
             return entity.ChatMessageId;
+        }
+
+        public ResponseModel Delete(int id, SessionProviderModel sessionProviderModel)
+        {
+            ResponseModel model = new ResponseModel();
+            try
+            {
+                var data = unitOfWork.ChatRoom.Get(id);
+                if (data != null)
+                {                    
+                    data.IsActive = false;
+                    unitOfWork.ChatRoom.Update(data, sessionProviderModel.UserId, sessionProviderModel.Ip);
+                    unitOfWork.Save();
+                    model.IsSuccess = true;
+                    model.Message = "Channel deleted Successfully";
+                }
+                else
+                    model.Message = "Channel records not found.";
+            }
+            catch (Exception ex)
+            {
+                model.IsSuccess = false;
+                model.Message = AppCommon.ErrorMessage;
+                AppCommon.LogException(ex, "ChatProvider=>Delete");
+            }
+            return model;
         }
 
         #endregion

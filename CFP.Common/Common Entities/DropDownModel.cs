@@ -19,5 +19,12 @@
         public int DealCount { get; set; }
     }
 
+    public class AgentDealDashboardViewModel
+    {
+        public List<AgentDealChartViewModel> ChartAgents { get; set; }
+        public List<AgentDealChartViewModel> TopAgents { get; set; }
+    }
+
+
 
 }

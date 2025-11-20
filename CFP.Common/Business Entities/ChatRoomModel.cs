@@ -10,8 +10,10 @@ namespace CFP.Common.Business_Entities
     public class ChatRoomModel
     {
         public int ChatRoomId { get; set; }
+        public string EncChatRoomId { get; set; }
         [Required(ErrorMessage = "Please enter channel name ")]
         [Display(Name = "Channel Name")]
+        [StringLength(250, ErrorMessage = "Channel name cannot exceed 250 characters")]
         public string RoomName { get; set; } = null!;
 
         public bool IsActive { get; set; }
@@ -29,6 +31,7 @@ namespace CFP.Common.Business_Entities
         [Required(ErrorMessage = "Please select members ")]
         [Display(Name = "Members")]
         public List<int> UserIds { get; set; }
+        public bool IsShowActionBtn { get; set; }
         public virtual ICollection<ChatMessageModel> ChatMessages { get; set; } = new List<ChatMessageModel>();
 
 

@@ -54,7 +54,7 @@ namespace CFP.Web.Controllers
         [HttpPost]
         public JsonResult FetchDealDataAllAgents(int days)
         {
-            return Json(_commonProvider.GetDealCountsByAgent(days));
+            return Json(_commonProvider.GetAgentDealDashboard(days));
         }
 
         #endregion

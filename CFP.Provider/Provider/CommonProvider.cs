@@ -340,37 +340,66 @@ namespace CFP.Provider.Provider
             }
         }
 
-        public List<AgentDealChartViewModel> GetDealCountsByAgent(int days)
+        public AgentDealDashboardViewModel GetAgentDealDashboard(int days)
         {
             try
             {
-                DateTime fromDate = AppCommon.CurrentDate.AddDays(-days); // last N days including today
+                DateTime fromDate = AppCommon.CurrentDate.AddDays(-days);
 
-                var query = unitOfWork.Deal
+                // Fetch deals
+                var deals = unitOfWork.Deal
                     .GetAll(d => d.IsActive && d.CreatedOn.Date >= fromDate)
                     .ToList();
 
-                var result = query
-                    .GroupBy(d => d.AgentId)
-                    .Select(g =>
+                // Fetch agents only once
+                var allAgents = unitOfWork.AgentMaster
+                    .GetAll(a => a.IsActive)
+                    .Select(a => new { a.AgentMasterId, a.FirstName, a.LastName })
+                    .ToList();
+
+                // Build full list with deal counts
+                var agentList = allAgents
+                    .Select(a =>
                     {
-                        var agent = unitOfWork.AgentMaster.GetAll(x=>x.AgentMasterId==g.Key).FirstOrDefault(); // adjust if you have cached agent list
+                        int count = deals.Count(x => x.AgentId == a.AgentMasterId);
+
                         return new AgentDealChartViewModel
                         {
-                            AgentId = g.Key,
-                            AgentName = agent != null ? agent.FirstName+" "+agent.LastName : $"Agent {g.Key}",
-                            DealCount = g.Count()
+                            AgentId = a.AgentMasterId,
+                            AgentName = $"{a.FirstName} {a.LastName}",
+                            DealCount = count
                         };
                     })
+                    .ToList();
+
+                // ---------------------------
+                // 1️⃣ Donut Chart List (Only agents with deals > 0)
+                // ---------------------------
+                var chartList = agentList
+                    .Where(x => x.DealCount > 0)
                     .OrderByDescending(x => x.DealCount)
                     .ToList();
 
-                return result;
+                // ---------------------------
+                // 2️⃣ Top 5 Display List (Always 5)
+                // ---------------------------
+                var top5List = agentList
+                    .OrderByDescending(x => x.DealCount > 0)
+                    .ThenByDescending(x => x.DealCount)
+                    .ThenBy(x => x.AgentName)
+                    .Take(5)
+                    .ToList();
+
+                return new AgentDealDashboardViewModel
+                {
+                    ChartAgents = chartList,
+                    TopAgents = top5List
+                };
             }
             catch (Exception ex)
             {
-                AppCommon.LogException(ex, "Error in GetDealCountsByAgent");
-                return new List<AgentDealChartViewModel>();
+                AppCommon.LogException(ex, "Error in GetAgentDealDashboard");
+                return new AgentDealDashboardViewModel();
             }
         }
 

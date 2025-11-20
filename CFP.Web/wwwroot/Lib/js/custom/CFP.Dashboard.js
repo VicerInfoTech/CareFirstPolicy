@@ -188,6 +188,9 @@
                         }
                     }
                 });
+                const canvas = $(".deal-chart-canvas").val();
+                canvas.style.height = "500px";
+                canvas.style.minHeight = "500px";
             },
 
             error: function (xhr) {
@@ -208,14 +211,15 @@
                 // result is array of AgentDealChartViewModel {AgentId, AgentName, DealCount}
 
                 // If no data
-                if (!result || result.length === 0) {
+                if (!result || !result.chartAgents || result.chartAgents.length === 0) {
                     CFP.Dashboard.RenderEmptyPortfolio();
                     return;
                 }
 
                 // Prepare data: labels and series for donut
-                const labels = result.map(r => r.agentName);
-                const series = result.map(r => r.dealCount);
+                const labels = result.chartAgents.map(r => r.agentName);
+                const series = result.chartAgents.map(r => r.dealCount);
+
 
                 // Optionally limit slices shown and aggregate rest into "Other"
                 const maxSlices = 8; // show up to 8 slices
@@ -241,7 +245,8 @@
                 }
 
                 CFP.Dashboard.RenderDonut(finalLabels, finalSeries, colors);
-                CFP.Dashboard.RenderTop5List(result.slice(0, 5)); // top 5
+                CFP.Dashboard.RenderTop5List(result.topAgents);
+
             },
             error: function (err) {
                 console.error('Error fetching portfolio data', err);
@@ -256,7 +261,7 @@
             window.portfolioDonutChart.destroy();
             $('#portfolioDonut').empty();
         }
-
+        const totalDeals = series.reduce((a, b) => a + b, 0);
         const options = {
             series: series,
             chart: { type: 'donut', height: 227 },
@@ -265,6 +270,24 @@
                 show: false   // 🔥 HIDE LEGEND
             },
             colors: colors,
+            // 🔥 Add donut center label
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '75%',
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                label: 'Total Deals',
+                                formatter: function () {
+                                    return "#"+ totalDeals;  // center value
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             dataLabels: { enabled: false },
             responsive: [{
                 breakpoint: 480,
@@ -294,7 +317,7 @@
             <h6 class="mb-1">${escapeHtml(item.agentName)}</h6>
           </div>
           <div class="flex-shrink-0 text-end">
-            <h6 class="fs-13 mb-0 text-muted">Deals: ${item.dealCount}</h6>
+            <h6 class="fs-13 mb-0 text-muted"># ${item.dealCount}</h6>
           </div>
         </div>
       </li>`;

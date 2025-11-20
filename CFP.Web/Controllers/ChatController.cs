@@ -86,7 +86,7 @@ namespace CFP.Web.Controllers
             if (!string.IsNullOrEmpty(id))
             {
                 model.IsEdit = true;
-                model.ChatRoomModel = _chatProvider.GetRoomById(_commonProvider.UnProtect(id));
+                model.ChatRoomModel = _chatProvider.GetRoomById(_commonProvider.UnProtect(id),GetSessionProviderParameters());
             }
 
             return PartialView(model);
@@ -97,6 +97,14 @@ namespace CFP.Web.Controllers
         {
             return Json(_chatProvider.CreateRoom(model.ChatRoomModel, GetSessionProviderParameters()));
         }
+
+
+        [HttpPost]
+        public JsonResult Delete(string id)
+        {
+            return Json(_chatProvider.Delete(_commonProvider.UnProtect(id), GetSessionProviderParameters()));
+        }
+
 
         [HttpPost]
         public IActionResult AddMember(int roomId, int userId)
@@ -114,7 +122,7 @@ namespace CFP.Web.Controllers
         [HttpGet("/chat/getroom")]
         public IActionResult GetRoom(int roomId)
         {
-            return Json(_chatProvider.GetRoomById(roomId));
+            return Json(_chatProvider.GetRoomById(roomId,GetSessionProviderParameters()));
         }
         [HttpGet("/chat/getroommessages")]
         public IActionResult GetRoomMessages(int roomId)

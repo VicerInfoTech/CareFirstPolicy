@@ -384,6 +384,7 @@
     //});
 
     this.AddRoom = function (id = '') {
+        debugger;
         $(".preloader").show();
         $.ajax({
             type: "GET",
@@ -418,7 +419,10 @@
                     if (result.isSuccess) {
                         CFP.Common.ToastrSuccess(result.message);
                         $("#common-dialog").modal("hide");
+                        debugger;
                         CFP.ChatClient.LoadRooms();
+                        CFP.ChatClient.OpenRoom(result.chatRoomId);
+
                     } else {
                         CFP.Common.ToastrError(result.message);
                     }
@@ -426,6 +430,41 @@
             })
         }
     }
+
+    this.DeleteRoom = function (id) {
+        Swal.fire({
+            title: '<h4>Are you sure want to delete this channel?</h4>',
+            html: '',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#f33c02',
+            cancelButtonColor: '#a1aab2',
+            confirmButtonText: '<i class="mdi mdi-trash-can"></i> Delete',
+            cancelButtonText: '<i class="mdi mdi-cancel"></i> Cancel'
+        }).then((result) => {
+            if (result.value) {
+                $('.preloader').show();
+                $.ajax({
+                    type: "POST",
+                    url: UrlContent("Chat/Delete"),
+                    data: {
+                        id: id,
+                    },
+                    success: function (result) {
+                        $('.preloader').hide();
+                        if (result.isSuccess) {
+                            CFP.Common.ToastrSuccess(result.message);
+                            window.location.reload();
+                        }
+                        else {
+                            CFP.Common.ToastrError(result.message);
+                        }
+                    }
+                })
+            }
+        });
+    }
+
 
     //// CREATE ROOM
     //$("#btnSaveRoom").click(function () {
@@ -479,6 +518,7 @@
         CFP.ChatClient.ScrollBottom();
     };
     this.OpenRoom = function (roomId) {
+        debugger;
         currentChatType = "room";     // NEW FLAG
         currentRoomId = roomId;       // SET SELECTED ROOM
         selectedUserId = null;
@@ -513,7 +553,9 @@
             debugger;
             $(".username").text(room.roomName);
             $(".member-count").text("Members: " + room.memberCount);
-           
+            if (room.isShowActionBtn) {
+                CFP.ChatClient.RenderRoomDropdown(room);
+            }
         });
 
     };
@@ -581,26 +623,28 @@
     this.RenderRoomDropdown = function (room) {
         debugger;
         let html = `
-        <div class="dropdown ms-2">
-            <button class="btn btn-sm btn-light" data-bs-toggle="dropdown">
-                <i class="fa fa-ellipsis-v"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                    <a class="dropdown-item" onclick="CFP.ChatClient.EditRoom(${room.roomId}, '${room.roomName}')">
-                        ✏ Edit Room
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item text-danger" onclick="CFP.ChatClient.DeleteRoom(${room.roomId})">
-                        🗑 Delete Room
-                    </a>
-                </li>
-            </ul>
+        <div class="dropdown">
+           <button class="btn btn-ghost-secondary btn-icon" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical icon-sm"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                                                                    </button>
+
+            <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="#"
+                   onclick="CFP.ChatClient.AddRoom('${room.encChatRoomId}')">
+                    <i class="ri-edit-2-line align-bottom text-muted me-2"></i> Edit Room
+                </a>
+
+                <a class="dropdown-item text-danger" href="#"
+                  onclick="CFP.ChatClient.DeleteRoom('${room.encChatRoomId}')"
+>
+                    <i class="ri-delete-bin-5-line align-bottom me-2"></i> Delete
+                </a>
+            </div>
         </div>    `;
 
         $(".chat-header-actions").html(html);
     };
+
 
 
 

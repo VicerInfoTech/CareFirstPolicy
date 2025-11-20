@@ -30,9 +30,10 @@ namespace CFP.Provider.IProvider
         ResponseModel CreateRoom(ChatRoomModel inputModel, SessionProviderModel providerModel);
         void AddMemberToRoom(int roomId, int userId);
         List<UserMasterModel> GetRoomMembers(int roomId);
-        ChatRoomModel GetRoomById(int roomId);
+        ChatRoomModel GetRoomById(int roomId,SessionProviderModel providerModel);
         List<ChatMessageModel> GetRoomMessages(int roomId);
         long SaveRoomMessage(ChatMessageModel model);
+        ResponseModel Delete(int id, SessionProviderModel sessionProviderModel);
 
         #endregion
 

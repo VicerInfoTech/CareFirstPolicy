@@ -9,6 +9,7 @@ namespace CFP.Common.Common_Entities
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
         public object Result { get; set; }
+        public int ChatRoomId { get; set; } 
     }
 
     public class APIResponseModel<T>

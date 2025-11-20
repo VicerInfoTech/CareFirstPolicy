@@ -30,7 +30,7 @@ namespace CFP.Provider.IProvider
         bool IsAuthorized(int roleId, int menuId);
         List<DropDownModel> GetUserList();
         List<DealChartViewModel> GetDealDataForChart(int agentId);
-        List<AgentDealChartViewModel> GetDealCountsByAgent(int days);
+        AgentDealDashboardViewModel GetAgentDealDashboard(int days);
         #endregion
 
     }

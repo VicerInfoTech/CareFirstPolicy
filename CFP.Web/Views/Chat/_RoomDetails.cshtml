@@ -7,6 +7,10 @@
 <div class="card">
     <div class="card-body" style="padding-left:1rem;padding-right:1rem;">
         <form class="validation-wizard form-horizontal form-material needs-validation" id="roomForm">
+            <input asp-for="ChatRoomModel.EncChatRoomId" type="hidden" class="form-control" id="txtEncId" />
+            <input asp-for="ChatRoomModel.IsActive" type="hidden" />
+            <input asp-for="ChatRoomModel.CreatedBy" type="hidden" />
+            <input asp-for="ChatRoomModel.CreatedOn" type="hidden" />
             <div class="mb-3">
                 <label>Channel Name</label>
                 <input type="text" id="roomName" asp-for="ChatRoomModel.RoomName" class="form-control" />
