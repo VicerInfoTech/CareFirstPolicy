@@ -32,6 +32,7 @@ namespace CFP.Provider.Provider
             AuthResultModel model = new AuthResultModel();
             try
             {
+                login.UserName = login.UserName.Trim();
                 var userData = unitOfWork.UserMaster.GetAll(x => x.Username == login.UserName).FirstOrDefault();
                 if (userData != null)
                 {

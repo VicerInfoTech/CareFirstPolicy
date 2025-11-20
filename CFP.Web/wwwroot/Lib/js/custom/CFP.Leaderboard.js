@@ -6,7 +6,7 @@
     const board = document.getElementById('leaderboard');
     
     let interval;
-    let dailyTarget = 50;
+    let dailyTarget = 100;
 
     this.bindPlayers = function () {
         scores.forEach(function (entity, index) {
