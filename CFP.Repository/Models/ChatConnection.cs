@@ -11,5 +11,7 @@ public partial class ChatConnection
 
     public string ConnectionId { get; set; } = null!;
 
+    public DateTime CreatedOn { get; set; }
+
     public virtual UserMaster UserMaster { get; set; } = null!;
 }

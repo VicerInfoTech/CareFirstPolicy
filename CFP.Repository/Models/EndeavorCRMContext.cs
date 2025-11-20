@@ -132,6 +132,7 @@ public partial class EndeavorCRMContext : DbContext
             entity.ToTable("ChatConnection");
 
             entity.Property(e => e.ConnectionId).HasMaxLength(100);
+            entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
             entity.HasOne(d => d.UserMaster).WithMany(p => p.ChatConnections)
                 .HasForeignKey(d => d.UserMasterId)
@@ -257,7 +258,7 @@ public partial class EndeavorCRMContext : DbContext
 
         modelBuilder.Entity<LeadMaster>(entity =>
         {
-            entity.HasKey(e => e.LeadId).HasName("PK__LeadMast__73EF78FA64DB377E");
+            entity.HasKey(e => e.LeadId).HasName("PK__LeadMast__73EF78FA114B1F69");
 
             entity.ToTable("LeadMaster");
 
