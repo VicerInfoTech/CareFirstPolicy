@@ -16,6 +16,14 @@
         width: 300px !important;
     }
 
+    .OverallTotel {
+        font-weight: 800 !important;
+        border-top: 3px double #a4a4a4 !important;
+    }
+
+    .total {
+        font-weight: 600 !important;
+    }
 </style>
 
 @if (Model.RoleId == (int)Enumeration.Role.Agent || Model.RoleId == (int)Enumeration.Role.AgentLead)
@@ -89,7 +97,7 @@
                 </div>
             </div>
             <div class="col-xl-6 ">
-                <div class="card card-animate" style="height:350px;">
+                <div class="card card-animate" style="height:540px;">
                     <div class="card-header py-2 mt-1 d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0" style="font-size: 15px;">
                             Deals (Recent 10 Days)
@@ -99,12 +107,21 @@
 
                     </div>
 
-                    <div class="card-body p-2" style="height: 273px;">
-                        <canvas id="dealLineChart" style="height: 100%; width: 100%;"></canvas>
-                        <div id="dealNoData" class="text-center text-muted mt-5" style="display:none; font-size:14px;">
+                    <div class="card-body px-0">
+                        <ul class="list-inline main-chart text-center mb-0">
+                            <li class="list-inline-item chart-border-left me-0 border-0">
+                                <h4 class="text-primary" id="totalApplicantsDisplay">0 <span class="text-muted d-inline-block fs-14 align-middle ms-2">Forms</span></h4>
+                            </li>
+                            <li class="list-inline-item chart-border-left me-0">
+                                <h4 id="totalDealsDisplay">0<span class="text-muted d-inline-block fs-14 align-middle ms-2">Deals</span></h4>
+                            </li>
+                        </ul>
+
+                        <div id="dealLineChart" style="height: 380px; width: 100%;"></div>
+
+                        <div id="dealNoData" class="text-center text-muted mt-3" style="display:none; font-size:14px;">
                             No deal data available.
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -116,34 +133,76 @@
 @if (Model.RoleId == (int)Enumeration.Role.Super_Admin)
 {
     <div class="row g-4 mb-4">
-        <div class="col-xl-9 mt-4">
-            <div class="card card-animate" style="height:545px;">
-                <div class="card-header py-2 mt-1 d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0" style="font-size: 15px;">
-                        Deals (Recent 10 Days)
-                    </h5>
+        <div class="col-xl-9">
+            <div class="card card-animate">
 
-                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 col-xxl-2 ">
+                <!-- HEADER WITH FILTER BUTTONS -->
+                <div class="card-header border-0 align-items-center d-flex">
+                    <h4 class="card-title mb-0 flex-grow-1">Deals – Last 10 Days</h4>
 
-                        <select class="form-select form-select-sm" id="AgentId" asp-items="Model.AgentList" onchange="CFP.Dashboard.BindDealChart()">
+                    <div class="d-flex gap-1">
+                        <select class="form-select form-select-sm" id="AgentId"
+                                style="width:150px" onchange="CFP.Dashboard.BindDealChart()">
                             <option value="-1">All Agents</option>
+                            @foreach (var a in Model.AgentList)
+                            {
+                                <option value="@a.Value">@a.Text</option>
+                            }
                         </select>
                     </div>
-
                 </div>
 
-                <div class="card-body p-2" style="height: 500px;">
-                    <canvas id="dealLineChart" class="deal-chart-canvas" style="height: 100%; width: 100%;"></canvas>
-                    <div id="dealNoData" class="text-center text-muted mt-5" style="display:none; font-size:14px;">
+                <!-- METRICS BAR (LIKE THE THEME) -->
+                <div class="card-header p-0 border-0 bg-light-subtle">
+                    <div class="row g-0 text-center">
+                        <div class="col-6 col-sm-3">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1" id="metricDeals">0</h5>
+                                <p class="text-muted mb-0">Total Deals</p>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-sm-3">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1" id="metricApplicants">0</h5>
+                                <p class="text-muted mb-0">Applicants</p>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-sm-3">
+                            <div class="p-3 border border-dashed border-start-0">
+                                <h5 class="mb-1" id="metricAgents">0</h5>
+                                <p class="text-muted mb-0">Active Agents</p>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-sm-3">
+                            <div class="p-3 border border-dashed border-start-0 border-end-0">
+                                <h5 class="mb-1 text-success" id="metricAvgDeals">0</h5>
+                                <p class="text-muted mb-0">Avg Deals/Day</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHART -->
+                <div class="card-body p-0 pb-2">
+                    <div id="dealLineChart"
+                         data-colors='["--vz-secondary","--vz-success","--vz-warning","--vz-warning"]'
+                         class="apex-charts"></div>
+
+
+
+                    <div id="dealNoData" class="text-center text-muted mt-3" style="display:none; font-size:14px;">
                         No deal data available.
                     </div>
-
                 </div>
             </div>
         </div>
 
+
         <div class="col-xxl-3">
-            <div class="card card-animate card-height-100">
+            <div class="card card-animate ">
                 <div class="card-header border-0 align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Deals Portfolio</h4>
 
@@ -173,6 +232,87 @@
         </div>
 
     </div>
+    <div class="row g-4 mb-4">
+
+        <div class="col-xl-9 mt-1">
+            <div class="card card-animate">
+                <div class="card-header py-2 mt-1 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0" style="font-size: 15px;">
+                        Deals Summary By Date (Recent 7 Days)
+                    </h5>
+
+
+                </div>
+
+                <div class="card-body p-2">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Agent Name</th>
+                                @if (Model.DealSummaryList.Any())
+                                {
+                                    foreach (var day in Model.DealSummaryList.First().Counts)
+                                    {
+                                        <th colspan="2">@day.Date.ToString("dd-MMM-yyyy")</th>
+                                    }
+                                }
+                            </tr>
+                            <tr>
+                                <th></th>
+                                @if (Model.DealSummaryList.Any())
+                                {
+                                    foreach (var day in Model.DealSummaryList.First().Counts)
+                                    {
+                                        <th># Form</th>
+                                        <th># Deals</th>
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var agent in Model.DealSummaryList)
+                            {
+                                <tr>
+                                    <td class="text-left">@agent.AgentName</td>
+                                    @foreach (var count in agent.Counts)
+                                    {
+                                        <td>@count.ApplicantCount</td>
+                                        <td>@count.DealCount</td>
+                                    }
+                                </tr>
+                            }
+                            @{
+                                // Build total per day
+                                var totals = new List<(int applicants, int deals)>();
+
+                                if (Model.DealSummaryList.Any())
+                                {
+                                    int cols = Model.DealSummaryList.First().Counts.Count;
+
+                                    for (int i = 0; i < cols; i++)
+                                    {
+                                        int totalApplicants = Model.DealSummaryList.Sum(a => a.Counts[i].ApplicantCount);
+                                        int totalDeals = Model.DealSummaryList.Sum(a => a.Counts[i].DealCount);
+
+                                        totals.Add((totalApplicants, totalDeals));
+                                    }
+                                }
+                            }
+
+                            <tr style="background-color:#f3f3f3; font-weight:bold;">
+                                <td class="text-center OverallTotel">Total</td>
+                                @foreach (var t in totals)
+                                {
+                                    <td class="OverallTotel">@t.applicants</td>
+                                    <td class="OverallTotel">@t.deals</td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @section Scripts {
@@ -181,6 +321,8 @@
     <script src="/assets/libs/swiper/swiper-bundle.min.js"></script>
     <script src="/assets/js/pages/dashboard-crypto.init.js"></script>
     <script src="/assets/js/pages/dashboard-projects.init.js"></script>
+    <script src="assets/js/pages/dashboard-crm.init.js"></script>
+    <script src="assets/js/pages/dashboard-projects.init.js"></script>
     @* <script src="~/assets/libs/chart.js/chart.js"></script> *@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/lib/js/custom/CFP.Dashboard.js" asp-append-version="true"></script>

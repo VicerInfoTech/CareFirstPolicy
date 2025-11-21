@@ -7,11 +7,16 @@
         public int ExtraValue { get; set; }
     }
 
-    public class DealChartViewModel
+   
+    public class DealChartPoint
     {
-        public string Date { get; set; }       
-        public int TotalDeal { get; set; }        
+        public DateTime Date { get; set; }         
+        public string DateLabel => Date.ToString("dd-MMM"); 
+        public int ApplicantCount { get; set; }
+        public int DealCount { get; set; }
+        public int AgentCount { get; set; }
     }
+
     public class AgentDealChartViewModel
     {
         public int AgentId { get; set; }

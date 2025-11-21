@@ -300,35 +300,83 @@ namespace CFP.Provider.Provider
             }
             return returnResult;
         }
-        public List<DealChartViewModel> GetDealDataForChart(int agentId)
+        //public List<DealChartViewModel> GetDealDataForChart(int agentId)
+        //{
+        //    try
+        //    {
+
+        //        var query = unitOfWork.Deal.GetAll(x =>
+        //            x.IsActive &&
+        //            x.CreatedOn.Date >= AppCommon.CurrentDate.AddDays(-9) &&
+        //            (agentId == -1 || x.AgentId == agentId)
+        //        ).ToList();
+
+        //        var result = query
+        //            .GroupBy(x => x.CreatedOn.Date)
+        //            .Select(g => new DealChartViewModel
+        //            {
+        //                Date = g.Key.ToString("MM/dd/yyyy"),
+        //                TotalDeal = g.Sum(x => x.NoOfApplicants)
+        //            })
+        //            .OrderBy(x => x.Date)
+        //            .ToList();
+
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        AppCommon.LogException(ex, "Error in GetDealDataForChart");
+        //        return new List<DealChartViewModel>();
+        //    }
+        //}
+
+        public List<DealChartPoint> GetDealDataForChart(int agentId)
         {
             try
             {
+                var startDate = AppCommon.CurrentDate.AddDays(-10).Date;
 
-                var query = unitOfWork.Deal.GetAll(x =>
-                    x.IsActive &&
-                    x.CreatedOn.Date >= AppCommon.CurrentDate.AddDays(-9) &&
-                    (agentId == -1 || x.AgentId == agentId)
-                ).ToList();
+                var query = unitOfWork.Deal.GetAll(d => d.IsActive && d.CreatedOn.Date >= startDate && (agentId == -1 || d.AgentId == agentId))
+                            .Select(d => new
+                            {
+                                DealDate = d.CreatedOn.Date,
+                                Applicants = d.NoOfApplicants,
+                                AgentId = d.AgentId
+                            })
+                            .ToList();
 
-                var result = query
-                    .GroupBy(x => x.CreatedOn.Date)
-                    .Select(g => new DealChartViewModel
+                var grouped = query.GroupBy(x => x.DealDate)
+                    .Select(g => new DealChartPoint
                     {
-                        Date = g.Key.ToString("MM/dd/yyyy"),
-                        TotalDeal = g.Sum(x=>x.NoOfApplicants)
+                        Date = g.Key,
+                        ApplicantCount = g.Sum(x => x.Applicants),
+                        DealCount = g.Count(),
+                        AgentCount = g.Select(x => x.AgentId).Distinct().Count()
+                    }).OrderBy(x => x.Date).ToList();
+
+                var fullDates = Enumerable.Range(0, 10).Select(i => AppCommon.CurrentDate.AddDays(-10 + i).Date).ToList();
+
+                var final = fullDates
+                    .Select(d => grouped.FirstOrDefault(gp => gp.Date == d) ?? new DealChartPoint
+                    {
+                        Date = d,
+                        ApplicantCount = 0,
+                        DealCount = 0,
+                        AgentCount = 0
                     })
-                    .OrderBy(x => x.Date)
                     .ToList();
 
-                return result;
+                return final;
             }
             catch (Exception ex)
             {
-                AppCommon.LogException(ex, "Error in GetDealDataForChart");
-                return new List<DealChartViewModel>();
+                AppCommon.LogException(ex, "GetDealChartData");
+                return new List<DealChartPoint>();
             }
         }
+
+
+
         public AgentDealDashboardViewModel GetAgentDealDashboard(int days)
         {
             try
@@ -350,7 +398,7 @@ namespace CFP.Provider.Provider
                 var agentList = allAgents
                     .Select(a =>
                     {
-                        int count = deals.Where(x => x.AgentId == a.AgentMasterId).Sum(x=>x.NoOfApplicants);
+                        int count = deals.Where(x => x.AgentId == a.AgentMasterId).Sum(x => x.NoOfApplicants);
 
                         return new AgentDealChartViewModel
                         {
@@ -390,6 +438,38 @@ namespace CFP.Provider.Provider
                 AppCommon.LogException(ex, "Error in GetAgentDealDashboard");
                 return new AgentDealDashboardViewModel();
             }
+        }
+
+        public List<DealSummaryModel> GetDealSummary()
+        {
+            var summaryData = new List<DealSummaryModel>();
+
+            try
+            {
+                var deals = unitOfWork.Deal.GetAll(d => d.CreatedOn >= AppCommon.CurrentDate.AddDays(-30)).ToList();
+
+                var last7ActiveDays = deals.Select(d => d.CreatedOn.Date).Distinct().Take(7).ToList();
+
+                summaryData = deals
+                    .GroupBy(d => d.Agent.FirstName + " " + d.Agent.LastName)
+                    .Select(g => new DealSummaryModel
+                    {
+                        AgentName = g.Key,
+                        Counts = last7ActiveDays.Select(day => new DayCount
+                        {
+                            Date = day,
+                            ApplicantCount = g.Where(d => d.CreatedOn.Date == day).Sum(d => d.NoOfApplicants),
+                            DealCount = g.Count(d => d.CreatedOn.Date == day)
+                        }).ToList()
+                    })
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return summaryData;
         }
         #endregion
 

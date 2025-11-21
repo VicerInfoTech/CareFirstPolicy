@@ -32,6 +32,7 @@ namespace CFP.Web.Controllers
                 RoleId = _sessionManager.RoleId,
                 AgentId = _sessionManager.AgentId,
                 DealCount = _commonProvider.GetDealCount(GetSessionProviderParameters()),
+                DealSummaryList = _commonProvider.GetDealSummary(),
                 AgentList = GetAgentList()
             };
             return View(model);
@@ -48,7 +49,16 @@ namespace CFP.Web.Controllers
         }
         public JsonResult FetchDealData(int agentId)
         {
-            return Json(_commonProvider.GetDealDataForChart(agentId));
+            var chartData = _commonProvider.GetDealDataForChart(agentId);
+            var payload = chartData.Select(d => new
+            {
+                date = d.Date.ToString("MM/dd/yyyy"), // consistent client format
+                label = d.DateLabel,
+                applicantCount = d.ApplicantCount,
+                dealCount = d.DealCount,
+                agentCount=d.AgentCount
+            }).ToList();
+            return Json(payload);
         }
 
         [HttpPost]

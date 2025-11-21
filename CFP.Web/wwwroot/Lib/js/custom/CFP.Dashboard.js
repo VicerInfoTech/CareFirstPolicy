@@ -85,119 +85,406 @@
         CFP.Dashboard.Option.Table.ajax.reload();
     }
 
+    //this.BindDealChart = function () {
+
+    //    var agentId = $("#AgentId").val();
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: UrlContent("Dashboard/FetchDealData"),
+    //        data: { agentId: agentId },
+
+    //        success: function (result) {
+
+    //            // NO DATA
+    //            if (!result || result.length === 0) {
+
+    //                $("#dealLineChart").addClass("chart-hidden");
+    //                $("#dealNoData").show();
+
+    //                if (window.dealChart) window.dealChart.destroy();
+
+    //                return;
+    //            }
+
+    //            // HAS DATA
+    //            $("#dealLineChart").removeClass("chart-hidden");
+    //            $("#dealNoData").hide();
+
+
+    //            // Backend already returns grouped data
+    //            const labels = result.map(x => x.date);
+    //            const data = result.map(x => x.totalDeal);
+
+    //            const ctx = document.getElementById('dealLineChart').getContext('2d');
+
+    //            // Destroy old chart
+    //            if (window.dealChart) {
+    //                window.dealChart.destroy();
+    //            }
+
+
+    //            // Gradient effect for chart
+    //            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+    //            gradient.addColorStop(0, 'rgba(23, 71, 159, 0.7)');
+    //            gradient.addColorStop(1, 'rgba(0, 204, 255, 0.3)');
+
+    //            window.dealChart = new Chart(ctx, {
+    //                type: 'line',
+    //                data: {
+    //                    labels: labels,
+    //                    datasets: [{
+    //                        label: 'Deal Data',
+    //                        data: data,
+    //                        fill: true,
+    //                        borderColor: '#17479f',
+    //                        backgroundColor: gradient,
+    //                        tension: 0.4,
+    //                        borderWidth: 2,
+    //                        pointRadius: 3,
+    //                        pointBackgroundColor: '#17479f'
+    //                    }]
+    //                },
+    //                options: {
+    //                    responsive: true,
+    //                    maintainAspectRatio: false,
+
+    //                    plugins: {
+    //                        legend: { display: false },
+
+    //                        tooltip: {
+    //                            callbacks: {
+    //                                title: function (context) {
+    //                                    return context[0].label; // shows "11/20/2025"
+    //                                }
+    //                            }
+    //                        }
+
+    //                    },
+
+    //                    scales: {
+    //                        x: {
+    //                            grid: { display: false },
+    //                            ticks: {
+    //                                callback: function (value, index) {
+    //                                    const raw = this.chart.data.labels[index];  // "11/20/2025"
+
+    //                                    const [month, day, year] = raw.split("/");
+
+    //                                    // Format bottom label
+    //                                    const date = new Date(year, month - 1, day);
+
+    //                                    return `${day}-${date.toLocaleString("en-US", { month: "short" })}`;
+    //                                }
+    //                            }
+
+
+    //                        },
+    //                        y: {
+    //                            beginAtZero: true,
+    //                            ticks: { stepSize: 1 },
+    //                            grid: { color: 'rgba(230,230,230,0.5)' }
+    //                        }
+    //                    }
+    //                }
+    //            });
+    //            const canvas = $(".deal-chart-canvas").val();
+    //            canvas.style.height = "350px";
+    //            canvas.style.minHeight = "350px";
+    //        },
+
+    //        error: function (xhr) {
+    //            console.error("Error loading deal data", xhr);
+    //        }
+    //    });
+    //}
+    //this.BindDealChart = function () {
+
+    //    var agentId = $("#AgentId").val();
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: UrlContent("Dashboard/FetchDealData"),
+    //        data: { agentId: agentId },
+
+    //        success: function (result) {
+
+    //            // NO DATA
+    //            if (!result || result.length === 0) {
+    //                $("#dealLineChart").addClass("chart-hidden");
+    //                $("#dealNoData").show();
+
+    //                if (window.dealChart) window.dealChart.destroy();
+
+    //                return;
+    //            }
+
+    //            // HAS DATA
+    //            $("#dealLineChart").removeClass("chart-hidden");
+    //            $("#dealNoData").hide();
+
+    //            // Using backend payload
+    //            const labels = result.map(x => x.date);
+    //            const applicantSeries = result.map(x => x.applicantCount);
+    //            const dealSeries = result.map(x => x.dealCount);
+
+    //            // SUM TOTALS
+    //            const totalApplicants = applicantSeries.reduce((a, b) => a + b, 0);
+    //            const totalDeals = dealSeries.reduce((a, b) => a + b, 0);
+
+    //            // UPDATE HEADER DISPLAY
+    //            $("#totalApplicantsDisplay").html(
+    //                `${totalApplicants} <span class="text-muted d-inline-block fs-14 align-middle ms-2">Applicants</span>`
+    //            );
+
+    //            $("#totalDealsDisplay").html(
+    //                `${totalDeals} <span class="text-muted d-inline-block fs-14 align-middle ms-2">Deals</span>`
+    //            );
+
+    //            // Destroy old chart
+    //            if (window.dealChart) {
+    //                window.dealChart.destroy();
+    //            }
+
+    //            // Clear old SVG
+    //            document.querySelector("#dealLineChart").innerHTML = "";
+
+    //            // ApexChart options
+    //            var options = {
+    //                chart: {
+    //                    type: 'line',
+    //                    height: 350,
+    //                },
+
+    //                series: [
+    //                    { name: 'Deals', data: dealSeries },
+    //                    { name: 'Forms', data: applicantSeries }
+    //                ],
+
+    //                xaxis: {
+    //                    categories: labels,
+    //                    labels: {
+    //                        formatter: function (val) {
+    //                            // Apex sends undefined sometimes → avoid crash
+    //                            if (!val) return "";
+
+    //                            const parts = val.split("/");
+    //                            if (parts.length !== 3) return val;
+
+    //                            const [month, day, year] = parts;
+    //                            const date = new Date(year, month - 1, day);
+
+    //                            return `${day}-${date.toLocaleString("en-US", { month: "short" })}`;
+    //                        }
+    //                    }
+    //                },
+
+    //                stroke: { curve: 'smooth', width: 3 },
+    //                colors: ['#17479f', '#00bcd4'],
+    //                dataLabels: { enabled: false },
+
+    //                grid: { borderColor: '#e0e0e0' }
+    //            };
+
+    //            window.dealChart = new ApexCharts(
+    //                document.querySelector("#dealLineChart"),
+    //                options
+    //            );
+
+    //            window.dealChart.render();
+    //        },
+
+    //        error: function (xhr) {
+    //            console.error("Error loading deal data", xhr);
+    //        }
+    //    });
+    //}
     this.BindDealChart = function () {
 
-        var agentId = $("#AgentId").val();
+        let agentId = $("#AgentId").val();
 
         $.ajax({
-            type: "POST",
-            url: UrlContent("Dashboard/FetchDealData"),
+            url: "/Dashboard/FetchDealData",
+            type: "GET",
             data: { agentId: agentId },
+            success: function (res) {
 
-            success: function (result) {
-
-                // NO DATA
-                if (!result || result.length === 0) {
-
-                    $("#dealLineChart").addClass("chart-hidden");
+                if (!res || res.length === 0) {
+                    $("#dealLineChart").hide();
                     $("#dealNoData").show();
-
-                    if (window.dealChart) window.dealChart.destroy();
-
                     return;
                 }
 
-                // HAS DATA
-                $("#dealLineChart").removeClass("chart-hidden");
+                // Convert values to Numbers
+                let chartData = {
+                    dates: res.map(x => x.label),
+                    deals: res.map(x => Number(x.dealCount)),
+                    applicants: res.map(x => Number(x.applicantCount)),
+                    agents: res.map(x => Number(x.agentCount))
+                };
+
+                // -------- METRICS ----------
+                let totalDeals = chartData.deals.reduce((a, b) => a + b, 0);
+                let totalApplicants = chartData.applicants.reduce((a, b) => a + b, 0);
+                let totalAgents = Math.max(...chartData.agents);   // max agents in 10 days
+                let avgDeals = (totalDeals / chartData.deals.length).toFixed(1);
+
+                $("#metricDeals").text(totalDeals);
+                $("#metricApplicants").text(totalApplicants);
+                $("#metricAgents").text(totalAgents);
+                $("#metricAvgDeals").text(avgDeals);
+
+                $("#dealLineChart").show();
                 $("#dealNoData").hide();
 
+                // -------- Theme Colors ----------
+                var chartColors = getChartColorsArray(
+                    document.querySelector("#dealLineChart")
+                );
 
-                // Backend already returns grouped data
-                const labels = result.map(x => x.date);
-                const data = result.map(x => x.totalDeal);
-
-                const ctx = document.getElementById('dealLineChart').getContext('2d');
-
-                // Destroy old chart
-                if (window.dealChart) {
-                    window.dealChart.destroy();
-                }
-
-
-                // Gradient effect for chart
-                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                gradient.addColorStop(0, 'rgba(23, 71, 159, 0.7)');
-                gradient.addColorStop(1, 'rgba(0, 204, 255, 0.3)');
-
-                window.dealChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Deal Data',
-                            data: data,
-                            fill: true,
-                            borderColor: '#17479f',
-                            backgroundColor: gradient,
-                            tension: 0.4,
-                            borderWidth: 2,
-                            pointRadius: 3,
-                            pointBackgroundColor: '#17479f'
-                        }]
+                // -------- APEX CHART CODE ----------
+                let options = {
+                    chart: {
+                        height: 350,
+                        type: "line",
+                        toolbar: { show: false }
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
 
-                        plugins: {
-                            legend: { display: false },
-
-                            tooltip: {
-                                callbacks: {
-                                    title: function (context) {
-                                        return context[0].label; // shows "11/20/2025"
-                                    }
-                                }
-                            }
-
+                    series: [
+                        {
+                            name: "Deals",
+                            type: "column",
+                            data: chartData.deals
                         },
+                        {
+                            name: "Applicants",
+                            type: "column",
+                            data: chartData.applicants
+                        },
+                        {
+                            // 🔥 Fake series → ONLY for soft yellow background area
+                            name: "Agents Area",
+                            type: "area",
+                            data: chartData.agents
+                        },
+                        {
+                            name: "Agents",
+                            type: "line",
+                            data: chartData.agents
+                        }
+                    ],
 
-                        scales: {
-                            x: {
-                                grid: { display: false },
-                                ticks: {
-                                    callback: function (value, index) {
-                                        const raw = this.chart.data.labels[index];  // "11/20/2025"
+                    colors: chartColors,
 
-                                        const [month, day, year] = raw.split("/");
+                    stroke: {
+                        width: [0, 0, 0, 3],
+                        curve: "smooth",
+                        dashArray: [0, 0, 0, 5]   // dotted yellow line
+                    },
 
-                                        // Format bottom label
-                                        const date = new Date(year, month - 1, day);
+                    plotOptions: {
+                        bar: {
+                            columnWidth: "40%",
+                            borderRadius: 4
+                        }
+                    },
 
-                                        return `${day}-${date.toLocaleString("en-US", { month: "short" })}`;
-                                    }
+                    fill: {
+                        type: ["solid", "solid", "gradient", "solid"],
+                        opacity: [1, 1, 0.25, 1], // ⭐ FAKE AREA SOFT SHADE
+                        gradient: {
+                            shadeIntensity: 1,
+                            opacityFrom: 0.30,
+                            opacityTo: 0.05,
+                            stops: [0, 90, 100]
+                        }
+                    },
+
+                    markers: {
+                        size: 5,
+                        strokeWidth: 3
+                    },
+
+                    xaxis: {
+                        categories: chartData.dates,
+                        labels: { style: { fontSize: "12px" } }
+                    },
+
+                    yaxis: {
+                        labels: { style: { fontSize: "12px" } }
+                    },
+
+                    grid: {
+                        borderColor: "#f1f1f1"
+                    },
+
+                    // -------- HIDE FAKE SERIES FROM TOOLTIP ----------
+                    tooltip: {
+                        shared: true,
+                        intersect: false,
+                        y: {
+                            formatter: function (val, opts) {
+                                let index = opts.seriesIndex;
+
+                                // ❗ Hide Agents Area series from tooltip
+                                if (opts.w.config.series[index].name === "Agents Area") {
+                                    return "";
                                 }
-
-
-                            },
-                            y: {
-                                beginAtZero: true,
-                                ticks: { stepSize: 1 },
-                                grid: { color: 'rgba(230,230,230,0.5)' }
+                                return val;
                             }
                         }
-                    }
-                });
-                const canvas = $(".deal-chart-canvas").val();
-                canvas.style.height = "500px";
-                canvas.style.minHeight = "500px";
-            },
+                    },
 
-            error: function (xhr) {
-                console.error("Error loading deal data", xhr);
+
+                    // -------- HIDE FAKE SERIES FROM LEGEND ----------
+                    legend: {
+                        position: "bottom",
+                        fontSize: "12px",
+                        formatter: function (seriesName, opts) {
+                            if (seriesName === "Agents Area") return ""; // hide it
+                            return seriesName;
+                        }
+                    }
+                };
+
+                // Destroy old chart
+                if (window.dealChartInstance) {
+                    window.dealChartInstance.destroy();
+                }
+
+                window.dealChartInstance = new ApexCharts(
+                    document.querySelector("#dealLineChart"),
+                    options
+                );
+
+                window.dealChartInstance.render();
             }
         });
+    };
+
+
+    // ============ THEME COLOR FUNCTION ============
+    function getChartColorsArray(el) {
+        if (!el) return [];
+        var colors = el.getAttribute("data-colors");
+
+        try {
+            colors = JSON.parse(colors);
+        } catch {
+            return [];
+        }
+
+        return colors.map(function (value) {
+            var newValue = value.replace(" ", "");
+            if (newValue.indexOf("--") !== -1) {
+                var cssVar = getComputedStyle(document.documentElement)
+                    .getPropertyValue(newValue);
+                return cssVar.trim();
+            }
+            return newValue;
+        });
     }
+
 
     this.LoadPortfolioChart = function () {
         const days = parseInt($('#portfolioRange').val() || '7', 10);
@@ -241,7 +528,7 @@
                 try {
                     colors = JSON.parse(colorCss.replace(/&quot;/g, '"'));
                 } catch (e) {
-                    colors = ['#3D78E3', '#29BADB', '#FFC84B', '#67B173'];
+                    colors = generateUniqueColors(result.length);
                 }
 
                 CFP.Dashboard.RenderDonut(finalLabels, finalSeries, colors);
@@ -253,7 +540,15 @@
                 CFP.Dashboard.RenderEmptyPortfolio();
             }
         });
+
     };
+    function generateUniqueColors(count) {
+        const colors = [];
+        for (let i = 0; i < count; i++) {
+            colors.push("#" + Math.floor(Math.random() * 16777215).toString(16));
+        }
+        return colors;
+    }
 
     this.RenderDonut = function (labels, series, colors) {
         // destroy previous chart if present
@@ -283,12 +578,26 @@
                                 formatter: function () {
                                     return "#"+ totalDeals;  // center value
                                 }
+                            },
+                            value: {
+                                show: true,
+                                fontSize: '18px',
+                                formatter: function (val) {
+                                    return "#" + val;    // <<< ADD # FOR EACH SEGMENT
+                                }
                             }
                         }
                     }
                 }
             },
             dataLabels: { enabled: false },
+            tooltip: {
+                y: {
+                    formatter: function (value) {
+                        return "#" + value;
+                    }
+                }
+            },
             responsive: [{
                 breakpoint: 480,
                 options: { chart: { width: 200 }, legend: { show: false } }

@@ -98,4 +98,17 @@ namespace CFP.Common.Business_Entities
 
         public virtual UserMasterModel? UpdatedByNavigation { get; set; }
     }
+    public class DealSummaryModel
+    {
+        public string AgentName { get; set; }
+        public List<DayCount> Counts { get; set; } = new();
+    }
+
+    public class DayCount
+    {
+        public int ApplicantCount { get; set; }
+        public int DealCount { get; set; }
+        public DateTime Date { get; set; } // optional, useful for Razor
+    }
+
 }
