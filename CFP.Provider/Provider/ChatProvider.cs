@@ -349,9 +349,9 @@ namespace CFP.Provider.Provider
                 if (item.IsAttachment)
                 {
                     var parts = item.Message?.Split(new[] { "__--__" }, StringSplitOptions.None);
-                    var fileId = parts != null && parts.Length > 0 ? parts[0] : "";
-                    var fileName = parts != null && parts.Length > 1 ? parts[1] : "";
-                    item.FileName = fileName;
+                    //var fileId = parts != null && parts.Length > 0 ? parts[0] : "";
+                    //var fileName = parts != null && parts.Length > 1 ? parts[1] : "";
+                    item.FileName = parts != null ? parts[parts.Length - 1] : "";
                 }
             }
             return chatMessages;
@@ -367,7 +367,7 @@ namespace CFP.Provider.Provider
                 Message = model.Message,
                 SentAt = AppCommon.CurrentDate,
                 IsRead = false,
-                IsAttachment=model.IsAttachment,
+                IsAttachment = model.IsAttachment,
             };
 
             unitOfWork.ChatMessage.Insert(entity);

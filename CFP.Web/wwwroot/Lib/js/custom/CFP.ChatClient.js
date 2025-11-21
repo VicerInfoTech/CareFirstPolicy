@@ -172,6 +172,7 @@
             $(".member-count").text("Offline");  // Show Offline
         }
         $(".attachment-container").hide();
+        $(".chat-header-actions").html("");
     }
 
 
@@ -220,9 +221,10 @@
         } else {
             dateLabel = msgDate.toLocaleDateString(); // fallback to full date
         }
-        let contentHtml = msg.isAttachment
-            ? `<a href="${msg.downloadUrl}" target="_blank" download><i class="ri-attachment-line text-success fs-18"></i> ${msg.message}</a>`
-            : msg.message;
+        //let contentHtml = msg.isAttachment
+        //    ? `<a href="${msg.downloadUrl}" target="_blank" download><i class="ri-attachment-line text-success fs-18"></i> ${msg.message}</a>`
+        //    : msg.message;
+        let contentHtml = msg.isAttachment ? CFP.ChatClient.showAttachmentBubble(downloadUrl, msg.message) : msg.message;
         let html = "";
 
         if (msg.isOwnMessage) {
@@ -595,7 +597,9 @@
         }
 
         if (isAttachment) {
-            contentHtml = `<a href="${downloadUrl}" target="_blank" download><i class="ri-attachment-line text-success fs-18"></i> ${message}</a>`;
+            //contentHtml = `<a href="${downloadUrl}" target="_blank" download><i class="ri-attachment-line text-success fs-18"></i> ${message}</a>`;
+            //contentHtml = `<a href="${downloadUrl}" target="_blank" download>${CFP.ChatClient.showAttachmentBubble(downloadUrl, message)}</a>`;
+            contentHtml = CFP.ChatClient.showAttachmentBubble(downloadUrl, message);
         }
         else {
             contentHtml = message;
@@ -639,7 +643,88 @@
      </li>`;
         }
     };
+    this.showAttachmentBubble = function (url, message) {
+        let attachmentContainer = document.createElement("div");
+        attachmentContainer.className = "attachments";
+        let lower = url.toLowerCase();
 
+        // ----- IMAGE -----
+        if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif") || lower.endsWith(".webp")) {
+            let img = document.createElement("img");
+            img.className = "attach-img";
+            img.src = url;            
+            attachmentContainer.appendChild(img);
+            attachmentContainer.innerHTML += `<a href="${url}" download><i class="ri-download-2-line text-danger fs-18"></i></a>`;
+        }
+
+        // ----- VIDEO -----
+        else if (lower.endsWith(".mp4") || lower.endsWith(".mov") || lower.endsWith(".webm") || lower.endsWith(".mkv")) {
+            let videoBox = document.createElement("div");
+            videoBox.className = "video-thumb-container";
+
+            let thumb = document.createElement("video");
+            thumb.src = url;
+            thumb.className = "attach-video-thumb";
+            thumb.muted = true;
+            thumb.playsInline = true;
+            thumb.preload = "metadata";
+
+            let play = document.createElement("div");
+            play.className = "play-icon";
+            play.innerHTML = "▶";
+
+            // CLICK → OPEN FULL VIDEO
+            play.onclick = () => openVideoPlayer(url);
+
+            videoBox.appendChild(thumb);
+            videoBox.appendChild(play);
+            attachmentContainer.appendChild(videoBox);
+        }
+
+        // ----- DOCUMENT / OTHER FILE TYPES -----
+        else {
+            let div = document.createElement("div");
+            div.className = "file-box";
+
+            // assign icon by file extension
+            let icon = "📄"; // default
+            if (lower.endsWith(".pdf")) icon = "📕";
+            if (lower.endsWith(".doc") || lower.endsWith(".docx")) icon = "📘";
+            if (lower.endsWith(".zip") || lower.endsWith(".rar")) icon = "🗂️";
+            if (lower.endsWith(".xlsx")) icon = "📗";
+
+            let filename = url.split("/").pop();
+
+            div.innerHTML = `
+                <i>${icon}</i>
+                <div>
+                    <b>${message}</b><br>
+                    <a href="${url}" download><i class="ri-download-2-line text-danger fs-18"></i></a>
+                </div>
+            `;
+
+            attachmentContainer.appendChild(div);
+        }
+        var attachmentHTML = attachmentContainer.innerHTML;
+        //document.remove(attachmentContainer);
+        return attachmentHTML;
+    };
+    function openVideoPlayer(url) {
+        let popup = document.createElement("div");
+        popup.className = "video-popup";
+
+        let vid = document.createElement("video");
+        vid.src = url;
+        vid.controls = true;
+        vid.autoplay = true;
+
+        popup.appendChild(vid);
+
+        // CLOSE POPUP WHEN CLICK OUTSIDE
+        popup.onclick = () => popup.remove();
+
+        document.body.appendChild(popup);
+    }
 
     this.RenderRoomDropdown = function (room) {
         debugger;
@@ -665,9 +750,6 @@
 
         $(".chat-header-actions").html(html);
     };
-
-
-
 
     $("#fileAttachment").on("change", async function (e) {
         debugger;

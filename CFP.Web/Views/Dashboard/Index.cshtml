@@ -270,8 +270,8 @@
                                         <td class="text-left">@agent.AgentName</td>
                                         @foreach (var count in agent.Counts)
                                         {
-                                            <td class="text-center">@(count.ApplicantCount > 0 ? count.ApplicantCount : "")</td>
                                             <td class="text-center">@(count.DealCount > 0 ? count.DealCount : "")</td>
+                                            <td class="text-center">@(count.ApplicantCount > 0 ? count.ApplicantCount : "")</td>
                                         }
                                     </tr>
                                 }

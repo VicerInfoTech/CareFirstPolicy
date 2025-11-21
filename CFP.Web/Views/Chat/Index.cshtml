@@ -41,6 +41,52 @@
         background-color: #6691e7;
     }
 
+    .chat-bubble {
+        max-width: 50%;
+        padding: 8px;
+        background: #e1ffc7;
+        border-radius: 10px;
+        margin: 10px 0;
+        position: relative;
+    }
+
+    .attachments {
+        display: grid;
+        gap: 8px;
+    }
+
+    .attach-img,
+    .attach-video-thumb {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .video-thumb-container {
+        position: relative;
+    }
+
+    .play-icon {
+        position: absolute;
+        top: 45%;
+        left: 45%;
+        font-size: 38px;
+        color: white;
+        opacity: 0.9;
+    }
+
+    .file-box {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        padding: 8px;
+    }
+
+        .file-box i {
+            font-size: 30px;
+            margin-right: 10px;
+        }
 </style>
 <input asp-for="CurrentUserId" id="currentUserId" type="hidden" />
 
