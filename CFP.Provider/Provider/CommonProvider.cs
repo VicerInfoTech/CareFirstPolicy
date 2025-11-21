@@ -354,7 +354,7 @@ namespace CFP.Provider.Provider
                         AgentCount = g.Select(x => x.AgentId).Distinct().Count()
                     }).OrderBy(x => x.Date).ToList();
 
-                var fullDates = Enumerable.Range(0, 10).Select(i => AppCommon.CurrentDate.AddDays(-10 + i).Date).ToList();
+                var fullDates = Enumerable.Range(0, 10).Select(i => AppCommon.CurrentDate.AddDays(-9 + i).Date).ToList();
 
                 var final = fullDates
                     .Select(d => grouped.FirstOrDefault(gp => gp.Date == d) ?? new DealChartPoint
