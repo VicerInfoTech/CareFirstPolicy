@@ -138,7 +138,7 @@
 
                 <!-- HEADER WITH FILTER BUTTONS -->
                 <div class="card-header border-0 align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">Deals – Last 10 Days</h4>
+                    <h4 class="card-title mb-0 flex-grow-1">Deals – Recent 10 Days</h4>
 
                     <div class="d-flex gap-1">
                         <select class="form-select form-select-sm" id="AgentId"
@@ -158,14 +158,14 @@
                         <div class="col-6 col-sm-3">
                             <div class="p-3 border border-dashed border-start-0">
                                 <h5 class="mb-1" id="metricDeals">0</h5>
-                                <p class="text-muted mb-0">Total Deals</p>
+                                <p class="text-muted mb-0">Total Forms</p>
                             </div>
                         </div>
 
                         <div class="col-6 col-sm-3">
                             <div class="p-3 border border-dashed border-start-0">
                                 <h5 class="mb-1" id="metricApplicants">0</h5>
-                                <p class="text-muted mb-0">Applicants</p>
+                                <p class="text-muted mb-0">Total Deals</p>
                             </div>
                         </div>
 
@@ -187,10 +187,10 @@
 
                 <!-- CHART -->
                 <div class="card-body p-0 pb-2">
-                    <div id="dealLineChart"
+                    @* <div id="dealLineChart"
                          data-colors='["--vz-secondary","--vz-success","--vz-warning","--vz-warning"]'
-                         class="apex-charts"></div>
-
+                         class="apex-charts"></div> *@
+                    <div id="dealLineChart" data-colors='["--vz-secondary", "--vz-warning", "--vz-success"]' class="apex-charts" dir="ltr"></div>
 
 
                     <div id="dealNoData" class="text-center text-muted mt-3" style="display:none; font-size:14px;">
@@ -205,12 +205,10 @@
             <div class="card card-animate ">
                 <div class="card-header border-0 align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Deals Portfolio</h4>
-
-                    <div class="d-flex align-items-center">
-
+                    <div class="d-flex align-items-center">                        
                         <div>
                             <select id="portfolioRange" class="form-select form-select-sm" onchange="CFP.Dashboard.LoadPortfolioChart();">
-                                <option value="1">Last 1 Day</option>
+                                <option value="1">Today</option>
                                 <option value="7" selected>Last 7 Days</option>
                                 <option value="30">Last 30 Days</option>
                             </select>
@@ -234,83 +232,57 @@
     </div>
     <div class="row g-4 mb-4">
 
-        <div class="col-xl-9 mt-1">
+        <div class="col-xl-12 mt-1">
             <div class="card card-animate">
-                <div class="card-header py-2 mt-1 d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0" style="font-size: 15px;">
-                        Deals Summary By Date (Recent 7 Days)
-                    </h5>
-
-
-                </div>
-
-                <div class="card-body p-2">
-                    <table class="table table-bordered text-center">
-                        <thead>
-                            <tr>
-                                <th class="text-left">Agent Name</th>
-                                @if (Model.DealSummaryList.Any())
-                                {
-                                    foreach (var day in Model.DealSummaryList.First().Counts)
-                                    {
-                                        <th colspan="2">@day.Date.ToString("dd-MMM-yyyy")</th>
-                                    }
-                                }
-                            </tr>
-                            <tr>
-                                <th></th>
-                                @if (Model.DealSummaryList.Any())
-                                {
-                                    foreach (var day in Model.DealSummaryList.First().Counts)
-                                    {
-                                        <th># Form</th>
-                                        <th># Deals</th>
-                                    }
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var agent in Model.DealSummaryList)
-                            {
+                <div class="card-header d-flex align-items-center">
+                    <h4 class="card-title flex-grow-1 mb-0">Deals Summary By Date (Recent 7 Days)</h4>
+                                    </div><!-- end cardheader -->
+                <div class="card-body">
+                    <div class="table-responsive table-card">
+                        <table class="table table-nowrap table-centered table-bordered align-middle">
+                            <thead class="bg-light text-muted">
                                 <tr>
-                                    <td class="text-left">@agent.AgentName</td>
-                                    @foreach (var count in agent.Counts)
+                                    <th scope="col" rowspan="2" style="vertical-align:middle;">Agent Name</th>
+                                    @if (Model.DealSummaryList.Any())
                                     {
-                                        <td>@count.ApplicantCount</td>
-                                        <td>@count.DealCount</td>
+                                        foreach (var day in Model.DealSummaryList.First().Counts)
+                                        {
+                                            <th colspan="2" class="col-xl-2 text-center">@day.Date.ToString("dd-MMM-yyyy")</th>
+                                        }
+                                    }
+                                </tr><!-- end tr -->
+                                <tr>
+                                    @if (Model.DealSummaryList.Any())
+                                    {
+                                        foreach (var day in Model.DealSummaryList.First().Counts)
+                                        {
+                                            <th class="text-center">Forms</th>
+                                            <th class="text-center">Deals</th>
+                                        }
                                     }
                                 </tr>
-                            }
-                            @{
-                                // Build total per day
-                                var totals = new List<(int applicants, int deals)>();
+                            </thead><!-- thead -->
 
-                                if (Model.DealSummaryList.Any())
+                            <tbody>
+                                @foreach (var agent in Model.DealSummaryList.OrderBy(x=>x.AgentName))
                                 {
-                                    int cols = Model.DealSummaryList.First().Counts.Count;
-
-                                    for (int i = 0; i < cols; i++)
-                                    {
-                                        int totalApplicants = Model.DealSummaryList.Sum(a => a.Counts[i].ApplicantCount);
-                                        int totalDeals = Model.DealSummaryList.Sum(a => a.Counts[i].DealCount);
-
-                                        totals.Add((totalApplicants, totalDeals));
-                                    }
+                                    <tr>
+                                        <td class="text-left">@agent.AgentName</td>
+                                        @foreach (var count in agent.Counts)
+                                        {
+                                            <td class="text-center">@(count.ApplicantCount > 0 ? count.ApplicantCount : "")</td>
+                                            <td class="text-center">@(count.DealCount > 0 ? count.DealCount : "")</td>
+                                        }
+                                    </tr>
                                 }
-                            }
+                                                                
+                            </tbody><!-- end tbody -->
+                        </table><!-- end table -->
+                    </div>                    
 
-                            <tr style="background-color:#f3f3f3; font-weight:bold;">
-                                <td class="text-center OverallTotel">Total</td>
-                                @foreach (var t in totals)
-                                {
-                                    <td class="OverallTotel">@t.applicants</td>
-                                    <td class="OverallTotel">@t.deals</td>
-                                }
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+
         </div>
     </div>
 }

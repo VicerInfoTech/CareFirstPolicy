@@ -49,7 +49,7 @@
                             }
                         }
                     },
-                  
+
                     {
                         data: "testStatus", name: "TestStatus", className: "col-1  text-center",
                         render: function (data, type, row) {
@@ -299,6 +299,7 @@
     //        }
     //    });
     //}
+
     this.BindDealChart = function () {
 
         let agentId = $("#AgentId").val();
@@ -327,7 +328,8 @@
                 let totalDeals = chartData.deals.reduce((a, b) => a + b, 0);
                 let totalApplicants = chartData.applicants.reduce((a, b) => a + b, 0);
                 let totalAgents = Math.max(...chartData.agents);   // max agents in 10 days
-                let avgDeals = (totalDeals / chartData.deals.length).toFixed(1);
+                let avgDeals = (totalApplicants / chartData.applicants.filter(d => d > 0).length).toFixed(0);
+                avgDeals = isNaN(avgDeals) ? 0 : avgDeals;
 
                 $("#metricDeals").text(totalDeals);
                 $("#metricApplicants").text(totalApplicants);
@@ -344,78 +346,93 @@
 
                 // -------- APEX CHART CODE ----------
                 let options = {
-                    chart: {
-                        height: 350,
-                        type: "line",
-                        toolbar: { show: false }
-                    },
 
-                    series: [
-                        {
-                            name: "Deals",
-                            type: "column",
-                            data: chartData.deals
-                        },
-                        {
-                            name: "Applicants",
-                            type: "column",
-                            data: chartData.applicants
-                        },
-                        {
-                            // 🔥 Fake series → ONLY for soft yellow background area
-                            name: "Agents Area",
-                            type: "area",
-                            data: chartData.agents
-                        },
-                        {
-                            name: "Agents",
-                            type: "line",
-                            data: chartData.agents
-                        }
-                    ],
+                    series: [{
+                        name: "Forms",
+                        type: "bar",
+                        data: chartData.deals
+                    }, {
+                        name: "Deals",
+                        type: "area",
+                        data: chartData.applicants
+                    }, {
+                        name: "Active Agents",
+                        type: "bar",
+                        data: chartData.agents
+                    }],
 
                     colors: chartColors,
 
+                    chart: {
+                        height: 394,
+                        type: "line",
+                        toolbar: {
+                            show: !1
+                        }
+                    },
                     stroke: {
-                        width: [0, 0, 0, 3],
                         curve: "smooth",
-                        dashArray: [0, 0, 0, 5]   // dotted yellow line
+                        dashArray: [0, 3, 0],
+                        width: [0, 1, 0]
                     },
-
-                    plotOptions: {
-                        bar: {
-                            columnWidth: "40%",
-                            borderRadius: 4
-                        }
-                    },
-
                     fill: {
-                        type: ["solid", "solid", "gradient", "solid"],
-                        opacity: [1, 1, 0.25, 1], // ⭐ FAKE AREA SOFT SHADE
-                        gradient: {
-                            shadeIntensity: 1,
-                            opacityFrom: 0.30,
-                            opacityTo: 0.05,
-                            stops: [0, 90, 100]
+                        opacity: [1, .1, 1]
+                    },
+                    markers: {
+                        size: [0, 4, 0],
+                        strokeWidth: 2,
+                        hover: {
+                            size: 4
                         }
                     },
-
-                    markers: {
-                        size: 5,
-                        strokeWidth: 3
-                    },
-
                     xaxis: {
                         categories: chartData.dates,
-                        labels: { style: { fontSize: "12px" } }
+                        axisTicks: {
+                            show: !1
+                        },
+                        axisBorder: {
+                            show: !1
+                        }
                     },
-
-                    yaxis: {
-                        labels: { style: { fontSize: "12px" } }
-                    },
-
                     grid: {
-                        borderColor: "#f1f1f1"
+                        show: !0,
+                        xaxis: {
+                            lines: {
+                                show: !0
+                            }
+                        },
+                        yaxis: {
+                            lines: {
+                                show: !1
+                            }
+                        },
+                        padding: {
+                            top: 0,
+                            right: -2,
+                            bottom: 15,
+                            left: 10
+                        }
+                    },
+                    legend: {
+                        show: !0,
+                        horizontalAlign: "center",
+                        offsetX: 0,
+                        offsetY: -5,
+                        markers: {
+                            width: 9,
+                            height: 9,
+                            radius: 6
+                        },
+                        itemMargin: {
+                            horizontal: 10,
+                            vertical: 0
+                        }
+                    },
+                    plotOptions: {
+                        bar: {
+                            columnWidth: "30%",
+                            barHeight: "70%"
+                        }
                     },
 
                     // -------- HIDE FAKE SERIES FROM TOOLTIP ----------
@@ -425,11 +442,6 @@
                         y: {
                             formatter: function (val, opts) {
                                 let index = opts.seriesIndex;
-
-                                // ❗ Hide Agents Area series from tooltip
-                                if (opts.w.config.series[index].name === "Agents Area") {
-                                    return "";
-                                }
                                 return val;
                             }
                         }
@@ -441,7 +453,6 @@
                         position: "bottom",
                         fontSize: "12px",
                         formatter: function (seriesName, opts) {
-                            if (seriesName === "Agents Area") return ""; // hide it
                             return seriesName;
                         }
                     }
@@ -458,10 +469,10 @@
                 );
 
                 window.dealChartInstance.render();
+
             }
         });
     };
-
 
     // ============ THEME COLOR FUNCTION ============
     function getChartColorsArray(el) {
@@ -576,7 +587,7 @@
                                 show: true,
                                 label: 'Total Deals',
                                 formatter: function () {
-                                    return "#"+ totalDeals;  // center value
+                                    return "#" + totalDeals;  // center value
                                 }
                             },
                             value: {
