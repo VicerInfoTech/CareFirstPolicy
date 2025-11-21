@@ -1,7 +1,9 @@
-﻿using CFP.Common.Common_Entities;
+﻿using CFP.Common.Business_Entities;
+using CFP.Common.Common_Entities;
 using CFP.Common.Utility;
 using CFP.Patient.Controllers;
 using CFP.Provider.IProvider;
+using CFP.Repository.Models;
 using CFP.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -13,12 +15,19 @@ namespace CFP.Web.Controllers
         #region Variables
         IAgentMasterProvider _provider;
         private readonly IChatProvider _chatProvider;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".png", ".jpg", ".jpeg", ".txt", ".zip"
+    };
+        private const long MaxFileSizeBytes = 15 * 1024 * 1024; // 15MB
         #endregion
 
         #region Constructor
-        public ChatController(ICommonProvider commonProvider, ISessionManager sessionManager, IChatProvider chatProvider) : base(commonProvider, sessionManager)
+        public ChatController(ICommonProvider commonProvider, ISessionManager sessionManager, IChatProvider chatProvider, IWebHostEnvironment webHostEnvironment) : base(commonProvider, sessionManager)
         {
             _chatProvider = chatProvider;
+            _webHostEnvironment = webHostEnvironment;
         }
         #endregion
 
@@ -26,7 +35,7 @@ namespace CFP.Web.Controllers
         public IActionResult Index()
         {
             ChatViewModel viewModel = new ChatViewModel();
-            viewModel.CurrentUserId = _sessionManager.UserId;           
+            viewModel.CurrentUserId = _sessionManager.UserId;
             return View(viewModel);
         }
         [HttpGet]
@@ -86,7 +95,7 @@ namespace CFP.Web.Controllers
             if (!string.IsNullOrEmpty(id))
             {
                 model.IsEdit = true;
-                model.ChatRoomModel = _chatProvider.GetRoomById(_commonProvider.UnProtect(id),GetSessionProviderParameters());
+                model.ChatRoomModel = _chatProvider.GetRoomById(_commonProvider.UnProtect(id), GetSessionProviderParameters());
             }
 
             return PartialView(model);
@@ -122,7 +131,7 @@ namespace CFP.Web.Controllers
         [HttpGet("/chat/getroom")]
         public IActionResult GetRoom(int roomId)
         {
-            return Json(_chatProvider.GetRoomById(roomId,GetSessionProviderParameters()));
+            return Json(_chatProvider.GetRoomById(roomId, GetSessionProviderParameters()));
         }
         [HttpGet("/chat/getroommessages")]
         public IActionResult GetRoomMessages(int roomId)
@@ -130,6 +139,59 @@ namespace CFP.Web.Controllers
             var messages = _chatProvider.GetRoomMessages(roomId);
             return Json(messages);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadAttachment(int chatRoomId, IFormFile file)
+        {
+            if (file == null || file.Length == 0) return BadRequest("No file selected.");
+
+            var ext = Path.GetExtension(file.FileName);
+           // var guidFileName = $"{Guid.NewGuid()}{ext}";
+            var guidFileName=  Guid.NewGuid().ToString() + AppCommon.FileNameSeperator + file.FileName;
+
+            var uploadPath = GetChatUploadPath(chatRoomId);
+            var filePath = Path.Combine(uploadPath, guidFileName);
+
+            using (var stream = System.IO.File.Create(filePath))
+                await file.CopyToAsync(stream);
+
+            // Return metadata
+            return Ok(new
+            {
+                guidFileName,
+                fileName = file.FileName,
+                downloadUrl = Url.Action("DownloadAttachment", "Chat", new { roomId = chatRoomId, file = guidFileName })
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadAttachment(int roomId, string file)
+        {
+            if (string.IsNullOrEmpty(file)) return BadRequest();
+
+            var uploadRoot = GetChatUploadPath(roomId);
+            var filePath = Path.Combine(uploadRoot, file);
+
+            if (!System.IO.File.Exists(filePath)) return NotFound();
+
+            var memory = new MemoryStream();
+            await using (var stream = System.IO.File.OpenRead(filePath))
+                await stream.CopyToAsync(memory);
+            memory.Position = 0;
+
+            string[]fileNameArray= file.Split(AppCommon.FileNameSeperator);
+            var originalFileName = fileNameArray[fileNameArray.Length-1];
+
+            return File(memory, "application/octet-stream", originalFileName);
+        }
+
+        private string GetChatUploadPath(int chatRoomId)
+        {
+            var path = Path.Combine(_webHostEnvironment.WebRootPath, "ExtraFiles", "Uploads", "Chat", chatRoomId.ToString());
+            Directory.CreateDirectory(path);
+            return path;
+        }
+
 
         #endregion
     }

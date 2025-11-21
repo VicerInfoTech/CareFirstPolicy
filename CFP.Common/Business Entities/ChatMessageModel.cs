@@ -19,10 +19,12 @@ namespace CFP.Common.Business_Entities
         public string Message { get; set; } = null!;
 
         public DateTime SentAt { get; set; }
+        public bool IsAttachment { get; set; }
         public bool isOwnMessage { get; set; }
 
         public bool IsRead { get; set; }
         public string SenderName { get; set; }
+        public string FileName { get; set; }
         public virtual UserMasterModel FromUser { get; set; } = null!;
 
         public virtual UserMasterModel? ToUser { get; set; }

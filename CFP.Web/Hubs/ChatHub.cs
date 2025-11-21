@@ -163,14 +163,16 @@ namespace CFP.Web.Hubs
         public async Task SendRoomMessage(ChatMessageModel model)
         {
             var messageId = _chatProvider.SaveRoomMessage(model);
-
+           
             await Clients.Group(model.ChatRoomId.ToString())
                 .SendAsync("ReceiveRoomMessage", new
                 {
                     model.Message,
                     model.ChatRoomId,
                     model.FromUserId,
-                    SentAt = AppCommon.CurrentDate
+                    SentAt = AppCommon.CurrentDate,
+                    model.IsAttachment,
+                    model.FileName
                 });
         }
 

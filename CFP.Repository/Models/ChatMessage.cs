@@ -19,6 +19,8 @@ public partial class ChatMessage
 
     public bool IsRead { get; set; }
 
+    public bool IsAttachment { get; set; }
+
     public virtual ChatRoom? ChatRoom { get; set; }
 
     public virtual UserMaster FromUser { get; set; } = null!;

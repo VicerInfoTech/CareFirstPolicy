@@ -40,16 +40,23 @@
         connection.on("ReceiveRoomMessage", function (message) {
 
             let isOwn = (message.fromUserId === currentUserId);
+            let displayMessage = message.isAttachment ? message.fileName : message.message;
+            let downloadUrl = message.isAttachment ? `/Chat/DownloadAttachment?roomId=${message.chatRoomId}&file=${message.message}` : "";
 
-            // Only show if user is inside this room right now
             if (currentChatType === "room" && message.chatRoomId === currentRoomId) {
                 $("#users-conversation").append(
-                    CFP.ChatClient.BuildMessageHtml(message.message, message.sentAt, isOwn)
+                    CFP.ChatClient.BuildMessageHtml(
+                        displayMessage,
+                        message.sentAt,
+                        isOwn,
+                        message.senderName,
+                        message.isAttachment,
+                        downloadUrl
+                    )
                 );
                 CFP.ChatClient.ScrollBottom();
             }
 
-            // Optional: If user is NOT in room, increase unread badge
             else {
                 CFP.ChatClient.IncreaseRoomBadge(message.chatRoomId);
             }
@@ -164,6 +171,7 @@
             $(".user-own-img").removeClass("online");
             $(".member-count").text("Offline");  // Show Offline
         }
+        $(".attachment-container").hide();
     }
 
 
@@ -212,7 +220,9 @@
         } else {
             dateLabel = msgDate.toLocaleDateString(); // fallback to full date
         }
-
+        let contentHtml = msg.isAttachment
+            ? `<a href="${msg.downloadUrl}" target="_blank" download><i class="ri-attachment-line text-success fs-18"></i> ${msg.message}</a>`
+            : msg.message;
         let html = "";
 
         if (msg.isOwnMessage) {
@@ -221,7 +231,7 @@
 				<div class="conversation-list">
 					<div class="user-chat-content">
 						<div class="ctext-wrap">
-							<div class="ctext-wrap-content">${msg.message}</div>
+							<div class="ctext-wrap-content">${contentHtml}</div>
 						</div>
 						<small class="text-muted">${dateLabel}, ${time}</small>
 					</div>
@@ -236,7 +246,7 @@
 					</div>
 					<div class="user-chat-content">
 						<div class="ctext-wrap">
-							<div class="ctext-wrap-content">${msg.message}</div>
+							<div class="ctext-wrap-content">${contentHtml}</div>
 						</div>
 						<small class="text-muted ms-1">${dateLabel}, ${time}</small>
 					</div>
@@ -512,7 +522,7 @@
             fromUserId: currentUserId,
             message: msg,
             sentAt: new Date(new Date().toLocaleString("en-US", CFP.Common.TimeZoneOptions)),
-            isOwnMessage: true
+            isOwnMessage: true,
         });
 
         CFP.ChatClient.ScrollBottom();
@@ -527,7 +537,7 @@
         $(".channel-item").removeClass("active");
         $(`.channel-item[data-roomid='${roomId}']`).addClass("active");
         $(".user-own-img img").attr("src", "/assets/images/users/multi-user.jpg");
-
+        $(".attachment-container").show();
         // Load room messages
         $.get("/chat/getroommessages?roomId=" + roomId, function (messages) {
 
@@ -535,12 +545,17 @@
 
             messages.forEach(m => {
                 let isOwn = (m.fromUserId === currentUserId);
+                let displayMessage = m.isAttachment ? m.fileName : m.message;
+                let downloadUrl = m.isAttachment ? `/Chat/DownloadAttachment?roomId=${m.chatRoomId}&file=${m.message}` : "";
+
 
                 html += CFP.ChatClient.BuildMessageHtml(
-                    m.message,
+                    displayMessage,
                     m.sentAt,
                     isOwn,
-                    m.senderName
+                    m.senderName,
+                    m.isAttachment,
+                    downloadUrl
                 );
             });
 
@@ -561,8 +576,8 @@
     };
 
 
-    this.BuildMessageHtml = function (message, sentAt, isOwn, senderName) {
-
+    this.BuildMessageHtml = function (message, sentAt, isOwn, senderName, isAttachment = false, downloadUrl = "") {
+        debugger;
         const msgMoment = moment(sentAt);
         const now = moment();
 
@@ -579,6 +594,12 @@
             dateLabel = msgMoment.format("MMM D, YYYY"); // e.g., Nov 18, 2025
         }
 
+        if (isAttachment) {
+            contentHtml = `<a href="${downloadUrl}" target="_blank" download><i class="ri-attachment-line text-success fs-18"></i> ${message}</a>`;
+        }
+        else {
+            contentHtml = message;
+        }
         if (isOwn) {
             return `
      <li class="right">
@@ -586,7 +607,7 @@
              <div class="user-chat-content">                 
                  <div class="ctext-wrap">
                      <div class="ctext-wrap-content">
-                         ${message}
+                        ${contentHtml}
                      </div>
                  </div>
 
@@ -608,7 +629,7 @@
                  <div class="text-muted d-block pb-1">${senderName} </div>
                  <div class="ctext-wrap">
                      <div class="ctext-wrap-content">
-                         ${message}
+                         ${contentHtml}
                      </div>
                  </div>
                  <small class="text-muted ms-1">${dateLabel}, ${time}</small>
@@ -647,6 +668,60 @@
 
 
 
+
+    $("#fileAttachment").on("change", async function (e) {
+        debugger;
+        const file = e.target.files[0];
+        if (!file || !currentRoomId) return;
+
+        const form = new FormData();
+        form.append("chatRoomId", currentRoomId);
+        form.append("file", file);
+
+        try {
+            const resp = await fetch("/Chat/UploadAttachment", {
+                method: "POST",
+                body: form,
+                credentials: "same-origin"
+            });
+
+            if (!resp.ok) {
+                alert("File upload failed.");
+                return;
+            }
+
+            const data = await resp.json();
+
+            // Send attachment message to hub
+            const payload = {
+                chatRoomId: currentRoomId,
+                message: data.guidFileName,// store file GUID
+                fromUserId: currentUserId,
+                isAttachment: true,
+                fileName: data.fileName
+            };
+
+            connection.invoke("SendRoomMessage", payload);
+
+            // Show own message instantly
+            CFP.ChatClient.AppendMessageToChat({
+                fromUserId: currentUserId,
+                message: data.fileName, // display original file name
+                sentAt: new Date(new Date().toLocaleString("en-US", CFP.Common.TimeZoneOptions)),
+                isOwnMessage: true,
+                isAttachment: true,
+                downloadUrl: data.downloadUrl
+            });
+
+            CFP.ChatClient.ScrollBottom();
+
+        } catch (ex) {
+            console.error(ex);
+            alert("Upload error");
+        } finally {
+            $(this).val(""); // reset input
+        }
+    });
 
     window.addEventListener("beforeunload", function () {
         if (connection && connection.connectionId) {

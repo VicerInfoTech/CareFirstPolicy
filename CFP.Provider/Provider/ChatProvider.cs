@@ -346,6 +346,13 @@ namespace CFP.Provider.Provider
             foreach (var item in chatMessages)
             {
                 item.SenderName = item.FromUser.FirstName + " " + item.FromUser.LastName;
+                if (item.IsAttachment)
+                {
+                    var parts = item.Message?.Split(new[] { "__--__" }, StringSplitOptions.None);
+                    var fileId = parts != null && parts.Length > 0 ? parts[0] : "";
+                    var fileName = parts != null && parts.Length > 1 ? parts[1] : "";
+                    item.FileName = fileName;
+                }
             }
             return chatMessages;
         }
@@ -359,7 +366,8 @@ namespace CFP.Provider.Provider
                 ChatRoomId = model.ChatRoomId,   // Important
                 Message = model.Message,
                 SentAt = AppCommon.CurrentDate,
-                IsRead = false
+                IsRead = false,
+                IsAttachment=model.IsAttachment,
             };
 
             unitOfWork.ChatMessage.Insert(entity);

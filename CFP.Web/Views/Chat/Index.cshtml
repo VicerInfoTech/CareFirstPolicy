@@ -40,6 +40,7 @@
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
         background-color: #6691e7;
     }
+
 </style>
 <input asp-for="CurrentUserId" id="currentUserId" type="hidden" />
 
@@ -183,7 +184,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                      
+
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-4 text-end">
@@ -293,14 +294,26 @@
                                 <div class="col-auto">
                                     <div class="chat-input-links me-2">
                                         <div class="links-list-item">
-                                            <button type="button" class="btn btn-link text-decoration-none emoji-btn" id="emoji-btn">
+                                            <button type="button" class="btn btn-soft-dark waves-effect waves-light material-shadow-none emoji-btn" id="emoji-btn">
                                                 <i class="bx bx-smile align-middle"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
+                                <div class="col-auto attachment-container" style="display:none">
+                                    <div class="chat-input-links me-2">
+                                        <div class="links-list-item">
+                                            <button type="button" class="btn btn-soft-dark waves-effect waves-light material-shadow-none" id="btnAttach">
+                                                <i class="ri-attachment-line align-middle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <input type="file" id="fileAttachment" style="display:none" />
+                                </div>
+
                                 <div class="col">
+
                                     <div class="chat-input-feedback">
                                         Please Enter a Message
                                     </div>
@@ -622,6 +635,9 @@
                 e.preventDefault(); // prevent new line
                 CFP.ChatClient.SendPrivateMessage(); // Trigger send
             }
+        });
+                $("#btnAttach").click(function () {
+            $("#fileAttachment").click();
         });
 
     </script>
