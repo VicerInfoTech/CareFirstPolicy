@@ -126,35 +126,49 @@ namespace CFP.Provider.Provider
 
         public List<ChatUserListModel> GetChatUsers(int userId)
         {
-            var users = unitOfWork.UserMaster.GetAll(u => u.UserMasterId != userId).ToList();
-
-            var messages = unitOfWork.ChatMessage.GetAll(m => m.FromUserId == userId || m.ToUserId == userId).ToList();
-
-            var connections = unitOfWork.ChatConnection.GetAll(c => c.UserMasterId != userId).ToList();
-            var list = users.Select(user =>
+            List<ChatUserListModel> list = new List<ChatUserListModel>();
+            try
             {
-                var lastMsg = messages.Where(m => (m.FromUserId == user.UserMasterId && m.ToUserId == userId) ||
-                                (m.ToUserId == user.UserMasterId && m.FromUserId == userId)).OrderByDescending(m => m.ChatMessageId).FirstOrDefault();
 
-                bool isOnline = connections.Any(c => c.UserMasterId == user.UserMasterId);
 
-                int unreadCount = messages.Where(m =>
-              m.FromUserId == user.UserMasterId &&
-              m.ToUserId == userId &&
-              m.IsRead == false
-          ).Count();
-                return new ChatUserListModel
-                {
-                    UserId = user.UserMasterId,
-                    UserName = user.FirstName + " " + user.LastName,
-                    LastMessage = lastMsg?.Message ?? "",
-                    LastMessageTime = lastMsg?.SentAt,
-                    IsOnline = isOnline,
-                    UnreadCount = unreadCount ,
-                    LastSeen=user.LastSeen,
-                };
-            }).OrderByDescending(x => x.IsOnline).ThenByDescending(x => x.LastMessageTime ?? DateTime.MinValue).ToList();
+                var users = unitOfWork.UserMaster.GetAll(u => u.UserMasterId != userId).ToList();
 
+                var messages = unitOfWork.ChatMessage.GetAll(m => m.FromUserId == userId || m.ToUserId == userId).ToList();
+
+                var connections = unitOfWork.ChatConnection.GetAll(c => c.UserMasterId != userId).ToList();
+                list = users.Select(user =>
+               {
+                   var lastMsg = messages.Where(m => (m.FromUserId == user.UserMasterId && m.ToUserId == userId) ||
+                                   (m.ToUserId == user.UserMasterId && m.FromUserId == userId)).OrderByDescending(m => m.ChatMessageId).FirstOrDefault();
+
+                   bool isOnline = connections.Any(c => c.UserMasterId == user.UserMasterId);
+
+                   int unreadCount = messages.Where(m => m.FromUserId == user.UserMasterId && m.ToUserId == userId && m.IsRead == false).Count();
+
+                   DateTime? lastLogin = user.LoginHistories.OrderByDescending(x => x.LoggedInTime).Select(x => (DateTime?)x.LoggedInTime).FirstOrDefault();
+
+                   DateTime? lastConnection = user.ChatConnections.OrderByDescending(c => c.CreatedOn).Select(c => (DateTime?)c.CreatedOn).FirstOrDefault();
+
+                   DateTime? lastMessage = user.ChatMessageFromUsers.OrderByDescending(m => m.SentAt).Select(m => (DateTime?)m.SentAt).FirstOrDefault();
+                   // Take latest datetime among the three
+                   DateTime? lastSeen = new[] { lastLogin, lastConnection, lastMessage }
+                                        .Where(dt => dt.HasValue).OrderByDescending(dt => dt.Value).FirstOrDefault();
+                   return new ChatUserListModel
+                   {
+                       UserId = user.UserMasterId,
+                       UserName = user.FirstName + " " + user.LastName,
+                       LastMessage = lastMsg?.Message ?? "",
+                       LastMessageTime = lastMsg?.SentAt,
+                       IsOnline = isOnline,
+                       UnreadCount = unreadCount,
+                       LastSeen = lastSeen,
+                   };
+               }).OrderByDescending(x => x.IsOnline).ThenByDescending(x => x.LastMessageTime ?? DateTime.MinValue).ToList();
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "ChatProvider=>GetChatUsers");
+            }
             return list;
         }
 
@@ -176,12 +190,7 @@ namespace CFP.Provider.Provider
                 var existingConnection = unitOfWork.ChatConnection
                     .GetAll(x => x.UserMasterId == sessionProvider.UserId && x.ConnectionId == connectionId)
                     .SingleOrDefault();
-                var userData = unitOfWork.UserMaster.Get(sessionProvider.UserId);
-                if (userData != null) { 
-                userData.LastSeen=AppCommon.CurrentDate;
-                    unitOfWork.UserMaster.Update(userData,sessionProvider.UserId,sessionProvider.Ip);
-                    unitOfWork.Save();
-                }
+
                 if (existingConnection != null)
                 {
                     unitOfWork.ChatConnection.Delete(existingConnection);

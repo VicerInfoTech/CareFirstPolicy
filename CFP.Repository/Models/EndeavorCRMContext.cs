@@ -376,7 +376,6 @@ public partial class EndeavorCRMContext : DbContext
             entity.Property(e => e.LastName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.LastSeen).HasColumnType("datetime");
             entity.Property(e => e.UpdatedOn).HasColumnType("datetime");
             entity.Property(e => e.UserPassword)
                 .HasMaxLength(500)
