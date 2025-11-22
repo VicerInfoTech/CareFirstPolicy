@@ -65,7 +65,7 @@ namespace CFP.Web.Controllers
         {
             if (!string.IsNullOrEmpty(model.ConnectionId))
             {
-                _chatProvider.RemoveConnection(model.ConnectionId, new SessionProviderModel());
+                _chatProvider.RemoveConnection(model.ConnectionId, GetSessionProviderParameters());
             }
 
             return Json(true);

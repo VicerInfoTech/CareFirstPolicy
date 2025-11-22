@@ -107,7 +107,7 @@
 
             users.forEach((u, index) => {
                 html += `
-							<li class="chat-user-item" id="private${u.userId}" onclick="CFP.ChatClient.OpenChat(${u.userId}, '${u.userName}', ${u.isOnline})"		>
+							<li class="chat-user-item" id="private${u.userId}" onclick="CFP.ChatClient.OpenChat(${u.userId}, '${u.userName}', ${u.isOnline},'${u.lastSeen}')"		>
 						<a class="d-flex align-items-center" href="javascript:void(0)">
 
 							 <!-- Theme Avatar + Status -->
@@ -139,7 +139,7 @@
                         $(".member-count").text("Online");   // Show Online in member-count                        
                     } else {
                         $(".user-own-img").removeClass("online");
-                        $(".member-count").text("Offline");  // Show Offline
+                        $(".member-count").text(formatLastSeen(u.lastSeen));  // Show Offline
                     }
                 }
             });
@@ -153,7 +153,8 @@
         });
     }
 
-    this.OpenChat = function (userId, name, isOnline) {
+    this.OpenChat = function (userId, name, isOnline, lastSeen) {
+        debugger;
         currentChatType = "private";   // IMPORTANT
         currentRoomId = null;          // Reset room
         selectedUserId = userId;
@@ -169,7 +170,7 @@
             $(".member-count").text("Online");   // Show Online in member-count
         } else {
             $(".user-own-img").removeClass("online");
-            $(".member-count").text("Offline");  // Show Offline
+            $(".member-count").text(formatLastSeen(lastSeen));  // Show Offline
         }
         $(".attachment-container").hide();
         $(".chat-header-actions").html("");
@@ -804,6 +805,35 @@
             $(this).val(""); // reset input
         }
     });
+
+
+    function formatLastSeen(dateString) {
+        debugger;
+        if (dateString == "null") return "Offline";
+        if (dateString == null) return "Offline";
+        let date = new Date(dateString);
+        let now = new Date();
+
+        //let diffMs = now - date;
+        //let diffMins = Math.floor(diffMs / 60000);
+
+        //if (diffMins < 1) return "Last seen just now";
+        //if (diffMins < 60) return `Last seen ${diffMins} min ago`;
+
+        //let diffHrs = Math.floor(diffMins / 60);
+        //if (diffHrs < 24) return `Last seen ${diffHrs} hrs ago`;
+
+        let yesterday = new Date();
+        yesterday.setDate(now.getDate() - 1);
+
+        if (date.toDateString() === yesterday.toDateString())
+            return `Last seen yesterday at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+        return `Last seen on ${date.toLocaleDateString()} at ${date.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        })}`;
+    }
 
     window.addEventListener("beforeunload", function () {
         if (connection && connection.connectionId) {

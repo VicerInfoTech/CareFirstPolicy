@@ -15,6 +15,7 @@ namespace CFP.Common.Business_Entities
         public DateTime? LastMessageTime { get; set; }   // For sorting latest chat
         public int UnreadCount { get; set; }            // Badge count
         public bool IsOnline { get; set; }
+        public DateTime? LastSeen { get; set; }
 
     }
     public class ContactUserDto

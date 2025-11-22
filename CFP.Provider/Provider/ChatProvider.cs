@@ -150,7 +150,8 @@ namespace CFP.Provider.Provider
                     LastMessage = lastMsg?.Message ?? "",
                     LastMessageTime = lastMsg?.SentAt,
                     IsOnline = isOnline,
-                    UnreadCount = unreadCount // new property in model
+                    UnreadCount = unreadCount ,
+                    LastSeen=user.LastSeen,
                 };
             }).OrderByDescending(x => x.IsOnline).ThenByDescending(x => x.LastMessageTime ?? DateTime.MinValue).ToList();
 
@@ -175,7 +176,12 @@ namespace CFP.Provider.Provider
                 var existingConnection = unitOfWork.ChatConnection
                     .GetAll(x => x.UserMasterId == sessionProvider.UserId && x.ConnectionId == connectionId)
                     .SingleOrDefault();
-
+                var userData = unitOfWork.UserMaster.Get(sessionProvider.UserId);
+                if (userData != null) { 
+                userData.LastSeen=AppCommon.CurrentDate;
+                    unitOfWork.UserMaster.Update(userData,sessionProvider.UserId,sessionProvider.Ip);
+                    unitOfWork.Save();
+                }
                 if (existingConnection != null)
                 {
                     unitOfWork.ChatConnection.Delete(existingConnection);

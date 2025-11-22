@@ -73,6 +73,8 @@
 @* <script src="~/lib/js/custom/CFP.Enum.js" asp-append-version="true"></script> *@
 
 <script>
+        window.isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+
     function UrlContent(url) {
         return "@Url.Content("~/")" + url
     }
@@ -130,6 +132,9 @@
             // }
 
         });
+        if (window.isAuthenticated) {
+            CFP.ChatClient.StartConnection();
+        }
     })
 
     $(document).ajaxError(function (event, request, settings) {

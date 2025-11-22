@@ -16,6 +16,17 @@
         }
     }
 
+    .chat-user-img .user-status {
+        width: 14px; /* increase the size */
+        height: 14px; /* increase the size */
+        border-radius: 50%;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: gray; /* default for offline */
+        border: 2px solid #fff; /* white border to look clean */
+    }
+
     #users-conversation {
         display: flex;
         flex-direction: column;
@@ -652,7 +663,6 @@
         $(document).ready(function () {
 
         CFP.ChatClient.LoadUserList();
-            CFP.ChatClient.StartConnection();
                     $(document).on("input", "#chatSearch", function () {
             let search = $(this).val().toLowerCase().trim();
 

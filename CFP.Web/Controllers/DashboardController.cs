@@ -27,6 +27,7 @@ namespace CFP.Web.Controllers
         #region Methods
         public IActionResult Index()
         {
+            ViewBag.IsAuthenticated = User.Identity.IsAuthenticated;
             DashboardViewModel model = new DashboardViewModel()
             {
                 RoleId = _sessionManager.RoleId,

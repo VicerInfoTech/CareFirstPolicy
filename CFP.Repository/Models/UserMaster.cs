@@ -35,6 +35,8 @@ public partial class UserMaster
 
     public string Ip { get; set; } = null!;
 
+    public DateTime? LastSeen { get; set; }
+
     public virtual ICollection<AgentMaster> AgentMasterCreatedByNavigations { get; set; } = new List<AgentMaster>();
 
     public virtual ICollection<AgentMaster> AgentMasterUpdatedByNavigations { get; set; } = new List<AgentMaster>();
