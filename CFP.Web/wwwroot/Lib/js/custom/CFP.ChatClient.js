@@ -32,6 +32,8 @@
             }
             else {
                 CFP.ChatClient.IncreaseUnreadCount(msg.fromUserId);
+               /* CFP.ChatClient.RefreshNotification();*/
+
             }
 
             CFP.ChatClient.UpdateLastMessageInSidebar(msg);
@@ -174,6 +176,7 @@
         }
         $(".attachment-container").hide();
         $(".chat-header-actions").html("");
+        CFP.ChatClient.RefreshNotification();
     }
 
 
@@ -225,7 +228,7 @@
         //let contentHtml = msg.isAttachment
         //    ? `<a href="${msg.downloadUrl}" target="_blank" download><i class="ri-attachment-line text-success fs-18"></i> ${msg.message}</a>`
         //    : msg.message;
-        let contentHtml = msg.isAttachment ? CFP.ChatClient.showAttachmentBubble(downloadUrl, msg.message) : msg.message;
+        let contentHtml = msg.isAttachment ? CFP.ChatClient.showAttachmentBubble(msg.downloadUrl, msg.message) : msg.message;
         let html = "";
 
         if (msg.isOwnMessage) {
@@ -387,15 +390,7 @@
     }
 
 
-    // OPEN MODAL
-    //$("#btnCreateRoom").click(function () {
-    //    $("#roomNameInput").val("");
-    //    $('.select2').select2({
-    //        dropdownParent: $('#createRoomModal')
-    //    });
-    //    $("#createRoomModal").modal("show");
-    //});
-
+    
     this.AddRoom = function (id = '') {
         debugger;
         $(".preloader").show();
@@ -479,24 +474,7 @@
     }
 
 
-    //// CREATE ROOM
-    //$("#btnSaveRoom").click(function () {
-    //    const roomName = $("#roomName").val();
-    //    const users = $("#roomUsers").val(); // array of userIds
-
-    //    $.ajax({
-    //        url: "/chat/createroom",
-    //        type: "POST",
-    //        data: { roomName, users },
-    //        success: function (res) {
-    //            $("#createRoomModal").modal("hide");
-    //            $("#roomName").val("");                // clear room name
-    //            $("#roomUsers").val(null).trigger('change'); // clear select2 values
-    //            CFP.ChatClient.LoadRooms(); // refresh list
-    //        }
-    //    });
-    //});
-
+   
 
     $(document).on("click", ".channel-item", function () {
         let roomId = $(this).data("roomid");
@@ -762,6 +740,7 @@
         form.append("file", file);
 
         try {
+            debugger;
             const resp = await fetch("/Chat/UploadAttachment", {
                 method: "POST",
                 body: form,
@@ -834,6 +813,18 @@
             minute: "2-digit"
         })}`;
     }
+
+    this.RefreshNotification = function () {
+        debugger;
+        $.ajax({
+            url: "/Common/ShowNotification",
+            type: "GET",
+            success: function (html) {
+                $("#notificationArea").html(html);
+            }
+        });
+    };
+
 
     window.addEventListener("beforeunload", function () {
         if (connection && connection.connectionId) {

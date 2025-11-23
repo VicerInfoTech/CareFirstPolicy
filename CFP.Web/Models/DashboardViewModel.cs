@@ -17,6 +17,7 @@ namespace CFP.Web.Models
         public List<DropDownModel> LeaderBoard { get; set; }
         public List<SelectListItem> AgentList { get; set; }
         public List<SelectListItem> CareerList { get; set; }
+        public List<NotificationDto> NotificationList { get; set; }
         public List<IFormFile> PictureofProblemList { get; set; }
     }
 }

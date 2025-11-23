@@ -10,22 +10,25 @@ namespace CFP.Patient.ViewComponents
     public class NotificationViewComponent : ViewComponent
     {
         public ISessionManager _sessionManager = null;
-       // IDashboardProvider _provider;
+        private readonly ICommonProvider _commonProvider;
 
-        public NotificationViewComponent(ISessionManager sessionManager)
+        // IDashboardProvider _provider;
+
+        public NotificationViewComponent(ISessionManager sessionManager,ICommonProvider commonProvider)
         {
             _sessionManager = sessionManager;
-           // _provider = provider;
+            _commonProvider = commonProvider;
+            // _provider = provider;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
             DashboardViewModel model = new DashboardViewModel()
             {
-                //Notifications = _provider.GetNotification(new SessionProviderModel()
-                //{
-                //    UserId = _sessionManager.UserId,
-                //    RoleId = _sessionManager.RoleId
-                //})
+                NotificationList = _commonProvider.GetNotification(new SessionProviderModel()
+                {
+                    UserId = _sessionManager.UserId,
+                    RoleId = _sessionManager.RoleId
+                })
             };
             return View(model);
         }

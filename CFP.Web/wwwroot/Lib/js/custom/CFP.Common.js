@@ -1,6 +1,8 @@
 
 CFP.Common = new function () {
-
+    this.Option = {
+        Table: null,
+    }
     this.ToastrSuccess = function (msg) {
         toastr.success(msg);
     }
@@ -64,6 +66,7 @@ CFP.Common = new function () {
 
 
     this.InitDatePicker = function () {
+        debugger;
         $('.date-picker-time').flatpickr({
             enableTime: true,
             enableSeconds: true,
@@ -184,5 +187,65 @@ CFP.Common = new function () {
                 $(".preloader").hide();
             }
         })
+    }
+
+    this.ChatHistory = function (options) {
+        CFP.Common.Option.Table = $("#chatHistoryTableId").DataTable({
+            searching: false,
+            paging: true,
+            serverSide: true,
+            processing: true,
+            bPaginate: true,
+            bLengthChange: false,
+            bInfo: true,
+            ajax: {
+                type: "POST",
+                url: UrlContent("Common/GetChatHistoryList"),
+                data: function (dtParms) {
+                    dtParms.search.value = $("#txtSearch").val();
+                    dtParms.fromValue = $("#fromUserId").val();
+                    dtParms.toUserValue = $("#toUserid").val();
+                    dtParms.sendDatealue = $("#sendDateId").val();
+                    return dtParms;
+                },
+            },
+            columns: [
+                { data: "sendAtString", name: "SendAtString", autoWidth: true, className: "col-2" },
+                { data: "senderName", name: "SenderName", autoWidth: true, className: "col-2" },
+                { data: "receiverName", name: "ReceiverName", autoWidth: true, className: "col-2" },
+                {
+                    data: null,  // we will use render so we need the full row
+                    name: "Message",
+                    autoWidth: true,
+                    className: "col-4",
+                    render: function (data, type, row, meta) {
+                        // row is full data object
+                        if (row.isAttachment) {
+                            const downloadUrl = `/Chat/DownloadAttachment?roomId=${encodeURIComponent(row.chatRoomId)}&file=${encodeURIComponent(row.message)}`;
+                            // Show filename if you have `row.fileName`, else use `row.message`
+                            const fileName = row.fileName || row.message;
+                            return `<a href="${downloadUrl}" target="_blank">${fileName}</a>`;
+                        } else {
+                            return row.message;
+                        }
+                    }
+                },
+                {
+                    data: "isAttachment",
+                    name: "MessageType",
+                    autoWidth: true,
+                    className: "col-1",
+                    render: function (data, type, row, meta) {
+                        return data ? "Multimedia" : "Text";
+                    }
+                }
+            ],
+            order: [[0, "DESC"]],
+        });
+    }
+
+
+    this.ChatSearch = function () {
+        CFP.Common.Option.Table.ajax.reload();
     }
 }

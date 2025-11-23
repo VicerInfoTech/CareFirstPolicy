@@ -53,6 +53,13 @@ namespace CFP.Patient.Controllers
             if (HttpContext.Request.Form.Any(x => x.Key == "Id") && !string.IsNullOrEmpty(HttpContext.Request.Form["Id"].ToString()))
                 model.Id = AppCommon.ConvertToInt32(HttpContext.Request.Form["Id"]);
 
+            if (HttpContext.Request.Form.Any(x => x.Key == "fromValue") && !string.IsNullOrEmpty(HttpContext.Request.Form["fromValue"].ToString()))
+                model.FromUserId = AppCommon.ConvertToInt32(HttpContext.Request.Form["fromValue"]);
+            if (HttpContext.Request.Form.Any(x => x.Key == "toUserValue") && !string.IsNullOrEmpty(HttpContext.Request.Form["toUserValue"].ToString()))
+                model.ToUserId = AppCommon.ConvertToInt32(HttpContext.Request.Form["toUserValue"]);
+            if (HttpContext.Request.Form.Any(x => x.Key == "sendDatealue") && !string.IsNullOrEmpty(HttpContext.Request.Form["sendDatealue"].ToString()))
+                model.SendDate = AppCommon.ConvertToDate(HttpContext.Request.Form["sendDatealue"]);
+
             return model;
 
         }

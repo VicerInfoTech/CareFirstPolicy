@@ -2,7 +2,9 @@
 using CFP.Common.Utility;
 using CFP.Patient.Controllers;
 using CFP.Provider.IProvider;
+using CFP.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml.FormulaParsing.Utilities;
 
 namespace CFP.Web.Controllers
 {
@@ -40,6 +42,27 @@ namespace CFP.Web.Controllers
         public JsonResult ChangePassword(ResetPasswordModel model)
         {
             return Json(_userProvider.ChangeOrResetPassword(model, true, _sessionManager.GetIP()));
+        }
+        public IActionResult Index()
+        {
+            ViewBag.IsAuthenticated = User.Identity.IsAuthenticated;
+            DashboardViewModel model = new DashboardViewModel()
+            {
+                AgentList = GetSelectUserList()
+            };
+            return View(model);
+        }
+
+        public JsonResult GetChatHistoryList()
+        {
+            return Json(_commonProvider.GetChatHistoryList(GetPagingRequestModel(), GetSessionProviderParameters()));
+        }
+
+        public IActionResult ShowNotification()
+        {
+            DashboardViewModel viewModel = new DashboardViewModel();
+            viewModel.NotificationList = _commonProvider.GetNotification(GetSessionProviderParameters());
+            return View("_Notification", viewModel);
         }
         #endregion
     }

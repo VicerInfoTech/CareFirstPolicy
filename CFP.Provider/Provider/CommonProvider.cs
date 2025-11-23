@@ -1,16 +1,18 @@
-﻿using CFP.Common.Business_Entities;
+﻿using AutoMapper;
+using CFP.Common.Business_Entities;
 using CFP.Common.Common_Entities;
 using CFP.Common.Utility;
 using CFP.Provider.IProvider;
 using CFP.Repository.Models;
 using CFP.Repository.Repository;
-using AutoMapper;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
 using static CFP.Common.Utility.Enumeration;
-using Microsoft.EntityFrameworkCore;
 
 namespace CFP.Provider.Provider
 {
@@ -471,6 +473,101 @@ namespace CFP.Provider.Provider
 
             return summaryData;
         }
+
+        public DatatablePageResponseModel<ChatMessageModel> GetChatHistoryList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel)
+        {
+            DatatablePageResponseModel<ChatMessageModel> list = new DatatablePageResponseModel<ChatMessageModel>()
+            {
+                data = new List<ChatMessageModel>(),
+                draw = requestModel.Draw
+            };
+
+            try
+            {
+                var dataList = unitOfWork.ChatMessage.GetAll(x => (requestModel.FromUserId != -1 ? x.FromUserId == requestModel.FromUserId : true)
+                && (requestModel.ToUserId != -1 ? x.ToUserId == requestModel.ToUserId : true)
+               && (requestModel.SendDate.HasValue ? x.SentAt.Date == requestModel.SendDate.Value.Date : true))
+                    .Select(x => new ChatMessageModel()
+                    {
+                        SendAtString = x.SentAt.ToString("MM/dd/yyyy hh:mm tt"),
+                        SenderName = x.FromUser.FirstName + " " + x.FromUser.LastName,
+                        ReceiverName = x.ToUser != null ? x.ToUser.FirstName + " " + x.FromUser.LastName : x.ChatRoom.RoomName,
+                        Message = x.Message,
+                        IsAttachment = x.IsAttachment,
+                        SentAt = x.SentAt,
+                        ChatRoomId = x.ChatRoom != null ? x.ChatRoomId : 0,
+                    }).OrderByDescending(x => x.SentAt).ToList();
+
+                list.recordsTotal = dataList.Count();
+
+                // Search filter
+                if (!string.IsNullOrEmpty(requestModel.SearchText))
+                {
+                    string search = requestModel.SearchText.ToLower();
+                    dataList = dataList.Where(x =>
+                        x.SenderName.ToLower().Contains(search) ||
+                        x.ReceiverName.ToLower().Contains(search) ||
+                        x.Message.ToLower().Contains(search)
+                    ).ToList();
+                }
+
+                list.recordsFiltered = dataList.Count();
+
+                if (!string.IsNullOrEmpty(requestModel.SortColumnName))
+                {
+                    var prop = typeof(DealModel).GetProperty(requestModel.SortColumnName);
+                    if (prop != null)
+                    {
+                        if (requestModel.SortDirection.ToLower() == "asc")
+                            dataList = dataList.OrderBy(x => prop.GetValue(x, null)).ToList();
+                        else
+                            dataList = dataList.OrderByDescending(x => prop.GetValue(x, null)).ToList();
+                    }
+                }
+
+                // Paging
+                list.data = dataList.Skip(requestModel.StartIndex).Take(requestModel.PageSize).Select(x =>
+                {
+                    if (x.IsAttachment)
+                    {
+                        var parts = x.Message?.Split(new[] { "__--__" }, StringSplitOptions.None);
+                        //var fileId = parts != null && parts.Length > 0 ? parts[0] : "";
+                        //var fileName = parts != null && parts.Length > 1 ? parts[1] : "";
+                        x.FileName = parts != null ? parts[parts.Length - 1] : "";
+                    }
+                    return x;
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "CommonProvider=>GetChatHistoryList");
+            }
+
+            return list;
+        }
+        public List<NotificationDto> GetNotification(SessionProviderModel sessionProviderModel)
+        {
+            List<NotificationDto> list = new List<NotificationDto>();
+            try
+            {
+                list = unitOfWork.ChatMessage.GetAll(x => x.ToUserId == sessionProviderModel.UserId && !x.IsRead).OrderByDescending(x => x.SentAt)
+           .Select(x => new NotificationDto
+           {
+               SenderName = x.FromUser.FirstName + " " + x.FromUser.LastName,
+               Message = x.Message,
+               ProfilePic = "/assets/images/users/user-dummy-img.jpg",
+               TimeAgo = x.SentAt.ToString("MM/dd/yyyy hh:mm tt"),
+           }).ToList();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return list;
+        }
+
         #endregion
 
         #region Email & SMS Methods

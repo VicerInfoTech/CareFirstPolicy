@@ -32,6 +32,8 @@ namespace CFP.Provider.IProvider
         List<DealChartPoint> GetDealDataForChart(int agentId);
         AgentDealDashboardViewModel GetAgentDealDashboard(int days);
         List<DealSummaryModel> GetDealSummary();
+        DatatablePageResponseModel<ChatMessageModel> GetChatHistoryList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel);
+        List<NotificationDto> GetNotification(SessionProviderModel sessionProviderModel);
         #endregion
 
     }

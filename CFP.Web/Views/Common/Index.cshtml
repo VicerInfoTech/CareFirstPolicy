@@ -1,0 +1,72 @@
+﻿@model DashboardViewModel
+@{
+	ViewData["Title"] = "Deal";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	//ViewBag.ParentPageName = "Deal";
+	ViewBag.ParentPageName = "<a href='/Dashboard/Index'><i class='ri-home-2-line'></i> Home</a>";
+	ViewBag.PageName = "<i class='ri-chat-history-line'></i>  Chat History";
+}
+<link href="~/lib/css/gorev/bootstrap-datepicker.min.css" rel="stylesheet" asp-append-version="true" />
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+						<div class="input-group mt-1" id="searchId">
+							<input class="form-control" id="txtSearch" autocomplete="off" placeholder="Search..." />
+							<div class="input-group-append pointermouse" onclick="CFP.Common.ChatSearch()">
+								<span class="input-group-text"><i class="ri-search-line"></i></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+						<select asp-items="Model.AgentList" class="form-select" id="fromUserId" onchange="CFP.Common.ChatSearch()">
+								<option value="-1">All</option>
+								</select>
+					</div>
+					<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+						<select asp-items="Model.AgentList" class="form-select" id="toUserid" onchange="CFP.Common.ChatSearch()">
+							<option value="-1">All</option>
+						</select>
+					</div>
+					<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+						<input class="form-control date-picker" id="sendDateId" autocomplete="off" onchange="CFP.Common.ChatSearch()" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12 table-responsive">
+						<table class="table table-hover table-bordered display responsive nowrap" width="100%" id="chatHistoryTableId">
+							<thead>
+								<tr>
+									<th class="col-2">  <b>Send Date</b></th>
+									<th class="col-2"><b>Sender Name</b></th>
+									<th class="col-2"><b>Receiver Name</b></th>
+									<th class="col-5"><b>Message</b></th>
+									<th class="col-1"><b>Message Type</b></th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script src="~/lib/js/gorev/bootstrap-datepicker.min.js" asp-append-version="true"></script>
+	<script src="~/lib/js/custom/CFP.Common.js" asp-append-version="true"></script>
+
+	<script>
+		$(document).ready(function () {
+			CFP.Common.ChatHistory();
+			$("#txtSearch").on("keyup", function () {
+				CFP.Common.ChatSearch();
+			});
+			CFP.Common.InitDatePicker();
+
+		});
+	</script>
+}
