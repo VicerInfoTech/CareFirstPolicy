@@ -40,7 +40,7 @@ namespace CFP.Web.Hubs
                 LastName = _sessionManager.LastName,
             };
             return sessionProviderModel;
-        }        
+        }
         public override async Task OnConnectedAsync()
         {
             try
@@ -102,28 +102,28 @@ namespace CFP.Web.Hubs
             int fromUserId = session.UserId;
 
             // Save message
-            var msgId = _chatProvider.SaveMessage(fromUserId, toUserId, message);
+            var response = _chatProvider.SaveMessage(fromUserId, toUserId, message);
 
             // Build payload
-            var payload = new
-            {
-                MessageId = msgId,
-                FromUserId = fromUserId,
-                ToUserId = toUserId,
-                Message = message,
-                SentAt = AppCommon.CurrentDate
-            };
+            //var payload = new
+            //{
+            //    MessageId = response.ChatMessageId,
+            //    FromUserId = fromUserId,
+            //    ToUserId = toUserId,
+            //    Message = message,
+            //    SentAt = AppCommon.CurrentDate
+            //};
 
             // Send back to caller (so UI can show it instantly)
             await Clients.Caller.SendAsync("ReceiveMessage", new
             {
-                MessageId = msgId,
+                MessageId = response.ChatMessageId,
                 FromUserId = fromUserId,
                 ToUserId = toUserId,
                 Message = message,
                 SentAt = AppCommon.CurrentDate,
-                isOwnMessage = true
-
+                isOwnMessage = true,
+                response.SenderName
             });
 
             // Send to receiver if connected
@@ -132,13 +132,13 @@ namespace CFP.Web.Hubs
             {
                 await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", new
                 {
-                    MessageId = msgId,
+                    MessageId = response.ChatMessageId,
                     FromUserId = fromUserId,
                     ToUserId = toUserId,
                     Message = message,
                     SentAt = AppCommon.CurrentDate,
-                    isOwnMessage = false
-
+                    isOwnMessage = false,
+                    response.SenderName
                 });
             }
         }
@@ -162,18 +162,28 @@ namespace CFP.Web.Hubs
 
         public async Task SendRoomMessage(ChatMessageModel model)
         {
-            var messageId = _chatProvider.SaveRoomMessage(model);
-           
-            await Clients.Group(model.ChatRoomId.ToString())
-                .SendAsync("ReceiveRoomMessage", new
+            var response = _chatProvider.SaveRoomMessage(model);
+            var roomMembers = _chatProvider.GetRoomMembers(model.ChatRoomId ?? 0);
+
+            foreach (var user in roomMembers.Where(x => x.UserMasterId != model.FromUserId))
+            {
+                var receiverConnectionId = _chatProvider.GetConnectionId(user.UserMasterId);
+                if (receiverConnectionId != null)
                 {
-                    model.Message,
-                    model.ChatRoomId,
-                    model.FromUserId,
-                    SentAt = AppCommon.CurrentDate,
-                    model.IsAttachment,
-                    model.FileName
-                });
+                    await Clients.Client(receiverConnectionId)
+                        .SendAsync("ReceiveRoomMessage", new
+                        {
+                            model.Message,
+                            model.ChatRoomId,
+                            model.FromUserId,
+                            SentAt = AppCommon.CurrentDate,
+                            model.IsAttachment,
+                            model.FileName,
+                            response.SenderName,
+                            response.RoomName
+                        });
+                }
+            }
         }
 
     }

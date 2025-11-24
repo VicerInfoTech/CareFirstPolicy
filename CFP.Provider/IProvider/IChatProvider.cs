@@ -15,7 +15,7 @@ namespace CFP.Provider.IProvider
 
         string GetConnectionId(int userId);
 
-        long SaveMessage(int fromUserId, int toUserId, string message);
+        ChatMessageModel SaveMessage(int fromUserId, int toUserId, string message);
 
         List<ChatMessageModel> GetMessages(int currentUserId, int targetUserId);
 
@@ -32,7 +32,7 @@ namespace CFP.Provider.IProvider
         List<UserMasterModel> GetRoomMembers(int roomId);
         ChatRoomModel GetRoomById(int roomId,SessionProviderModel providerModel);
         List<ChatMessageModel> GetRoomMessages(int roomId);
-        long SaveRoomMessage(ChatMessageModel model);
+        ChatMessageModel SaveRoomMessage(ChatMessageModel model);
         ResponseModel Delete(int id, SessionProviderModel sessionProviderModel);
 
         #endregion

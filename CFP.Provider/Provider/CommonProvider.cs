@@ -467,19 +467,19 @@ namespace CFP.Provider.Provider
             {
                 var deals = unitOfWork.Deal.GetAll(d => d.CreatedOn >= AppCommon.CurrentDate.AddDays(-30)).ToList();
 
-                var last7ActiveDays = deals.Select(d => d.CreatedOn.Date).Distinct().Take(7).ToList();
+                var recentActiveDays = deals.Select(d => d.CreatedOn.Date).Distinct().OrderByDescending(x => x.Date).Take(5).ToList();
 
                 summaryData = deals
                     .GroupBy(d => d.Agent.FirstName + " " + d.Agent.LastName)
                     .Select(g => new DealSummaryModel
                     {
                         AgentName = g.Key,
-                        Counts = last7ActiveDays.Select(day => new DayCount
+                        Counts = recentActiveDays.Select(day => new DayCount
                         {
                             Date = day,
                             ApplicantCount = g.Where(d => d.CreatedOn.Date == day).Sum(d => d.NoOfApplicants),
                             DealCount = g.Count(d => d.CreatedOn.Date == day)
-                        }).ToList()
+                        }).OrderBy(x=>x.Date).ToList()
                     })
                     .ToList();
             }

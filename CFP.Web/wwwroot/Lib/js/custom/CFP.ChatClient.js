@@ -32,15 +32,18 @@
             }
             else {
                 CFP.ChatClient.IncreaseUnreadCount(msg.fromUserId);
-               /* CFP.ChatClient.RefreshNotification();*/
+            }
 
+            if (currentUserId != msg.fromUserId) {
+                CFP.ChatClient.ShowNotification(msg);
+                CFP.ChatClient.RefreshNotification();
             }
 
             CFP.ChatClient.UpdateLastMessageInSidebar(msg);
         });
 
         connection.on("ReceiveRoomMessage", function (message) {
-
+            debugger;
             let isOwn = (message.fromUserId === currentUserId);
             let displayMessage = message.isAttachment ? message.fileName : message.message;
             let downloadUrl = message.isAttachment ? `/Chat/DownloadAttachment?roomId=${message.chatRoomId}&file=${message.message}` : "";
@@ -58,10 +61,14 @@
                 );
                 CFP.ChatClient.ScrollBottom();
             }
-
             else {
-                CFP.ChatClient.IncreaseRoomBadge(message.chatRoomId);
+                //CFP.ChatClient.IncreaseRoomBadge(message.chatRoomId);                
             }
+            debugger;
+            if (currentUserId != message.fromUserId) {
+                CFP.ChatClient.ShowNotification(message);
+            }
+
         });
 
         connection.on("ForceLogout", () => {
@@ -390,7 +397,7 @@
     }
 
 
-    
+
     this.AddRoom = function (id = '') {
         debugger;
         $(".preloader").show();
@@ -474,7 +481,7 @@
     }
 
 
-   
+
 
     $(document).on("click", ".channel-item", function () {
         let roomId = $(this).data("roomid");
@@ -631,7 +638,7 @@
         if (lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif") || lower.endsWith(".webp")) {
             let img = document.createElement("img");
             img.className = "attach-img";
-            img.src = url;            
+            img.src = url;
             attachmentContainer.appendChild(img);
             attachmentContainer.innerHTML += `<a href="${url}" download><i class="ri-download-2-line text-danger fs-18"></i></a>`;
         }
@@ -825,6 +832,71 @@
             }
         });
     };
+
+    this.ShowNotification = function (msg) {
+        const msgDate = new Date(msg.sentAt);
+        const now = new Date(new Date().toLocaleString("en-US", CFP.Common.TimeZoneOptions));
+
+        // Check if message is today or yesterday
+        let dateLabel = "Just now";
+        //const isToday = msgDate.toDateString() === now.toDateString();
+        //const yesterday = now;
+        //yesterday.setDate(now.getDate() - 1);
+        //const isYesterday = msgDate.toDateString() === yesterday.toDateString();
+
+        //if (isToday) {
+        //    dateLabel = "Today";
+        //} else if (isYesterday) {
+        //    dateLabel = "Yesterday";
+        //} else {
+        //    dateLabel = msgDate.toLocaleDateString(); // fallback to full date
+        //}
+
+        // Create toast container
+        const toastHTML = `        
+            <div class="toast show toast-slide-in" role="alert" aria-live="assertive" aria-atomic="true" data-bs-toggle="toast" style="position: fixed; bottom: 16px; right: 16px;z-index:1100;">
+                <div class="toast-header">
+                    <img src="assets/images/logo-sm.png" class="rounded me-2" alt="..." height="20">
+                    <strong class="me-auto">`+ msg.senderName + `</strong>
+                    <small>`+ dateLabel + `</small>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                `+ (msg.roomName != null && msg.roomName != undefined ? `<p class="mb-1"><span class="badge bg-info" style="background-color:rgb(2 175 198) !important;">Channel: ` + msg.roomName + `</span></p>` : ``) + `
+                `+ msg.message + `
+                </div>
+            </div>        
+    `;
+
+        // Append to body
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = toastHTML;
+        const toastElement = wrapper.firstElementChild;
+
+        document.body.appendChild(toastElement);
+
+        void toastElement.offsetWidth;
+
+        // Wire up close button to remove immediately
+        const btnClose = toastElement.querySelector('.btn-close');
+        if (btnClose) {
+            btnClose.addEventListener('click', () => {
+                // play slide-out then remove
+                toastElement.classList.remove('toast-slide-in');
+                toastElement.classList.add('toast-slide-out');
+                setTimeout(() => toastElement.remove(), 400);
+            });
+        }
+
+        // Hide after 5 seconds
+        setTimeout(() => {
+            toastElement.classList.remove("toast-slide-in"); // fade-out animation
+            toastElement.classList.add("toast-slide-out");
+
+            // Remove from DOM after fade animation
+            setTimeout(() => toastElement.remove(), 400);
+        }, 5000);
+    }
 
 
     window.addEventListener("beforeunload", function () {

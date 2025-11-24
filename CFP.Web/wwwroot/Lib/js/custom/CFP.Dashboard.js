@@ -339,6 +339,34 @@
                 $("#dealLineChart").show();
                 $("#dealNoData").hide();
 
+                var chartHeight = 394;
+                var series = series = [{
+                    name: "Forms",
+                    type: "bar",
+                    data: chartData.deals
+                }, {
+                    name: "Deals",
+                    type: "area",
+                    data: chartData.applicants
+                }, {
+                    name: "Active Agents",
+                    type: "bar",
+                    data: chartData.agents
+                }];
+                var agent = $(".hidAgent");
+                if (agent.length > 0) {
+                    chartHeight = 409;
+                    series = [{
+                        name: "Forms",
+                        type: "bar",
+                        data: chartData.deals
+                    }, {
+                        name: "Deals",
+                        type: "area",
+                        data: chartData.applicants
+                    }]
+                }
+
                 // -------- Theme Colors ----------
                 var chartColors = getChartColorsArray(
                     document.querySelector("#dealLineChart")
@@ -347,24 +375,12 @@
                 // -------- APEX CHART CODE ----------
                 let options = {
 
-                    series: [{
-                        name: "Forms",
-                        type: "bar",
-                        data: chartData.deals
-                    }, {
-                        name: "Deals",
-                        type: "area",
-                        data: chartData.applicants
-                    }, {
-                        name: "Active Agents",
-                        type: "bar",
-                        data: chartData.agents
-                    }],
+                    series: series,
 
                     colors: chartColors,
 
                     chart: {
-                        height: 394,
+                        height: chartHeight,
                         type: "line",
                         toolbar: {
                             show: !1

@@ -86,8 +86,9 @@ namespace CFP.Provider.Provider
         }
 
 
-        public long SaveMessage(int fromUserId, int toUserId, string message)
+        public ChatMessageModel SaveMessage(int fromUserId, int toUserId, string message)
         {
+            ChatMessageModel model = new ChatMessageModel();
             var msg = new ChatMessage
             {
                 FromUserId = fromUserId,
@@ -98,7 +99,12 @@ namespace CFP.Provider.Provider
 
             unitOfWork.ChatMessage.Insert(msg);
             unitOfWork.Save();
-            return msg.ChatMessageId;
+
+            model.ChatMessageId = msg.ChatMessageId;
+            var sender = unitOfWork.UserMaster.GetAll(x => x.UserMasterId == msg.FromUserId).FirstOrDefault();
+            if (sender != null)
+                model.SenderName = sender.FirstName + " " + sender.LastName;
+            return model;
         }
 
         public List<ChatMessageModel> GetMessages(int currentUserId, int targetUserId)
@@ -372,7 +378,7 @@ namespace CFP.Provider.Provider
             return chatMessages;
         }
 
-        public long SaveRoomMessage(ChatMessageModel model)
+        public ChatMessageModel SaveRoomMessage(ChatMessageModel model)
         {
             var entity = new ChatMessage
             {
@@ -388,7 +394,15 @@ namespace CFP.Provider.Provider
             unitOfWork.ChatMessage.Insert(entity);
             unitOfWork.Save();
 
-            return entity.ChatMessageId;
+            model.ChatMessageId = entity.ChatMessageId;
+            var sender = unitOfWork.UserMaster.GetAll(x => x.UserMasterId == entity.FromUserId).FirstOrDefault();
+            if (sender != null)
+                model.SenderName = sender.FirstName + " " + sender.LastName;
+            var room = unitOfWork.ChatRoom.GetAll(x => x.ChatRoomId == entity.ChatRoomId).FirstOrDefault();
+            if (room != null)
+                model.RoomName = room.RoomName;
+
+            return model;
         }
 
         public ResponseModel Delete(int id, SessionProviderModel sessionProviderModel)

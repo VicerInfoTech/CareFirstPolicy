@@ -96,29 +96,42 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6 ">
-                <div class="card card-animate" style="height:540px;">
-                    <div class="card-header py-2 mt-1 d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0" style="font-size: 15px;">
-                            Deals (Recent 10 Days)
-                        </h5>
+            <div class="col-xl-6 ">                
+                <div class="card card-animate">
 
-                        <input asp-for="AgentId" hidden id="AgentId" />
-
+                    <!-- HEADER WITH FILTER BUTTONS -->
+                    <div class="card-header border-0 align-items-center d-flex">
+                        <h4 class="card-title mb-0 flex-grow-1">Deals – Recent 10 Days</h4>
+                        <input asp-for="AgentId" hidden id="AgentId" class="hidAgent"/>
                     </div>
 
-                    <div class="card-body px-0">
-                        <ul class="list-inline main-chart text-center mb-0">
-                            <li class="list-inline-item chart-border-left me-0 border-0">
-                                <h4 class="text-primary" id="totalApplicantsDisplay">0 <span class="text-muted d-inline-block fs-14 align-middle ms-2">Forms</span></h4>
-                            </li>
-                            <li class="list-inline-item chart-border-left me-0">
-                                <h4 id="totalDealsDisplay">0<span class="text-muted d-inline-block fs-14 align-middle ms-2">Deals</span></h4>
-                            </li>
-                        </ul>
+                    <!-- METRICS BAR (LIKE THE THEME) -->
+                    <div class="card-header p-0 border-0 bg-light-subtle">
+                        <div class="row g-0 text-center">
+                            <div class="col-6 col-sm-4">
+                                <div class="p-3 border border-dashed border-start-0">
+                                    <h5 class="mb-1" id="metricDeals">0</h5>
+                                    <p class="text-muted mb-0">Total Forms</p>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-4">
+                                <div class="p-3 border border-dashed border-start-0">
+                                    <h5 class="mb-1" id="metricApplicants">0</h5>
+                                    <p class="text-muted mb-0">Total Deals</p>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-4">
+                                <div class="p-3 border border-dashed border-start-0 border-end-0">
+                                    <h5 class="mb-1 text-success" id="metricAvgDeals">0</h5>
+                                    <p class="text-muted mb-0">Avg Deals/Day</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div id="dealLineChart" style="height: 380px; width: 100%;"></div>
-
+                    <!-- CHART -->
+                    <div class="card-body p-0 pb-2">                        
+                        <div id="dealLineChart" data-colors='["--vz-secondary", "--vz-warning", "--vz-success"]' class="apex-charts" dir="ltr"></div>
                         <div id="dealNoData" class="text-center text-muted mt-3" style="display:none; font-size:14px;">
                             No deal data available.
                         </div>
@@ -187,12 +200,7 @@
 
                 <!-- CHART -->
                 <div class="card-body p-0 pb-2">
-                    @* <div id="dealLineChart"
-                         data-colors='["--vz-secondary","--vz-success","--vz-warning","--vz-warning"]'
-                         class="apex-charts"></div> *@
                     <div id="dealLineChart" data-colors='["--vz-secondary", "--vz-warning", "--vz-success"]' class="apex-charts" dir="ltr"></div>
-
-
                     <div id="dealNoData" class="text-center text-muted mt-3" style="display:none; font-size:14px;">
                         No deal data available.
                     </div>
@@ -235,7 +243,7 @@
         <div class="col-xl-12 mt-1">
             <div class="card card-animate">
                 <div class="card-header d-flex align-items-center">
-                    <h4 class="card-title flex-grow-1 mb-0">Deals Summary By Date (Recent 7 Days)</h4>
+                    <h4 class="card-title flex-grow-1 mb-0">Deals Summary By Date (Recent 5 Days)</h4>
                                     </div><!-- end cardheader -->
                 <div class="card-body">
                     <div class="table-responsive table-card">

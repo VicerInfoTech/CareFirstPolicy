@@ -26,6 +26,7 @@ namespace CFP.Common.Business_Entities
         public string SenderName { get; set; }
         public string ReceiverName { get; set; }
         public string FileName { get; set; }
+        public string RoomName { get; set; }
         public string SendAtString { get; set; }
         public virtual UserMasterModel FromUser { get; set; } = null!;
 
