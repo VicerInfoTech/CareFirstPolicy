@@ -16,8 +16,11 @@ namespace CFP.Web.Models
         public List<DealSummaryModel> DealSummaryList { get; set; } = new List<DealSummaryModel>();
         public List<DropDownModel> LeaderBoard { get; set; }
         public List<SelectListItem> AgentList { get; set; }
+        public List<SelectListItem> RoomList { get; set; }
         public List<SelectListItem> CareerList { get; set; }
         public List<NotificationDto> NotificationList { get; set; }
         public List<IFormFile> PictureofProblemList { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
     }
 }

@@ -57,8 +57,18 @@ namespace CFP.Patient.Controllers
                 model.FromUserId = AppCommon.ConvertToInt32(HttpContext.Request.Form["fromValue"]);
             if (HttpContext.Request.Form.Any(x => x.Key == "toUserValue") && !string.IsNullOrEmpty(HttpContext.Request.Form["toUserValue"].ToString()))
                 model.ToUserId = AppCommon.ConvertToInt32(HttpContext.Request.Form["toUserValue"]);
-            if (HttpContext.Request.Form.Any(x => x.Key == "sendDatealue") && !string.IsNullOrEmpty(HttpContext.Request.Form["sendDatealue"].ToString()))
-                model.SendDate = AppCommon.ConvertToDate(HttpContext.Request.Form["sendDatealue"]);
+            if (HttpContext.Request.Form.Any(x => x.Key == "startData") && !string.IsNullOrEmpty(HttpContext.Request.Form["startData"].ToString()))
+                model.StartDate = AppCommon.ConvertToDate(HttpContext.Request.Form["startData"]);
+            if (HttpContext.Request.Form.Any(x => x.Key == "sendDateValue") && !string.IsNullOrEmpty(HttpContext.Request.Form["sendDateValue"].ToString()))
+                model.EndDate = AppCommon.ConvertToDate(HttpContext.Request.Form["sendDateValue"]);
+            if (HttpContext.Request.Form.Any(x => x.Key == "endDate") && !string.IsNullOrEmpty(HttpContext.Request.Form["endDate"].ToString()))
+                model.ChatTypeId = AppCommon.ConvertToInt32(HttpContext.Request.Form["endDate"]);
+            if (HttpContext.Request.Form.Any(x => x.Key == "roomIdValue") && !string.IsNullOrEmpty(HttpContext.Request.Form["roomIdValue"].ToString()))
+                model.RoomId = AppCommon.ConvertToInt32(HttpContext.Request.Form["roomIdValue"]);
+            if (HttpContext.Request.Form.Any(x => x.Key == "msgTypeValue") && !string.IsNullOrEmpty(HttpContext.Request.Form["msgTypeValue"].ToString()))
+                model.MsgTypeId = AppCommon.ConvertToInt32(HttpContext.Request.Form["msgTypeValue"]);
+            if (HttpContext.Request.Form.Any(x => x.Key == "chatTypeValue") && !string.IsNullOrEmpty(HttpContext.Request.Form["chatTypeValue"].ToString()))
+                model.ChatTypeId = AppCommon.ConvertToInt32(HttpContext.Request.Form["chatTypeValue"]);
 
             return model;
 
@@ -100,6 +110,16 @@ namespace CFP.Patient.Controllers
         protected List<SelectListItem> GetSelectUserList()
         {
             return _commonProvider.GetUserList()
+             .Select(e => new SelectListItem
+             {
+                 Value = e.Value,
+                 Text = e.Text
+             }).ToList();
+        }
+
+        protected List<SelectListItem> GetRoomList()
+        {
+            return _commonProvider.GetRoomList()
              .Select(e => new SelectListItem
              {
                  Value = e.Value,

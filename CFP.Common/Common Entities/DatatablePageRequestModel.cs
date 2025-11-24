@@ -12,7 +12,11 @@
         public int StringId { get; set; }
         public int FromUserId { get; set; }
         public int ToUserId { get; set; }
-        public DateTime? SendDate { get; set; }
+        public int ChatTypeId { get; set; }
+        public int MsgTypeId { get; set; }
+        public int RoomId { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
   
     }
 }

@@ -109,7 +109,7 @@
 
             users.forEach((u, index) => {
                 html += `
-							<li class="chat-user-item" id="private${u.userId}" onclick="CFP.ChatClient.OpenChat(${u.userId}, '${u.userName}', ${u.isOnline},'${u.lastSeen}')"		>
+							<li class="chat-user-item" id="private${u.userId}" onclick="CFP.ChatClient.OpenChat(${u.userId}, '${u.userName}', ${u.isOnline},'${u.lastSeen}')">
 						<a class="d-flex align-items-center" href="javascript:void(0)">
 
 							 <!-- Theme Avatar + Status -->
@@ -820,6 +820,7 @@
             url: "/Common/ShowNotification",
             type: "GET",
             success: function (html) {
+                debugger;
                 $("#notificationArea").html(html);
             }
         });

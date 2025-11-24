@@ -159,8 +159,6 @@ namespace CFP.Provider.Provider
             List<DropDownModel> list = new List<DropDownModel>();
             try
             {
-
-
                 list = unitOfWork.UserMaster.GetAll(x => x.IsActive == true).Select(
                                        x => new DropDownModel
                                        {
@@ -171,6 +169,25 @@ namespace CFP.Provider.Provider
             catch (Exception ex)
             {
                 AppCommon.LogException(ex, "CommonProvider=>GetUserList");
+            }
+            return list;
+        }
+
+        public List<DropDownModel> GetRoomList()
+        {
+            List<DropDownModel> list = new List<DropDownModel>();
+            try
+            {
+                list = unitOfWork.ChatRoom.GetAll(x => x.IsActive == true).Select(
+                                       x => new DropDownModel
+                                       {
+                                           Text = x.RoomName,
+                                           Value = x.ChatRoomId.ToString()
+                                       }).OrderBy(x => x.Text).ToList();
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "CommonProvider=>GetRoomList");
             }
             return list;
         }
@@ -484,19 +501,47 @@ namespace CFP.Provider.Provider
 
             try
             {
-                var dataList = unitOfWork.ChatMessage.GetAll(x => (requestModel.FromUserId != -1 ? x.FromUserId == requestModel.FromUserId : true)
-                && (requestModel.ToUserId != -1 ? x.ToUserId == requestModel.ToUserId : true)
-               && (requestModel.SendDate.HasValue ? x.SentAt.Date == requestModel.SendDate.Value.Date : true))
-                    .Select(x => new ChatMessageModel()
-                    {
-                        SendAtString = x.SentAt.ToString("MM/dd/yyyy hh:mm tt"),
-                        SenderName = x.FromUser.FirstName + " " + x.FromUser.LastName,
-                        ReceiverName = x.ToUser != null ? x.ToUser.FirstName + " " + x.FromUser.LastName : x.ChatRoom.RoomName,
-                        Message = x.Message,
-                        IsAttachment = x.IsAttachment,
-                        SentAt = x.SentAt,
-                        ChatRoomId = x.ChatRoom != null ? x.ChatRoomId : 0,
-                    }).OrderByDescending(x => x.SentAt).ToList();
+                var dataList = unitOfWork.ChatMessage.GetAll(x =>
+                               // ---- CHAT TYPE FILTER ----
+                               (
+                                   requestModel.ChatTypeId == 1  // PRIVATE
+                                   ? x.ChatRoomId == null
+                                   : x.ChatRoomId != null        // ROOM
+                               )
+
+                               // ---- COMMON FILTERS ----
+                               && (requestModel.FromUserId != -1 ? x.FromUserId == requestModel.FromUserId : true)
+                               && (requestModel.StartDate.HasValue ? x.SentAt.Date >= requestModel.StartDate.Value.Date : true)
+                               && (requestModel.EndDate.HasValue ? x.SentAt.Date <= requestModel.EndDate.Value.Date : true)
+
+                               // ---- PRIVATE CHAT FILTERS ----
+                               && (requestModel.ChatTypeId == 1
+                                   ? (requestModel.ToUserId != -1 ? x.ToUserId == requestModel.ToUserId : true)
+                                   : true
+                               )
+
+                               // ---- ROOM CHAT FILTERS ----
+                               && (requestModel.ChatTypeId == 2
+                                   ? (requestModel.RoomId != -1 ? x.ChatRoomId == requestModel.RoomId : true)
+                                   : true
+                               )
+                               && (requestModel.ChatTypeId == 2
+                                   ? (requestModel.MsgTypeId != -1 ? (requestModel.MsgTypeId == 1 ? !x.IsAttachment : x.IsAttachment) : true)
+                                   : true
+                               ))
+                                .Select(x => new ChatMessageModel
+                                {
+                                    SendAtString = x.SentAt.ToString("MM/dd/yyyy hh:mm tt"),
+                                    SenderName = x.FromUser.FirstName + " " + x.FromUser.LastName,
+                                    ReceiverName = x.ToUser != null
+                                        ? x.ToUser.FirstName + " " + x.ToUser.LastName
+                                        : (x.ChatRoom != null ? x.ChatRoom.RoomName : ""),
+                                    Message = x.Message,
+                                    IsAttachment = x.IsAttachment,
+                                    SentAt = x.SentAt,
+                                    ChatRoomId = x.ChatRoomId ?? 0,
+                                }).OrderByDescending(x => x.SentAt).ToList();
+
 
                 list.recordsTotal = dataList.Count();
 

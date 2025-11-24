@@ -43,12 +43,15 @@ namespace CFP.Web.Controllers
         {
             return Json(_userProvider.ChangeOrResetPassword(model, true, _sessionManager.GetIP()));
         }
-        public IActionResult Index()
+        public IActionResult ChatHistory()
         {
             ViewBag.IsAuthenticated = User.Identity.IsAuthenticated;
             DashboardViewModel model = new DashboardViewModel()
             {
-                AgentList = GetSelectUserList()
+                AgentList = GetSelectUserList(),
+                RoomList = GetRoomList(),
+                StartDate = new DateOnly(AppCommon.CurrentDate.Year, AppCommon.CurrentDate.Month, 1),
+                EndDate = DateOnly.FromDateTime(AppCommon.CurrentDate),
             };
             return View(model);
         }
@@ -62,7 +65,7 @@ namespace CFP.Web.Controllers
         {
             DashboardViewModel viewModel = new DashboardViewModel();
             viewModel.NotificationList = _commonProvider.GetNotification(GetSessionProviderParameters());
-            return View("_Notification", viewModel);
+            return PartialView("_Notification", viewModel);
         }
         #endregion
     }

@@ -203,16 +203,40 @@ CFP.Common = new function () {
                 url: UrlContent("Common/GetChatHistoryList"),
                 data: function (dtParms) {
                     dtParms.search.value = $("#txtSearch").val();
+                    dtParms.chatTypeValue = $("#chatTypeId").val();
                     dtParms.fromValue = $("#fromUserId").val();
-                    dtParms.toUserValue = $("#toUserid").val();
-                    dtParms.sendDatealue = $("#sendDateId").val();
+                    dtParms.startData = $("#startDate").val();
+                    dtParms.endDate = $("#endDate").val();
+                    if ($("#chatTypeId").val() == "1") {
+                        dtParms.toUserValue = $("#toUserid").val();
+                    }
+                    else {
+                        dtParms.roomIdValue = $("#roomid").val();
+                        dtParms.msgTypeValue = $("#msgTypeId").val();
+                    }
                     return dtParms;
                 },
             },
             columns: [
                 { data: "sendAtString", name: "SendAtString", autoWidth: true, className: "col-2" },
                 { data: "senderName", name: "SenderName", autoWidth: true, className: "col-2" },
-                { data: "receiverName", name: "ReceiverName", autoWidth: true, className: "col-2" },
+                {
+                    data: "receiverName",
+                    name: "ReceiverName",
+                    autoWidth: true,
+                    className: "col-2",
+                    render: function (data, type, row) {
+
+                        if (row.chatRoomId == 0) {
+                            return data;   // private chat ? show name
+                        }
+                        else {
+                            return `<span class="badge bg-success">${data}</span>`;
+                            // channel chat ? show badge
+                        }
+                    }
+                },
+
                 {
                     data: null,  // we will use render so we need the full row
                     name: "Message",
