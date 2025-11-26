@@ -353,7 +353,7 @@ namespace CFP.Provider.Provider
         {
             try
             {
-                var startDate = AppCommon.CurrentDate.AddDays(-10).Date;
+                var startDate = AppCommon.CurrentDate.Date.AddDays(-10).Date;
 
                 var query = unitOfWork.Deal.GetAll(d => d.IsActive && d.CreatedOn.Date >= startDate && (agentId == -1 || d.AgentId == agentId))
                             .Select(d => new
@@ -400,7 +400,7 @@ namespace CFP.Provider.Provider
         {
             try
             {
-                DateTime fromDate = AppCommon.CurrentDate.AddDays(-days);
+                DateTime fromDate = AppCommon.CurrentDate.Date.AddDays(-days);
 
                 // Fetch deals
                 var deals = unitOfWork.Deal
@@ -409,7 +409,7 @@ namespace CFP.Provider.Provider
 
                 // Fetch agents only once
                 var allAgents = unitOfWork.AgentMaster
-                    .GetAll(a => a.IsActive)
+                    .GetAll()
                     .Select(a => new { a.AgentMasterId, a.FirstName, a.LastName })
                     .ToList();
 
