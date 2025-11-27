@@ -1,4 +1,7 @@
-﻿<header id="page-topbar">
+﻿@using CFP.Common.Utility
+@inject CFP.Common.Utility.ISessionManager SessionData
+
+<header id="page-topbar">
 	<div class="layout-width">
 		<div class="navbar-header d-flex justify-content-between align-items-center w-100">
 			<div class="d-flex">
@@ -33,6 +36,16 @@
 			</div>
 
 			<div class="d-flex align-items-center gap-3">
+
+				@if (SessionData.RoleId == (int)Enumeration.Role.Super_Admin)   // 1 = Admin
+				{
+					<div>
+						<a asp-controller="AiAssistant" asp-action="Index"
+						   class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle">
+							<i class="ri-robot-2-line fs-22"></i>
+						</a>
+					</div>
+				}
 
 				<div id="notificationArea">
 					@await Component.InvokeAsync("Notification")
