@@ -39,7 +39,7 @@
 
 				@if (SessionData.RoleId == (int)Enumeration.Role.Super_Admin)   // 1 = Admin
 				{
-					<div>
+					<div style="display:none">
 						<a asp-controller="AiAssistant" asp-action="Index"
 						   class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle">
 							<i class="ri-robot-2-line fs-22"></i>
