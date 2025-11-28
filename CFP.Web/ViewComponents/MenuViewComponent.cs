@@ -22,7 +22,8 @@ namespace CFP.Web.ViewComponents
                 new Common.Common_Entities.SessionProviderModel()
                 {
                     UserId = _sessionManager.UserId,
-                    RoleId = _sessionManager.RoleId
+                    RoleId = _sessionManager.RoleId,
+                    UserAccess=_sessionManager.UserAccess
                 });
             return View(list);
         }

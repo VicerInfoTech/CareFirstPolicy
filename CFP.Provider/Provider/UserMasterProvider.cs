@@ -58,6 +58,7 @@ namespace CFP.Provider.Provider
                         model.FirstName = userData.FirstName;
                         model.LastName = userData.LastName;
                         model.RoleId = userData.RoleId;
+                        model.UserAccess = userData.UserAccess;
                         if (userData.AgentMasterUserMasters.Any())
                         {
                             model.AgentId = userData.AgentMasterUserMasters.FirstOrDefault().AgentMasterId;
@@ -171,6 +172,7 @@ namespace CFP.Provider.Provider
                 {
                     model = _mapper.Map<UserMasterModel>(data);
                     model.RoleName = data.Role.RoleName;
+                    model.Designation = data.AgentMasterUserMasters.FirstOrDefault()?.Designation;
                     model.EncId = _commonProvider.Protect(id);
                 }
                 else

@@ -13,6 +13,7 @@ namespace CFP.Common.Utility
         string FirstName { get; set; }
         string LastName { get; set; }
         string FullName { get; set; }
+        int UserAccess { get; set; }
         string GetSessionId();
         void ClearSession();
         string GetIP();

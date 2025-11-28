@@ -84,5 +84,11 @@ namespace CFP.Common.Utility
             [Display(Name = "ANTHEM")]
             Anthem = 20
         }
+
+        public enum UserAccess
+        {
+            FullAccess=1,
+            Training=2,
+        }
     }
 }

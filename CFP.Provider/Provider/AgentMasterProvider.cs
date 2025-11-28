@@ -131,6 +131,7 @@ namespace CFP.Provider.Provider
                         IsFirstTimeLogin = true,
                         TwoStepAuth = false,
                         IsActive = true,
+                        UserAccess=model.UserAccess,
                     };
                     userMaster.UserPassword = PasswordHash.CreateHash(AppCommon.CommonPassword);
                     unitOfWork.UserMaster.Insert(userMaster, sessionProviderModel.UserId, sessionProviderModel.Ip);
@@ -145,6 +146,7 @@ namespace CFP.Provider.Provider
                     _temp.UserMaster.Username = model.Email;
                     _temp.UserMaster.LastName = model.LastName;
                     _temp.UserMaster.FirstName = model.FirstName;
+                    _temp.UserMaster.UserAccess = model.UserAccess;
                     _temp.UserMaster.ContactNumber = AppCommon.RemoveExtra(model.ContactNumber);
                     _temp.UserMaster.UpdatedBy = sessionProviderModel.UserId;
                     _temp.UserMaster.UpdatedOn = AppCommon.CurrentDate;
@@ -174,6 +176,7 @@ namespace CFP.Provider.Provider
                 {
                     model = _mapper.Map<AgentMasterModel>(data);
                     model.EncId = _commonProvider.Protect(id);
+                    model.UserAccess = data.UserMaster.UserAccess;
                 }
             }
             catch (Exception ex)
@@ -191,6 +194,7 @@ namespace CFP.Provider.Provider
                 if (data != null)
                 {
                     data.IsActive = false;
+                    data.UserMaster.IsActive = false;
                     unitOfWork.AgentMaster.Update(data, sessionProviderModel.UserId, sessionProviderModel.Ip);
                     unitOfWork.Save();
                     model.IsSuccess = true;
@@ -216,6 +220,7 @@ namespace CFP.Provider.Provider
                 if (data != null)
                 {
                     data.IsActive = true;
+                    data.UserMaster.IsActive = true;
                     unitOfWork.AgentMaster.Update(data, sessionProviderModel.UserId, sessionProviderModel.Ip);
                     unitOfWork.Save();
                     model.IsSuccess = true;

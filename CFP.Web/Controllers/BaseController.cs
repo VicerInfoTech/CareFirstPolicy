@@ -34,6 +34,7 @@ namespace CFP.Patient.Controllers
                 Ip = _sessionManager.GetIP(),
                 FirstName = _sessionManager.FirstName,
                 LastName = _sessionManager.LastName,
+                UserAccess = _sessionManager.UserAccess,
             };
             return sessionProviderModel;
         }

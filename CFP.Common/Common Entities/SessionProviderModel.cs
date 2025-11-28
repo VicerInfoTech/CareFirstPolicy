@@ -12,6 +12,7 @@ namespace CFP.Common.Common_Entities
         public string Username { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int UserAccess { get; set; }
         public string Ip { get; set; }
     }
 }

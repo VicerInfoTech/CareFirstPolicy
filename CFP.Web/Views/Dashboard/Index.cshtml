@@ -25,67 +25,70 @@
         font-weight: 600 !important;
     }
 </style>
-
-@if (Model.RoleId == (int)Enumeration.Role.Agent || Model.RoleId == (int)Enumeration.Role.AgentLead)
+@if (Model.UserAccess == (int)Enumeration.UserAccess.FullAccess)
 {
-    <link rel="stylesheet" href="~/assets/css/leaderboard.css" asp-append-version="true" />
-    <div class="row">
+
+    @if (Model.RoleId == (int)Enumeration.Role.Agent || Model.RoleId == (int)Enumeration.Role.AgentLead)
+    {
+        <link rel="stylesheet" href="~/assets/css/leaderboard.css" asp-append-version="true" />
         <div class="row">
-            <div class="col-xl-6">
-                <div class="card overflow-hidden">
-                    <div class="card-body bg-marketplace d-flex">
-                        <div class="flex-grow-1">
-                            <h4 class="fs-18 lh-base mb-0">Connecting Care with Confidence. <br> Lets achive your own <span class="text-success">Goal.</span> </h4>
-                            <p class="mb-0 mt-2 pt-1 text-muted">Because Every Patient Deserves a Caring Voice.</p>
-                            <div class="d-flex gap-3 mt-4">
-                                <a href="https://www.healthsherpa.com/sessions/new" target="_blank" class="btn btn-primary">Goto HealthSherpa</a>
-                                <a href="@Url.Content("Deal")" class="btn btn-success">Create Your Deal</a>
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="card overflow-hidden">
+                        <div class="card-body bg-marketplace d-flex">
+                            <div class="flex-grow-1">
+                                <h4 class="fs-18 lh-base mb-0">Connecting Care with Confidence. <br> Lets achive your own <span class="text-success">Goal.</span> </h4>
+                                <p class="mb-0 mt-2 pt-1 text-muted">Because Every Patient Deserves a Caring Voice.</p>
+                                <div class="d-flex gap-3 mt-4">
+                                    <a href="https://www.healthsherpa.com/sessions/new" target="_blank" class="btn btn-primary">Goto HealthSherpa</a>
+                                    <a href="@Url.Content("Deal")" class="btn btn-success">Create Your Deal</a>
+                                </div>
+                            </div>
+                            <img src="assets/images/bg-d.png" alt="" class="img-fluid">
+                        </div>
+                    </div>
+                </div><!--end col-->
+                <div class="col-xl-3 col-md-6">
+                    <a href="@Url.Content("Deal")">
+                        <div class="card card-height-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-sm flex-shrink-0">
+                                        <span class="avatar-title bg-info-subtle rounded fs-3">
+                                            <i class="ri-shake-hands-line text-info"></i>
+                                        </span>
+                                    </div>
+                                    <div class="flex-grow-1 ps-3">
+                                        <h5 class="text-muted text-uppercase fs-13 mb-0">Total Deals</h5>
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-1">
+                                    <h4 class="fs-22 fw-semibold ff-secondary mb-0"><span class="counter-value" data-target="@Model.DealCount">@Model.DealCount</span> </h4>
+                                    <p class="mt-4 mb-0 text-muted"><span class="badge bg-success-subtle text-success mb-0"> Overall Deals </span></p>
+                                </div>
                             </div>
                         </div>
-                        <img src="assets/images/bg-d.png" alt="" class="img-fluid">
-                    </div>
+                    </a>
                 </div>
-            </div><!--end col-->
-            <div class="col-xl-3 col-md-6">
-                <a href="@Url.Content("Deal")">
-                    <div class="card card-height-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar-sm flex-shrink-0">
-                                    <span class="avatar-title bg-info-subtle rounded fs-3">
-                                        <i class="ri-shake-hands-line text-info"></i>
-                                    </span>
-                                </div>
-                                <div class="flex-grow-1 ps-3">
-                                    <h5 class="text-muted text-uppercase fs-13 mb-0">Total Deals</h5>
-                                </div>
-                            </div>
-                            <div class="mt-4 pt-1">
-                                <h4 class="fs-22 fw-semibold ff-secondary mb-0"><span class="counter-value" data-target="@Model.DealCount">@Model.DealCount</span> </h4>
-                                <p class="mt-4 mb-0 text-muted"><span class="badge bg-success-subtle text-success mb-0"> Overall Deals </span></p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
             </div>
-        </div>
 
 
-        <div class="row">
-            <div class="col-xl-6">
-                <div class="card">
-                    <div class="card-body p-0">
-                        <div class="row g-0">
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-body p-0">
                             <div class="row g-0">
-                                <div class="col-xxl-12">
-                                    <div class="">
-                                        <div class="card-header border-0 align-items-center d-flex">
-                                            <h4 class="card-title mb-0 flex-grow-1">🏆 Live Leaderboard</h4>
-                                        </div><!-- end card header -->
-                                        <div class="row g-0">
-                                            <div class="col-12 col-sm-12">
-                                                <div class="p-3 border border-dashed border-start-0 border-end-0 border-bottom-0" style="height: 500px;overflow: auto;">
-                                                    <div class="list" id="leaderboard"></div>
+                                <div class="row g-0">
+                                    <div class="col-xxl-12">
+                                        <div class="">
+                                            <div class="card-header border-0 align-items-center d-flex">
+                                                <h4 class="card-title mb-0 flex-grow-1">🏆 Live Leaderboard</h4>
+                                            </div><!-- end card header -->
+                                            <div class="row g-0">
+                                                <div class="col-12 col-sm-12">
+                                                    <div class="p-3 border border-dashed border-start-0 border-end-0 border-bottom-0" style="height: 500px;overflow: auto;">
+                                                        <div class="list" id="leaderboard"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -95,32 +98,100 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xl-6 ">
+                    <div class="card card-animate">
+
+                        <!-- HEADER WITH FILTER BUTTONS -->
+                        <div class="card-header border-0 align-items-center d-flex">
+                            <h4 class="card-title mb-0 flex-grow-1">Deals – Recent 10 Days</h4>
+                            <input asp-for="AgentId" hidden id="AgentId" class="hidAgent" />
+                        </div>
+
+                        <!-- METRICS BAR (LIKE THE THEME) -->
+                        <div class="card-header p-0 border-0 bg-light-subtle">
+                            <div class="row g-0 text-center">
+                                <div class="col-6 col-sm-4">
+                                    <div class="p-3 border border-dashed border-start-0">
+                                        <h5 class="mb-1" id="metricDeals">0</h5>
+                                        <p class="text-muted mb-0">Total Forms</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="p-3 border border-dashed border-start-0">
+                                        <h5 class="mb-1" id="metricApplicants">0</h5>
+                                        <p class="text-muted mb-0">Total Deals</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-sm-4">
+                                    <div class="p-3 border border-dashed border-start-0 border-end-0">
+                                        <h5 class="mb-1 text-success" id="metricAvgDeals">0</h5>
+                                        <p class="text-muted mb-0">Avg Deals/Day</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CHART -->
+                        <div class="card-body p-0 pb-2">
+                            <div id="dealLineChart" data-colors='["--vz-secondary", "--vz-warning", "--vz-success"]' class="apex-charts" dir="ltr"></div>
+                            <div id="dealNoData" class="text-center text-muted mt-3" style="display:none; font-size:14px;">
+                                No deal data available.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end col-->
             </div>
-            <div class="col-xl-6 ">                
+        </div>
+    }
+
+    @if (Model.RoleId == (int)Enumeration.Role.Super_Admin)
+    {
+        <div class="row g-4 mb-4">
+            <div class="col-xl-9">
                 <div class="card card-animate">
 
                     <!-- HEADER WITH FILTER BUTTONS -->
                     <div class="card-header border-0 align-items-center d-flex">
                         <h4 class="card-title mb-0 flex-grow-1">Deals – Recent 10 Days</h4>
-                        <input asp-for="AgentId" hidden id="AgentId" class="hidAgent"/>
+
+                        <div class="d-flex gap-1">
+                            <select class="form-select form-select-sm" id="AgentId"
+                                    style="width:150px" onchange="CFP.Dashboard.BindDealChart()">
+                                <option value="-1">All Agents</option>
+                                @foreach (var a in Model.AgentList)
+                                {
+                                    <option value="@a.Value">@a.Text</option>
+                                }
+                            </select>
+                        </div>
                     </div>
 
                     <!-- METRICS BAR (LIKE THE THEME) -->
                     <div class="card-header p-0 border-0 bg-light-subtle">
                         <div class="row g-0 text-center">
-                            <div class="col-6 col-sm-4">
+                            <div class="col-6 col-sm-3">
                                 <div class="p-3 border border-dashed border-start-0">
                                     <h5 class="mb-1" id="metricDeals">0</h5>
                                     <p class="text-muted mb-0">Total Forms</p>
                                 </div>
                             </div>
-                            <div class="col-6 col-sm-4">
+
+                            <div class="col-6 col-sm-3">
                                 <div class="p-3 border border-dashed border-start-0">
                                     <h5 class="mb-1" id="metricApplicants">0</h5>
                                     <p class="text-muted mb-0">Total Deals</p>
                                 </div>
                             </div>
-                            <div class="col-6 col-sm-4">
+
+                            <div class="col-6 col-sm-3">
+                                <div class="p-3 border border-dashed border-start-0">
+                                    <h5 class="mb-1" id="metricAgents">0</h5>
+                                    <p class="text-muted mb-0">Active Agents</p>
+                                </div>
+                            </div>
+
+                            <div class="col-6 col-sm-3">
                                 <div class="p-3 border border-dashed border-start-0 border-end-0">
                                     <h5 class="mb-1 text-success" id="metricAvgDeals">0</h5>
                                     <p class="text-muted mb-0">Avg Deals/Day</p>
@@ -130,7 +201,7 @@
                     </div>
 
                     <!-- CHART -->
-                    <div class="card-body p-0 pb-2">                        
+                    <div class="card-body p-0 pb-2">
                         <div id="dealLineChart" data-colors='["--vz-secondary", "--vz-warning", "--vz-success"]' class="apex-charts" dir="ltr"></div>
                         <div id="dealNoData" class="text-center text-muted mt-3" style="display:none; font-size:14px;">
                             No deal data available.
@@ -138,188 +209,120 @@
                     </div>
                 </div>
             </div>
-            <!--end col-->
-        </div>
-    </div>
-}
 
-@if (Model.RoleId == (int)Enumeration.Role.Super_Admin)
-{
-    <div class="row g-4 mb-4">
-        <div class="col-xl-9">
-            <div class="card card-animate">
 
-                <!-- HEADER WITH FILTER BUTTONS -->
-                <div class="card-header border-0 align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">Deals – Recent 10 Days</h4>
-
-                    <div class="d-flex gap-1">
-                        <select class="form-select form-select-sm" id="AgentId"
-                                style="width:150px" onchange="CFP.Dashboard.BindDealChart()">
-                            <option value="-1">All Agents</option>
-                            @foreach (var a in Model.AgentList)
-                            {
-                                <option value="@a.Value">@a.Text</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-
-                <!-- METRICS BAR (LIKE THE THEME) -->
-                <div class="card-header p-0 border-0 bg-light-subtle">
-                    <div class="row g-0 text-center">
-                        <div class="col-6 col-sm-3">
-                            <div class="p-3 border border-dashed border-start-0">
-                                <h5 class="mb-1" id="metricDeals">0</h5>
-                                <p class="text-muted mb-0">Total Forms</p>
+            <div class="col-xxl-3">
+                <div class="card card-animate ">
+                    <div class="card-header border-0 align-items-center d-flex">
+                        <h4 class="card-title mb-0 flex-grow-1">Deals Portfolio</h4>
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <select id="portfolioRange" class="form-select form-select-sm" onchange="CFP.Dashboard.LoadPortfolioChart();">
+                                    <option value="1">Today</option>
+                                    <option value="7" selected>Last 7 Days</option>
+                                    <option value="30">Last 30 Days</option>
+                                </select>
                             </div>
                         </div>
+                    </div><!-- end cardheader -->
 
-                        <div class="col-6 col-sm-3">
-                            <div class="p-3 border border-dashed border-start-0">
-                                <h5 class="mb-1" id="metricApplicants">0</h5>
-                                <p class="text-muted mb-0">Total Deals</p>
-                            </div>
+                    <div class="card-body">
+                        <div id="portfolio_donut_charts" class="apex-charts" style="min-height: 227px;">
+                            <div id="portfolioDonut"></div>
                         </div>
 
-                        <div class="col-6 col-sm-3">
-                            <div class="p-3 border border-dashed border-start-0">
-                                <h5 class="mb-1" id="metricAgents">0</h5>
-                                <p class="text-muted mb-0">Active Agents</p>
-                            </div>
-                        </div>
-
-                        <div class="col-6 col-sm-3">
-                            <div class="p-3 border border-dashed border-start-0 border-end-0">
-                                <h5 class="mb-1 text-success" id="metricAvgDeals">0</h5>
-                                <p class="text-muted mb-0">Avg Deals/Day</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- CHART -->
-                <div class="card-body p-0 pb-2">
-                    <div id="dealLineChart" data-colors='["--vz-secondary", "--vz-warning", "--vz-success"]' class="apex-charts" dir="ltr"></div>
-                    <div id="dealNoData" class="text-center text-muted mt-3" style="display:none; font-size:14px;">
-                        No deal data available.
-                    </div>
-                </div>
+                        <!-- Top 5 agents -->
+                        <ul id="portfolioTop5" class="list-group list-group-flush border-dashed mb-0 mt-3 pt-2">
+                            <!-- Filled by JS -->
+                        </ul>
+                    </div><!-- end card body -->
+                </div><!-- end card -->
             </div>
+
         </div>
+        <div class="row g-4 mb-4">
 
-
-        <div class="col-xxl-3">
-            <div class="card card-animate ">
-                <div class="card-header border-0 align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">Deals Portfolio</h4>
-                    <div class="d-flex align-items-center">                        
-                        <div>
-                            <select id="portfolioRange" class="form-select form-select-sm" onchange="CFP.Dashboard.LoadPortfolioChart();">
-                                <option value="1">Today</option>
-                                <option value="7" selected>Last 7 Days</option>
-                                <option value="30">Last 30 Days</option>
-                            </select>
-                        </div>
-                    </div>
-                </div><!-- end cardheader -->
-
-                <div class="card-body">
-                    <div id="portfolio_donut_charts" class="apex-charts" style="min-height: 227px;">
-                        <div id="portfolioDonut"></div>
-                    </div>
-
-                    <!-- Top 5 agents -->
-                    <ul id="portfolioTop5" class="list-group list-group-flush border-dashed mb-0 mt-3 pt-2">
-                        <!-- Filled by JS -->
-                    </ul>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div>
-
-    </div>
-    <div class="row g-4 mb-4">
-
-        <div class="col-xl-12 mt-1">
-            <div class="card card-animate">
-                <div class="card-header d-flex align-items-center">
-                    <h4 class="card-title flex-grow-1 mb-0">Deals Summary By Date (Recent 5 Days)</h4>
-                                    </div><!-- end cardheader -->
-                <div class="card-body">
-                    <div class="table-responsive table-card">
-                        <table class="table table-nowrap table-centered table-bordered align-middle">
-                            <thead class="bg-light text-muted">
-                                <tr>
-                                    <th scope="col" rowspan="2" style="vertical-align:middle;">Agent Name</th>
-                                    @if (Model.DealSummaryList.Any())
-                                    {
-                                        foreach (var day in Model.DealSummaryList.First().Counts)
-                                        {
-                                            <th colspan="2" class="col-xl-2 text-center">@day.Date.ToString("dd-MMM-yyyy")</th>
-                                        }
-                                    }
-                                </tr><!-- end tr -->
-                                <tr>
-                                    @if (Model.DealSummaryList.Any())
-                                    {
-                                        foreach (var day in Model.DealSummaryList.First().Counts)
-                                        {
-                                            <th class="text-center">Forms</th>
-                                            <th class="text-center">Deals</th>
-                                        }
-                                    }
-                                </tr>
-                            </thead><!-- thead -->
-
-                            <tbody>
-                                @foreach (var agent in Model.DealSummaryList.OrderBy(x=>x.AgentName))
-                                {
+            <div class="col-xl-12 mt-1">
+                <div class="card card-animate">
+                    <div class="card-header d-flex align-items-center">
+                        <h4 class="card-title flex-grow-1 mb-0">Deals Summary By Date (Recent 5 Days)</h4>
+                    </div><!-- end cardheader -->
+                    <div class="card-body">
+                        <div class="table-responsive table-card">
+                            <table class="table table-nowrap table-centered table-bordered align-middle">
+                                <thead class="bg-light text-muted">
                                     <tr>
-                                        <td class="text-left">@agent.AgentName</td>
-                                        @foreach (var count in agent.Counts)
+                                        <th scope="col" rowspan="2" style="vertical-align:middle;">Agent Name</th>
+                                        @if (Model.DealSummaryList.Any())
                                         {
-                                            <td class="text-center">@(count.DealCount > 0 ? count.DealCount : "")</td>
-                                            <td class="text-center">@(count.ApplicantCount > 0 ? count.ApplicantCount : "")</td>
+                                            foreach (var day in Model.DealSummaryList.First().Counts)
+                                            {
+                                                <th colspan="2" class="col-xl-2 text-center">@day.Date.ToString("dd-MMM-yyyy")</th>
+                                            }
+                                        }
+                                    </tr><!-- end tr -->
+                                    <tr>
+                                        @if (Model.DealSummaryList.Any())
+                                        {
+                                            foreach (var day in Model.DealSummaryList.First().Counts)
+                                            {
+                                                <th class="text-center">Forms</th>
+                                                <th class="text-center">Deals</th>
+                                            }
                                         }
                                     </tr>
-                                }
-                                                                
-                            </tbody><!-- end tbody -->
-                        </table><!-- end table -->
-                    </div>                    
+                                </thead><!-- thead -->
 
-                </div><!-- end card body -->
-            </div><!-- end card -->
+                                <tbody>
+                                    @foreach (var agent in Model.DealSummaryList.OrderBy(x => x.AgentName))
+                                    {
+                                        <tr>
+                                            <td class="text-left">@agent.AgentName</td>
+                                            @foreach (var count in agent.Counts)
+                                            {
+                                                <td class="text-center">@(count.DealCount > 0 ? count.DealCount : "")</td>
+                                                <td class="text-center">@(count.ApplicantCount > 0 ? count.ApplicantCount : "")</td>
+                                            }
+                                        </tr>
+                                    }
 
+                                </tbody><!-- end tbody -->
+                            </table><!-- end table -->
+                        </div>
+
+                    </div><!-- end card body -->
+                </div><!-- end card -->
+
+            </div>
         </div>
-    </div>
-}
+    }
 
-@section Scripts {
-    <script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
-    <script src="assets/js/pages/dashboard-crypto.init.js"></script>
-    <script src="/assets/libs/swiper/swiper-bundle.min.js"></script>
-    <script src="/assets/js/pages/dashboard-crypto.init.js"></script>
-    <script src="/assets/js/pages/dashboard-projects.init.js"></script>
-    <script src="assets/js/pages/dashboard-crm.init.js"></script>
-    <script src="assets/js/pages/dashboard-projects.init.js"></script>
-    @* <script src="~/assets/libs/chart.js/chart.js"></script> *@
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="~/lib/js/custom/CFP.Dashboard.js" asp-append-version="true"></script>
-    <script src="~/lib/js/custom/CFP.Leaderboard.js" asp-append-version="true"></script>
-    <script>
-        $(document).ready(function () {
-            Chart.defaults.font.family = "'Montserrat', sans-serif";
-          //  CFP.Common.MenuLink("/Order/Dashboard");
-              CFP.Dashboard.BindDealChart();
-              CFP.Dashboard.LoadPortfolioChart();
-            CFP.Leaderboard.refreshScores();
-            CFP.Dashboard.Init('@Model.RoleId');
-            $("#txtSearch").on("keyup", function () {
-                CFP.Dashboard.Search();
+    @section Scripts {
+        <script src="/assets/libs/apexcharts/apexcharts.min.js"></script>
+        <script src="assets/js/pages/dashboard-crypto.init.js"></script>
+        <script src="/assets/libs/swiper/swiper-bundle.min.js"></script>
+        <script src="/assets/js/pages/dashboard-crypto.init.js"></script>
+        <script src="/assets/js/pages/dashboard-projects.init.js"></script>
+        <script src="assets/js/pages/dashboard-crm.init.js"></script>
+        <script src="assets/js/pages/dashboard-projects.init.js"></script>
+        @* <script src="~/assets/libs/chart.js/chart.js"></script> *@
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="~/lib/js/custom/CFP.Dashboard.js" asp-append-version="true"></script>
+        <script src="~/lib/js/custom/CFP.Leaderboard.js" asp-append-version="true"></script>
+        <script>
+            $(document).ready(function () {
+                Chart.defaults.font.family = "'Montserrat', sans-serif";
+              //  CFP.Common.MenuLink("/Order/Dashboard");
+                  CFP.Dashboard.BindDealChart();
+                  CFP.Dashboard.LoadPortfolioChart();
+                CFP.Leaderboard.refreshScores();
+                CFP.Dashboard.Init('@Model.RoleId');
+                $("#txtSearch").on("keyup", function () {
+                    CFP.Dashboard.Search();
+                });
             });
-        });
-    </script>
-}
+        </script>
+    }
 
+}
 

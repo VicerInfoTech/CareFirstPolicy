@@ -31,6 +31,7 @@ namespace CFP.Web.ViewComponents
                     model.UserMasterId = userDetails.UserMasterId;
                     model.RoleId = userDetails.RoleId;
                     model.RoleName = userDetails.RoleName;
+                    model.Designation = userDetails.Designation;
                 }
             }
             return View(model);

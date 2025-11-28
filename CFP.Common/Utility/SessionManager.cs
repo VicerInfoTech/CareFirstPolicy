@@ -101,6 +101,19 @@ namespace CFP.Common.Utility
             }
 
         }
+
+        public int UserAccess
+        {
+            get
+            {
+                return GetSession().UserAccess;
+            }
+            set
+            {
+                SessionData.UserAccess = value;
+                SetSession();
+            }
+        }
         public SessionManager(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;

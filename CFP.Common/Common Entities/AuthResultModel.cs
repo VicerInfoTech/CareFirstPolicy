@@ -10,6 +10,7 @@
         public string FirstName { get; set; }
         public string FullName { get; set; }
         public string Ip { get; set; }
+        public int UserAccess { get; set; }
         public bool IsEnableTwoStepAuth { get; set; }
     }
 }

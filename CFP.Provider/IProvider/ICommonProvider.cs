@@ -27,7 +27,7 @@ namespace CFP.Provider.IProvider
         List<DropDownModel> GetAgentList();
         List<DropDownModel> GetLeaderBoard();
         int GetDealCount(SessionProviderModel sessionProviderModel);
-        bool IsAuthorized(int roleId, int menuId);
+        bool IsAuthorized(int roleId, int menuId,int userAccess);
         List<DropDownModel> GetUserList();
         List<DropDownModel> GetRoomList();
         List<DealChartPoint> GetDealDataForChart(int agentId);

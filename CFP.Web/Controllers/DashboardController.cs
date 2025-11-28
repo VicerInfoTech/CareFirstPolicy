@@ -32,6 +32,7 @@ namespace CFP.Web.Controllers
             {
                 RoleId = _sessionManager.RoleId,
                 AgentId = _sessionManager.AgentId,
+                UserAccess = _sessionManager.UserAccess,
                 DealCount = _commonProvider.GetDealCount(GetSessionProviderParameters()),
                 DealSummaryList = _commonProvider.GetDealSummary(),
                 AgentList = GetAgentList()

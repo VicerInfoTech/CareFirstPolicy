@@ -50,6 +50,8 @@ namespace CFP.Common.Business_Entities
         public bool IsReceiveNotification { get; set; }
         [DisplayName("Role")]
         public int RoleId { get; set; }
+        [DisplayName("Access")]
+        public int UserAccess { get; set; }
         public bool IsActive { get; set; }
         public int CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -62,6 +64,7 @@ namespace CFP.Common.Business_Entities
         public string? RoleName { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string FullName { get; set; }
+        public string? Designation { get; set; }
         public string CreatedOnString
         {
             get

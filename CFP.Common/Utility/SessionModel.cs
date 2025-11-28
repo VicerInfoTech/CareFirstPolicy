@@ -10,6 +10,7 @@ namespace CFP.Common.Utility
         public int UserId { get; set; }
         public int RoleId { get; set; }
         public int AgentId { get; set; }
+        public int UserAccess { get; set; }
         public string Username { get; set; }
         public string FullName { get; set; }
         public string FirstName { get; set; }

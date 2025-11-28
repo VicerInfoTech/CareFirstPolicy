@@ -8,6 +8,7 @@ namespace CFP.Web.Models
     {
         public int RoleId { get; set; }
         public int AgentId { get; set; }
+        public int UserAccess { get; set; }
         public bool IsEdit { get; set; }
         public bool IsView { get; set; }
         public DealModel DealModel { get; set; } = new DealModel();

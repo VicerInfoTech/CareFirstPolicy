@@ -74,6 +74,8 @@ namespace CFP.Common.Business_Entities
         [DisplayName("Pay Structure")]
         [MaxLength(50, ErrorMessage = "Email cannot exceed 50 characters.")]
         public string? PayStructure { get; set; }
+        [DisplayName("Access")]
+        public int UserAccess { get; set; }
         public bool IsActive { get; set; }
 
         public int CreatedBy { get; set; }

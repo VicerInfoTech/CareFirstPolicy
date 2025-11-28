@@ -202,6 +202,13 @@ namespace CFP.Provider.Provider
                     menuList = menuList.Where(x => x.MenuRoles.Any(y => y.RoleId == sessionProviderModel.RoleId)).ToList();
                 }
                 list = _mapper.Map<List<MenuModel>>(menuList);
+
+
+                if (sessionProviderModel.UserAccess == (int)Enumeration.UserAccess.Training)
+                {
+                    list = list.Where(x => x.MenuId == 1 || x.MenuId == 6 || x.MenuId == 7).ToList();
+                }
+
             }
             catch (Exception ex)
             {
@@ -209,13 +216,16 @@ namespace CFP.Provider.Provider
             }
             return list;
         }
-        public bool IsAuthorized(int roleId, int menuId)
+        public bool IsAuthorized(int roleId, int menuId, int userAccess)
         {
             bool isAuthorized = false;
             try
             {
                 if (roleId == (int)Enumeration.Role.Super_Admin)
                     isAuthorized = true;
+                else if (userAccess == (int)Enumeration.UserAccess.Training && (menuId != 1 && menuId != 6 && menuId != 7))
+                    isAuthorized = false;
+
                 else
                 {
                     var menu = unitOfWork.Menu.Get(x => x.MenuId == menuId);
@@ -479,7 +489,7 @@ namespace CFP.Provider.Provider
                             Date = day,
                             ApplicantCount = g.Where(d => d.CreatedOn.Date == day).Sum(d => d.NoOfApplicants),
                             DealCount = g.Count(d => d.CreatedOn.Date == day)
-                        }).OrderBy(x=>x.Date).ToList()
+                        }).OrderBy(x => x.Date).ToList()
                     })
                     .ToList();
             }

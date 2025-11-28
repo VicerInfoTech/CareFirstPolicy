@@ -14,6 +14,7 @@ namespace CFP.Common.Business_Entities
         public string Username { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
+        public string? Designation { get; set; }
         public int TotalNotification { get; set; }
     }
 }

@@ -55,7 +55,7 @@ namespace CFP.Patient.Controllers
                         _sessionManager.FirstName = response.FirstName;
                         _sessionManager.LastName = response.LastName;
                         _sessionManager.FullName = response.FullName;
-
+                        _sessionManager.UserAccess = response.UserAccess;
 
                         var claims = new List<Claim>
                         {

@@ -24,6 +24,7 @@ namespace CFP.Web.Filter
             bool isUnauthorized = false;
             int userId = sessionManager.UserId;
             int roleId = sessionManager.RoleId;
+            int userAccess = sessionManager.UserAccess;
             if (userId == 0 || roleId == 0)
             {
                 if (IsAjaxRequest(context.HttpContext.Request))
@@ -37,7 +38,7 @@ namespace CFP.Web.Filter
 
             }
             if (roleId > 0)
-                isUnauthorized = !commonProvider.IsAuthorized(roleId, MenuId);
+                isUnauthorized = !commonProvider.IsAuthorized(roleId, MenuId,userAccess);
             else
                 isUnauthorized = true;
 

@@ -123,7 +123,14 @@
                         </select>
                     </div>
                 }
-
+                <div class="col-6 mt-2">
+                    <label asp-for="UserAccess"></label>
+                    <select asp-for="UserAccess" class="form-select req-border">
+                        <option value="2">Training</option>
+                        <option value="1">Full Access</option>
+                    </select>
+                    <span class="text-danger" asp-validation-for="UserAccess"></span>
+                </div>
 
             </div>
 
