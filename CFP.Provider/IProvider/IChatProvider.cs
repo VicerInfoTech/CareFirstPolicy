@@ -34,6 +34,7 @@ namespace CFP.Provider.IProvider
         List<ChatMessageModel> GetRoomMessages(int roomId);
         ChatMessageModel SaveRoomMessage(ChatMessageModel model);
         ResponseModel Delete(int id, SessionProviderModel sessionProviderModel);
+        void UpdateRoomVisit(int roomId, SessionProviderModel sessionProviderModel);
 
         #endregion
 

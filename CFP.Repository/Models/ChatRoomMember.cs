@@ -11,6 +11,8 @@ public partial class ChatRoomMember
 
     public int UserMasterId { get; set; }
 
+    public DateTime? LastVisited { get; set; }
+
     public virtual ChatRoom ChatRoom { get; set; } = null!;
 
     public virtual UserMaster UserMaster { get; set; } = null!;

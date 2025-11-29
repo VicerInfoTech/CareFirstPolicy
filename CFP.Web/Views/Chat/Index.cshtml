@@ -16,6 +16,8 @@
 		}
 	}
 
+
+
 	.chat-user-img .user-status {
 		width: 14px; /* increase the size */
 		height: 14px; /* increase the size */
@@ -106,6 +108,8 @@
 	}
 </style>
 <input asp-for="CurrentUserId" id="currentUserId" type="hidden" />
+<input asp-for="openUserId" id="hfOpenUserId" type="hidden" />
+<input asp-for="openRoomId" id="hfOpenRoomId" type="hidden" />
 
 <div class="chat-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
 	<div class="chat-leftsidebar">
@@ -217,7 +221,7 @@
 	</div>
 	<!-- end chat leftsidebar -->
 	<!-- Start User chat -->
-	<div class="user-chat w-100 overflow-hidden">
+	<div class="user-chat w-100 overflow-hidden user-chat-show">
 
 		<div class="chat-content d-lg-flex">
 			<!-- start chat conversation section -->
@@ -683,6 +687,27 @@
 			});
 		});
 		CFP.ChatClient.LoadRooms();
+
+			debugger;
+					// Check if a notification passed a userId
+		// var openUserId = @Model.openUserId?? 'null';
+		var openRoomId = @(Model.openRoomId == null ? "null" : Model.openRoomId.ToString());
+
+
+		// if (openUserId !== null) {
+		// 	// Find user name from list
+		// 	var userName = $("#private" + openUserId + " .username").text();
+		// 	var isOnline = $("#private" + openUserId + " .status").hasClass("online");
+		// 	var lastSeen = $("#private" + openUserId + " .last-seen").data("lastseen");
+
+		// 	CFP.ChatClient.OpenChat(openUserId, userName, isOnline, lastSeen);
+		// }
+		  if (openRoomId !== null) {
+					var channelsTabEl = document.querySelector('a[href="#contacts"]');
+		var tab = new bootstrap.Tab(channelsTabEl);
+		tab.show(); // Activates the tab
+		 }
+
 
 		});
 

@@ -12,7 +12,8 @@ namespace CFP.Common.Common_Entities
         public string Message { get; set; }
         public string ProfilePic { get; set; }
         public string TimeAgo { get; set; }
-
+        public int? SenderUserId { get; set; }   // For private chat
+        public int? RoomId { get; set; }         // For room chat
 
     }
 }

@@ -286,22 +286,35 @@ namespace CFP.Provider.Provider
                 {
 
                     var curDoc = roomData.ChatRoomMembers.ToList();
-                    List<int> removedDoc = curDoc.Select(x => x.ChatRoomMemberId).ToList();
-                    foreach (var item in inputModel.UserIds)
+                    var removedMembers = curDoc.Select(x => (x.ChatRoomMemberId, x.UserMasterId)).ToList();
+                    foreach (var userId in inputModel.UserIds)
                     {
-                        var tmp = curDoc.Where(x => x.UserMasterId == item).FirstOrDefault();
-                        if (tmp != null)
-                            removedDoc.Remove(tmp.ChatRoomMemberId);
+                        var existing = curDoc.FirstOrDefault(x => x.UserMasterId == userId);
+
+                        if (existing != null)
+                            removedMembers.Remove((existing.ChatRoomMemberId, existing.UserMasterId));
                         else
                         {
+                            // Add new member
                             roomData.ChatRoomMembers.Add(new ChatRoomMember
                             {
-                                UserMasterId = item,
+                                UserMasterId = userId,
                             });
                         }
                     }
-                    if (removedDoc.Any())
-                        unitOfWork.ChatRoomMember.DeleteAll(unitOfWork.ChatRoomMember.GetAll(x => removedDoc.Contains(x.ChatRoomMemberId)));
+                    foreach (var rm in removedMembers)
+                    {
+                        var userMessages = unitOfWork.ChatMessage.GetAll(x => x.ChatRoomId == roomData.ChatRoomId && x.FromUserId == rm.UserMasterId);
+
+                        unitOfWork.ChatMessage.DeleteAll(userMessages);
+
+                        var memberToDelete = unitOfWork.ChatRoomMember.GetAll(x => x.ChatRoomMemberId == rm.ChatRoomMemberId);
+
+                        unitOfWork.ChatRoomMember.DeleteAll(memberToDelete);
+                    }
+
+
+
                     response.Message = "Channel updated successfully";
                     unitOfWork.ChatRoom.Update(roomData, providerModel.UserId, providerModel.Ip);
                     unitOfWork.Save();
@@ -430,6 +443,28 @@ namespace CFP.Provider.Provider
             }
             return model;
         }
+
+       public void UpdateRoomVisit(int roomId, SessionProviderModel sessionProviderModel)
+        {
+            try
+            {
+                var ru = unitOfWork.ChatRoomMember.Get(x => x.ChatRoomId == roomId && x.UserMasterId== sessionProviderModel.UserId);
+
+                if (ru != null)
+                {
+                    ru.LastVisited = AppCommon.CurrentDate;
+                    unitOfWork.ChatRoomMember.Update(ru);
+                    unitOfWork.Save();
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         #endregion
 

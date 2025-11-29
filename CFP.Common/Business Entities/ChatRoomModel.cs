@@ -32,8 +32,6 @@ namespace CFP.Common.Business_Entities
         [Display(Name = "Members")]
         public List<int> UserIds { get; set; }
         public bool IsShowActionBtn { get; set; }
-        public virtual ICollection<ChatMessageModel> ChatMessages { get; set; } = new List<ChatMessageModel>();
-
 
         public virtual UserMasterModel CreatedByNavigation { get; set; } = null!;
 

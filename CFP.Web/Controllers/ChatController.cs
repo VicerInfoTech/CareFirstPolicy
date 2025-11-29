@@ -32,10 +32,12 @@ namespace CFP.Web.Controllers
         #endregion
 
         #region PrivateMessage
-        public IActionResult Index()
+        public IActionResult Index(int? openUserId, int? openRoomId)
         {
             ChatViewModel viewModel = new ChatViewModel();
             viewModel.CurrentUserId = _sessionManager.UserId;
+            viewModel.openUserId = openUserId;
+            viewModel.openRoomId = openRoomId;
             return View(viewModel);
         }
         [HttpGet]
@@ -146,8 +148,8 @@ namespace CFP.Web.Controllers
             if (file == null || file.Length == 0) return BadRequest("No file selected.");
 
             var ext = Path.GetExtension(file.FileName);
-           // var guidFileName = $"{Guid.NewGuid()}{ext}";
-            var guidFileName=  Guid.NewGuid().ToString() + AppCommon.FileNameSeperator + file.FileName;
+            // var guidFileName = $"{Guid.NewGuid()}{ext}";
+            var guidFileName = Guid.NewGuid().ToString() + AppCommon.FileNameSeperator + file.FileName;
 
             var uploadPath = GetChatUploadPath(chatRoomId);
             var filePath = Path.Combine(uploadPath, guidFileName);
@@ -179,8 +181,8 @@ namespace CFP.Web.Controllers
                 await stream.CopyToAsync(memory);
             memory.Position = 0;
 
-            string[]fileNameArray= file.Split(AppCommon.FileNameSeperator);
-            var originalFileName = fileNameArray[fileNameArray.Length-1];
+            string[] fileNameArray = file.Split(AppCommon.FileNameSeperator);
+            var originalFileName = fileNameArray[fileNameArray.Length - 1];
 
             return File(memory, "application/octet-stream", originalFileName);
         }
@@ -190,6 +192,15 @@ namespace CFP.Web.Controllers
             var path = Path.Combine(_webHostEnvironment.WebRootPath, "ExtraFiles", "Uploads", "Chat", chatRoomId.ToString());
             Directory.CreateDirectory(path);
             return path;
+        }
+
+        [HttpPost]
+        [Route("Chat/UpdateRoomVisit")]
+        public IActionResult UpdateRoomVisit(int roomId)
+        {
+            _chatProvider.UpdateRoomVisit(roomId, GetSessionProviderParameters());
+
+            return Json(true);
         }
 
 

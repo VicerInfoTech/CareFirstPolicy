@@ -28,7 +28,9 @@
 			<div id="notifItems">
 				@foreach (var item in Model.NotificationList)
 				{
-					<a asp-controller="Chat" asp-action="Index">
+					<a asp-controller="Chat" asp-action="Index" asp-route-openUserId="@item.SenderUserId"
+					   asp-route-openRoomId="@item.RoomId">
+						
 						<div class="text-reset notification-item d-block dropdown-item">
 							<div class="d-flex">
 								<img src="@item.ProfilePic" class="me-3 rounded-circle avatar-xs" />

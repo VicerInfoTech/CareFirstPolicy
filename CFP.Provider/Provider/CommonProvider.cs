@@ -605,15 +605,49 @@ namespace CFP.Provider.Provider
             List<NotificationDto> list = new List<NotificationDto>();
             try
             {
-                list = unitOfWork.ChatMessage.GetAll(x => x.ToUserId == sessionProviderModel.UserId && !x.IsRead).OrderByDescending(x => x.SentAt)
-           .Select(x => new NotificationDto
-           {
-               SenderName = x.FromUser.FirstName + " " + x.FromUser.LastName,
-               Message = x.Message,
-               ProfilePic = "/assets/images/users/user-dummy-img.jpg",
-               TimeAgo = x.SentAt.ToString("MM/dd/yyyy hh:mm tt"),
-           }).ToList();
 
+                var privateMessages = unitOfWork.ChatMessage.GetAll(x =>
+                x.ToUserId == sessionProviderModel.UserId && !x.IsRead)
+            .OrderByDescending(x => x.SentAt)
+            .Select(x => new NotificationDto
+            {
+                SenderName = x.FromUser.FirstName + " " + x.FromUser.LastName,
+                Message = x.Message,
+                ProfilePic = "/assets/images/users/user-dummy-img.jpg",
+                TimeAgo = x.SentAt.ToString("MM/dd/yyyy hh:mm tt"),
+                SenderUserId = x.FromUserId,
+                RoomId = x.ChatRoomId
+            })
+            .ToList();
+
+                // ROOM MESSAGES (Unread)
+                var roomMessages = (
+                        from msg in unitOfWork.ChatMessage.GetAll(x => x.ChatRoomId != null 
+                        && !x.IsAttachment && x.FromUserId != sessionProviderModel.UserId)
+                        join member in unitOfWork.ChatRoomMember.GetAll(m => m.UserMasterId == sessionProviderModel.UserId)
+                            on msg.ChatRoomId equals member.ChatRoomId
+                        select new { msg, member }
+                    )
+                    .AsEnumerable()  // ⭐ IMPORTANT: Switch to memory so grouping works
+                    .Where(x => x.msg.SentAt > (x.member.LastVisited ?? DateTime.MinValue))
+                    .GroupBy(x => x.msg.ChatRoomId)
+                    .Select(g =>
+                    {
+                        var lastMsg = g.OrderByDescending(m => m.msg.SentAt).First().msg;
+
+                        return new NotificationDto
+                        {
+                            SenderName = $"{lastMsg.FromUser.FirstName} {lastMsg.FromUser.LastName} (# {lastMsg.ChatRoom.RoomName})",
+                            Message = lastMsg.Message,
+                            ProfilePic = "/assets/images/users/user-dummy-img.jpg",
+                            TimeAgo = lastMsg.SentAt.ToString("MM/dd/yyyy hh:mm tt"),
+                            SenderUserId = lastMsg.FromUserId,
+                            RoomId = lastMsg.ChatRoomId
+                        };
+                    }).ToList();
+
+                // MERGE & SORT
+                list = privateMessages.Concat(roomMessages).OrderByDescending(x => DateTime.Parse(x.TimeAgo)).ToList();
             }
             catch (Exception)
             {

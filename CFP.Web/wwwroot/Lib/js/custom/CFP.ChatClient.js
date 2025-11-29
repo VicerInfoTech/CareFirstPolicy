@@ -60,6 +60,7 @@
                     )
                 );
                 CFP.ChatClient.ScrollBottom();
+                CFP.ChatClient.UpdateRoomVisit(currentRoomId);
             }
             else {
                 //CFP.ChatClient.IncreaseRoomBadge(message.chatRoomId);                
@@ -67,6 +68,7 @@
             debugger;
             if (currentUserId != message.fromUserId) {
                 CFP.ChatClient.ShowNotification(message);
+                CFP.ChatClient.RefreshNotification();
             }
 
         });
@@ -109,7 +111,7 @@
     }
 
     this.LoadUserList = function () {
-
+        var roomIdFromHidden = $("#hfOpenRoomId").val();
         $.get("/Chat/GetChatUsers", function (users) {
 
             let html = "";
@@ -139,31 +141,52 @@
 
 						</a>
 					</li>`;
-                if (index === 0) {
-                    selectedUserId = u.userId;
-                    $(".username").text(u.userName);
+                debugger;
+                var userIdFromHidden = $("#hfOpenUserId").val();
+                if (!roomIdFromHidden) {
 
-                    if (u.isOnline) {
-                        $(".user-own-img").addClass("online");
-                        $(".member-count").text("Online");   // Show Online in member-count                        
-                    } else {
-                        $(".user-own-img").removeClass("online");
-                        $(".member-count").text(formatLastSeen(u.lastSeen));  // Show Offline
+                    if (!userIdFromHidden && index === 0) {
+                        selectedUserId = u.userId;
+                        $(".username").text(u.userName);
+
+                        if (u.isOnline) {
+                            $(".user-own-img").addClass("online");
+                            $(".member-count").text("Online");   // Show Online in member-count                        
+                        } else {
+                            $(".user-own-img").removeClass("online");
+                            $(".member-count").text(formatLastSeen(u.lastSeen));  // Show Offline
+                        }
+                    }
+                    else if (userIdFromHidden && u.userId == userIdFromHidden) {
+                        selectedUserId = userIdFromHidden;
+                        $(".username").text(u.userName);
+
+                        if (u.isOnline) {
+                            $(".user-own-img").addClass("online");
+                            $(".member-count").text("Online");   // Show Online in member-count                        
+                        } else {
+                            $(".user-own-img").removeClass("online");
+                            $(".member-count").text(formatLastSeen(u.lastSeen));  // Show Offline
+                        }
                     }
                 }
             });
 
             $("#chatUserList").html(html);
-            $("#private" + selectedUserId).addClass("active");
-            // If there is at least one user, load their messages
-            if (users.length > 0) {
-                CFP.ChatClient.LoadMessages();
+            if (!roomIdFromHidden) {
+                $("#private" + selectedUserId).addClass("active");
+                // If there is at least one user, load their messages
+                if (users.length > 0) {
+                    CFP.ChatClient.LoadMessages();
+                }
             }
         });
     }
 
     this.OpenChat = function (userId, name, isOnline, lastSeen) {
         debugger;
+        $(".user-chat").addClass("user-chat-show");
+
         currentChatType = "private";   // IMPORTANT
         currentRoomId = null;          // Reset room
         selectedUserId = userId;
@@ -393,6 +416,11 @@
             });
 
             $("#channelList").html(html);
+            var roomIdFromHidden = $("#hfOpenRoomId").val();
+            if (roomIdFromHidden) {
+
+                CFP.ChatClient.OpenRoom(roomIdFromHidden);
+            }
         });
     }
 
@@ -514,9 +542,12 @@
         });
 
         CFP.ChatClient.ScrollBottom();
+        CFP.ChatClient.UpdateRoomVisit(currentRoomId);
     };
     this.OpenRoom = function (roomId) {
         debugger;
+        $(".user-chat").addClass("user-chat-show");
+
         currentChatType = "room";     // NEW FLAG
         currentRoomId = roomId;       // SET SELECTED ROOM
         selectedUserId = null;
@@ -560,6 +591,7 @@
                 CFP.ChatClient.RenderRoomDropdown(room);
             }
         });
+        CFP.ChatClient.UpdateRoomVisit(roomId);
 
     };
 
@@ -783,6 +815,7 @@
             });
 
             CFP.ChatClient.ScrollBottom();
+            CFP.ChatClient.UpdateRoomVisit(currentRoomId);
 
         } catch (ex) {
             console.error(ex);
@@ -896,6 +929,13 @@
             // Remove from DOM after fade animation
             setTimeout(() => toastElement.remove(), 400);
         }, 5000);
+    }
+    $(document).on("click", ".user-chat-remove", function () {
+        $(".user-chat").removeClass("user-chat-show");
+    });
+
+    this.UpdateRoomVisit = function (roomId) {
+        $.post("/Chat/UpdateRoomVisit", { roomId: roomId });
     }
 
 

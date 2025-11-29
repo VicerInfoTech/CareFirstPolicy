@@ -187,6 +187,8 @@ public partial class EndeavorCRMContext : DbContext
         {
             entity.ToTable("ChatRoomMember");
 
+            entity.Property(e => e.LastVisited).HasColumnType("datetime");
+
             entity.HasOne(d => d.ChatRoom).WithMany(p => p.ChatRoomMembers)
                 .HasForeignKey(d => d.ChatRoomId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

@@ -14,5 +14,7 @@ namespace CFP.Web.Models
         public List<SelectListItem> SelectUserList { get; set; }
         public List<int>? UserIds { get; set; }
         public bool IsEdit { get; set; }
+        public int? openUserId { get; set; }
+        public int? openRoomId { get; set; }
     }
 }
