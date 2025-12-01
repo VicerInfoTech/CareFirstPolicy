@@ -48,6 +48,18 @@ namespace CFP.Common.Utility
                 SetSession();
             }
         }
+        public int AppId
+        {
+            get
+            {
+                return GetSession().AppId;
+            }
+            set
+            {
+                SessionData.AppId = value;
+                SetSession();
+            }
+        }
         public string Username
         {
             get

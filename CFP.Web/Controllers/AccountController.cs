@@ -67,8 +67,9 @@ namespace CFP.Patient.Controllers
                         var principal = new ClaimsPrincipal(identity);
 
                         HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                        TempData["IsLogin"] = true;
+                        return RedirectToAction("SelectApp");
 
-                        return RedirectToAction("Index", "Dashboard");
                     }
                 }
                 else
@@ -214,6 +215,12 @@ namespace CFP.Patient.Controllers
         //        return View(model);
         //    }
         //}
+
+        public IActionResult SelectApp()
+        {
+           
+            return View();
+        }
         #endregion
     }
 }

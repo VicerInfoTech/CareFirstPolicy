@@ -16,7 +16,11 @@ public partial class EndeavorCRMContext : DbContext
     {
     }
 
+    public virtual DbSet<AgentApp> AgentApps { get; set; }
+
     public virtual DbSet<AgentMaster> AgentMasters { get; set; }
+
+    public virtual DbSet<AppMaster> AppMasters { get; set; }
 
     public virtual DbSet<ChatConnection> ChatConnections { get; set; }
 
@@ -50,6 +54,34 @@ public partial class EndeavorCRMContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AgentApp>(entity =>
+        {
+            entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+            entity.Property(e => e.Ip)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UpdatedOn).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Agent).WithMany(p => p.AgentApps)
+                .HasForeignKey(d => d.AgentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AgentApps_AgentMaster");
+
+            entity.HasOne(d => d.App).WithMany(p => p.AgentApps)
+                .HasForeignKey(d => d.AppId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AgentApps_AppMaster");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.AgentAppCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AgentApps_UserMaster");
+
+            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.AgentAppUpdatedByNavigations)
+                .HasForeignKey(d => d.UpdatedBy)
+                .HasConstraintName("FK_AgentApps_UserMaster1");
+        });
+
         modelBuilder.Entity<AgentMaster>(entity =>
         {
             entity.ToTable("AgentMaster");
@@ -125,6 +157,23 @@ public partial class EndeavorCRMContext : DbContext
                 .HasForeignKey(d => d.UserMasterId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AgentMaster_UserMaster_UserId");
+        });
+
+        modelBuilder.Entity<AppMaster>(entity =>
+        {
+            entity.HasKey(e => e.AppId);
+
+            entity.ToTable("AppMaster");
+
+            entity.Property(e => e.AppDesc)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.AppName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.LogoName)
+                .HasMaxLength(200)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<ChatConnection>(entity =>

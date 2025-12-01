@@ -1,5 +1,6 @@
 ﻿using CFP.Common.Business_Entities;
 using CFP.Common.Common_Entities;
+using CFP.Repository.Models;
 
 namespace CFP.Provider.IProvider
 {
@@ -30,11 +31,13 @@ namespace CFP.Provider.IProvider
         bool IsAuthorized(int roleId, int menuId,int userAccess);
         List<DropDownModel> GetUserList();
         List<DropDownModel> GetRoomList();
+        List<AppMasterModel> GetAppsList();
         List<DealChartPoint> GetDealDataForChart(int agentId);
         AgentDealDashboardViewModel GetAgentDealDashboard(int days);
         List<DealSummaryModel> GetDealSummary();
         DatatablePageResponseModel<ChatMessageModel> GetChatHistoryList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel);
         List<NotificationDto> GetNotification(SessionProviderModel sessionProviderModel);
+        List<AppMasterModel> GetAgentAppList(SessionProviderModel sessionProviderModel);
         #endregion
 
     }

@@ -33,13 +33,15 @@ namespace CFP.Web.Controllers
 
         public IActionResult _Details(string id)
         {
-
-            return PartialView(_provider.GetById(_commonProvider.UnProtect(id)));
+            AgentViewModel agentViewModel = new AgentViewModel();
+            agentViewModel.AgentMasterModel = _provider.GetById(_commonProvider.UnProtect(id));
+            agentViewModel.AppMasterModels = _commonProvider.GetAppsList();
+            return PartialView(agentViewModel);
         }
 
-        public JsonResult Save(AgentMasterModel model)
+        public JsonResult Save(AgentViewModel model)
         {
-            return Json(_provider.Save(model, GetSessionProviderParameters()));
+            return Json(_provider.Save(model.AgentMasterModel, GetSessionProviderParameters()));
         }
 
         [HttpPost]

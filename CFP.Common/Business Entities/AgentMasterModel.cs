@@ -90,6 +90,7 @@ namespace CFP.Common.Business_Entities
         public string RoleName { get; set; } = null!;
         [DisplayName("Role")]
         public int RoleId { get; set; }
+        public List<int> AppsList { get; set; }
         public virtual UserMasterModel CreatedByNavigation { get; set; } = null!;
 
         public virtual UserMasterModel? UpdatedByNavigation { get; set; }

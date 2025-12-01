@@ -131,7 +131,7 @@ namespace CFP.Provider.Provider
                         IsFirstTimeLogin = true,
                         TwoStepAuth = false,
                         IsActive = true,
-                        UserAccess=model.UserAccess,
+                        UserAccess = model.UserAccess,
                     };
                     userMaster.UserPassword = PasswordHash.CreateHash(AppCommon.CommonPassword);
                     unitOfWork.UserMaster.Insert(userMaster, sessionProviderModel.UserId, sessionProviderModel.Ip);
@@ -139,6 +139,17 @@ namespace CFP.Provider.Provider
                     agent.UserMasterId = userMaster.UserMasterId;
                     agent.Email = model.Email.ToLower();
                     response.Message = "Agent added successfully";
+                    foreach (var item in model.AppsList)
+                    {
+                        agent.AgentApps.Add(new AgentApp
+                        {
+                            AppId = item,
+                            IsActive = true,
+                            CreatedBy = sessionProviderModel.UserId,
+                            CreatedOn = AppCommon.CurrentDate,
+                            Ip = sessionProviderModel.Ip,
+                        });
+                    }
                     unitOfWork.AgentMaster.Insert(agent, sessionProviderModel.UserId, sessionProviderModel.Ip);
                 }
                 else

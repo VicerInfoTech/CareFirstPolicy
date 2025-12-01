@@ -1,11 +1,11 @@
 ﻿@using CFP.Common.Business_Entities
 
-@model AgentMasterModel
+@model AgentViewModel
 
 
 <div class="modal-header">
     <h4 class="modal-title fw-600" id="myModalLabel">
-        <i class='ri-user-3-line font-20'></i> @(Model.AgentMasterId > 0 ? "Edit Agent" : "Add New Agent")
+        <i class='ri-user-3-line font-20'></i> @(Model.AgentMasterModel.AgentMasterId > 0 ? "Edit Agent" : "Add New Agent")
     </h4>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
 </div>
@@ -14,124 +14,136 @@
     <div class="card-body" style="padding-left:1rem;padding-right:1rem;">
         <form class="validation-wizard form-horizontal form-material needs-validation" id="AgentMasterForm">
 
-            <input asp-for="EncId" type="hidden" />
-            <input asp-for="UserMasterId" type="hidden" />
-            <input asp-for="CreatedBy" type="hidden" />
-            <input asp-for="CreatedOn" type="hidden" />
-            <input asp-for="IsActive" type="hidden" />
+            <input asp-for="AgentMasterModel.EncId" type="hidden" />
+            <input asp-for="AgentMasterModel.UserMasterId" type="hidden" />
+            <input asp-for="AgentMasterModel.CreatedBy" type="hidden" />
+            <input asp-for="AgentMasterModel.CreatedOn" type="hidden" />
+            <input asp-for="AgentMasterModel.IsActive" type="hidden" />
 
             <div class="row">
 
                 <div class="col-6 mt-2">
-                    <label asp-for="FirstName"></label>
-                    <input asp-for="FirstName" class="form-control req-border" placeholder="First Name" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="FirstName"></span>
+                    <label asp-for="AgentMasterModel.FirstName"></label>
+                    <input asp-for="AgentMasterModel.FirstName" class="form-control req-border" placeholder="First Name" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.FirstName"></span>
                 </div>
 
                 <div class="col-6 mt-2">
-                    <label asp-for="LastName"></label>
-                    <input asp-for="LastName" class="form-control req-border" placeholder="Last Name" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="LastName"></span>
-                </div>                
+                    <label asp-for="AgentMasterModel.LastName"></label>
+                    <input asp-for="AgentMasterModel.LastName" class="form-control req-border" placeholder="Last Name" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.LastName"></span>
+                </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="Email"></label>
-                    <input asp-for="Email" class="form-control req-border" placeholder="Login Username" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="Email"></span>
+                    <label asp-for="AgentMasterModel.Email"></label>
+                    <input asp-for="AgentMasterModel.Email" class="form-control req-border" placeholder="Login Username" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.Email"></span>
                 </div>
                 <div class="col-md-6 mt-2">
-                    <label asp-for="Dob"></label>
-                    <input asp-for="Dob" placeholder="Select dob" class="form-control  date-picker" />
+                    <label asp-for="AgentMasterModel.Dob"></label>
+                    <input asp-for="AgentMasterModel.Dob" placeholder="Select dob" class="form-control  date-picker" />
                 </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="Ssn"></label>
-                    <input asp-for="Ssn" class="form-control " placeholder="SSN" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="Ssn"></span>
+                    <label asp-for="AgentMasterModel.Ssn"></label>
+                    <input asp-for="AgentMasterModel.Ssn" class="form-control " placeholder="SSN" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.Ssn"></span>
                 </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="ContactNumber"></label>
-                    <input asp-for="ContactNumber" class="form-control " placeholder="Contact Number" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="ContactNumber"></span>
+                    <label asp-for="AgentMasterModel.ContactNumber"></label>
+                    <input asp-for="AgentMasterModel.ContactNumber" class="form-control " placeholder="Contact Number" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.ContactNumber"></span>
                 </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="Designation"></label>
-                    <input asp-for="Designation" class="form-control " placeholder="Designation" autocomplete="off" />
+                    <label asp-for="AgentMasterModel.Designation"></label>
+                    <input asp-for="AgentMasterModel.Designation" class="form-control " placeholder="Designation" autocomplete="off" />
                 </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="Npn"></label>
-                    <input asp-for="Npn" class="form-control " placeholder="NPN" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="Npn"></span>
+                    <label asp-for="AgentMasterModel.Npn"></label>
+                    <input asp-for="AgentMasterModel.Npn" class="form-control " placeholder="NPN" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.Npn"></span>
                 </div>
                 <div class="col-2 mt-2">
-                    <label asp-for="ChaseExt"></label>
-                    <input asp-for="ChaseExt" class="form-control " placeholder="Chase Ext." autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="ChaseExt"></span>
+                    <label asp-for="AgentMasterModel.ChaseExt"></label>
+                    <input asp-for="AgentMasterModel.ChaseExt" class="form-control " placeholder="Chase Ext." autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.ChaseExt"></span>
                 </div>
                 <div class="col-5 mt-2">
-                    <label asp-for="ChaseDataUsername"></label>
-                    <input asp-for="ChaseDataUsername" class="form-control " placeholder="Chase Data Login" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="ChaseDataUsername"></span>
+                    <label asp-for="AgentMasterModel.ChaseDataUsername"></label>
+                    <input asp-for="AgentMasterModel.ChaseDataUsername" class="form-control " placeholder="Chase Data Login" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.ChaseDataUsername"></span>
                 </div>
                 <div class="col-5 mt-2">
-                    <label asp-for="ChaseDataPassword"></label>
-                    <input asp-for="ChaseDataPassword" class="form-control " placeholder="Chase Data Password" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="ChaseDataPassword"></span>
+                    <label asp-for="AgentMasterModel.ChaseDataPassword"></label>
+                    <input asp-for="AgentMasterModel.ChaseDataPassword" class="form-control " placeholder="Chase Data Password" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.ChaseDataPassword"></span>
                 </div>
 
                 <div class="col-6 mt-2">
-                    <label asp-for="HealthSherpaUsername"></label>
-                    <input asp-for="HealthSherpaUsername" class="form-control " placeholder="Healthsherpa Login" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="HealthSherpaUsername"></span>
+                    <label asp-for="AgentMasterModel.HealthSherpaUsername"></label>
+                    <input asp-for="AgentMasterModel.HealthSherpaUsername" class="form-control " placeholder="Healthsherpa Login" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.HealthSherpaUsername"></span>
                 </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="HealthSherpaPassword"></label>
-                    <input asp-for="HealthSherpaPassword" class="form-control " placeholder="HealthSherpa Password" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="HealthSherpaPassword"></span>
+                    <label asp-for="AgentMasterModel.HealthSherpaPassword"></label>
+                    <input asp-for="AgentMasterModel.HealthSherpaPassword" class="form-control " placeholder="HealthSherpa Password" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.HealthSherpaPassword"></span>
                 </div>
 
                 <div class="col-6 mt-2">
-                    <label asp-for="MyMfgUsername"></label>
-                    <input asp-for="MyMfgUsername" class="form-control " placeholder="MyMFG Username" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="MyMfgUsername"></span>
+                    <label asp-for="AgentMasterModel.MyMfgUsername"></label>
+                    <input asp-for="AgentMasterModel.MyMfgUsername" class="form-control " placeholder="MyMFG Username" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.MyMfgUsername"></span>
                 </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="MyMfgPassword"></label>
-                    <input asp-for="MyMfgPassword" class="form-control " placeholder="MyMFG Password" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="MyMfgPassword"></span>
+                    <label asp-for="AgentMasterModel.MyMfgPassword"></label>
+                    <input asp-for="AgentMasterModel.MyMfgPassword" class="form-control " placeholder="MyMFG Password" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.MyMfgPassword"></span>
                 </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="FfmUsername"></label>
-                    <input asp-for="FfmUsername" class="form-control " placeholder="FFM Username " autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="FfmUsername"></span>
+                    <label asp-for="AgentMasterModel.FfmUsername"></label>
+                    <input asp-for="AgentMasterModel.FfmUsername" class="form-control " placeholder="FFM Username " autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.FfmUsername"></span>
                 </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="Forwarding"></label>
-                    <input asp-for="Forwarding" class="form-control " placeholder="Forwarding" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="Forwarding"></span>
+                    <label asp-for="AgentMasterModel.Forwarding"></label>
+                    <input asp-for="AgentMasterModel.Forwarding" class="form-control " placeholder="Forwarding" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.Forwarding"></span>
                 </div>
                 <div class="col-6 mt-2">
-                    <label asp-for="PayStructure"></label>
-                    <input asp-for="PayStructure" class="form-control " placeholder="Pay Structure" autocomplete="off" />
-                    <span class="text-danger" asp-validation-for="PayStructure"></span>
+                    <label asp-for="AgentMasterModel.PayStructure"></label>
+                    <input asp-for="AgentMasterModel.PayStructure" class="form-control " placeholder="Pay Structure" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.PayStructure"></span>
                 </div>
-                @if (string.IsNullOrEmpty(Model.EncId))
+                @if (string.IsNullOrEmpty(Model.AgentMasterModel.EncId))
                 {
                     <div class="col-md-6 mt-2">
-                        <label asp-for="RoleId"></label>
-                        <select asp-for="RoleId" class="form-select req-border">
+                        <label asp-for="AgentMasterModel.RoleId"></label>
+                        <select asp-for="AgentMasterModel.RoleId" class="form-select req-border">
                             <option value="3">Agent</option>
                             <option value="2">Agent Lead</option>
                         </select>
                     </div>
                 }
                 <div class="col-6 mt-2">
-                    <label asp-for="UserAccess"></label>
-                    <select asp-for="UserAccess" class="form-select req-border">
+                    <label asp-for="AgentMasterModel.UserAccess"></label>
+                    <select asp-for="AgentMasterModel.UserAccess" class="form-select req-border">
                         <option value="2">Training</option>
                         <option value="1">Full Access</option>
                     </select>
-                    <span class="text-danger" asp-validation-for="UserAccess"></span>
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.UserAccess"></span>
                 </div>
-
+                @if (string.IsNullOrEmpty(Model.AgentMasterModel.EncId))
+                {
+                    <div class="col-6 mt-2">
+                        <label asp-for="AgentMasterModel.AppsList"></label>
+                        <select asp-for="AgentMasterModel.AppsList" class="form-select req-border" id="multipleSelect" multiple data-placeholder="Select">
+                            @foreach (var item in Model.AppMasterModels)
+                            {
+                                <option value="@item.AppId">@item.AppName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="AgentMasterModel.AppsList" class="text-danger"></span>
+                    </div>
+                }
             </div>
 
         </form>

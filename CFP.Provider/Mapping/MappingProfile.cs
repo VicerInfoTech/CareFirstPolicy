@@ -30,6 +30,9 @@ namespace CFP.Provider.Mapping
             CreateMap<DealDocModel, DealDocument>();
             CreateMap<DealDocument, DealDocModel>();
 
+            CreateMap<AppMaster, AppMasterModel>();
+            CreateMap<AppMasterModel, AppMaster>();
+
 
         }
     }

@@ -11,6 +11,7 @@ namespace CFP.Web.Models
         public int UserAccess { get; set; }
         public bool IsEdit { get; set; }
         public bool IsView { get; set; }
+        public bool IsLogin { get; set; }=false;
         public DealModel DealModel { get; set; } = new DealModel();
         public int DealCount { get; set; } = 0;
         public List<DealDocModel> DealDocList { get; set; } = new List<DealDocModel>();
@@ -20,6 +21,7 @@ namespace CFP.Web.Models
         public List<SelectListItem> RoomList { get; set; }
         public List<SelectListItem> CareerList { get; set; }
         public List<NotificationDto> NotificationList { get; set; }
+        public List<AppMasterModel> AgentAppList { get; set; }
         public List<IFormFile> PictureofProblemList { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }

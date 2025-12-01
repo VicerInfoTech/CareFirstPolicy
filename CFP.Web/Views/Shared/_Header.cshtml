@@ -46,7 +46,9 @@
 						</a>
 					</div>
 				}
-
+				<div id="appListArea">
+					@await Component.InvokeAsync("AppList")
+				</div>
 				<div id="notificationArea">
 					@await Component.InvokeAsync("Notification")
 				</div>

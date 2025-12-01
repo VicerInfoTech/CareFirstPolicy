@@ -680,5 +680,30 @@
             .replace(/'/g, '&#039;');
     }
 
+    this.ShowAppList = function () {
+        $(".preloader").show();
+        $.ajax({
+            type: "GET",
+            url: UrlContent("Dashboard/LoadAppSelector/" ),
+            success: function (data) {
+                debugger;
+                $("#common-lg-dialogContentApp").html(data);
+                $("#common-lg-dialogApp").modal({
+                    backdrop: "static",   // prevents closing on outside click
+                    keyboard: false,      // prevents ESC close
+                    show: true
+                });
+                $("#common-lg-dialogApp").modal('show');
+                $(".preloader").hide();
+            }
+        })
+    }
+
+    this.SelectApp = function (appId) {
+        $("#common-lg-dialogApp").modal('hide');
+
+        // Redirect directly with appId
+        window.location.href = '/Dashboard/Index?appId=' + appId;
+    }
 
 }

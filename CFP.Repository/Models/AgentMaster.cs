@@ -57,6 +57,8 @@ public partial class AgentMaster
 
     public string Ip { get; set; } = null!;
 
+    public virtual ICollection<AgentApp> AgentApps { get; set; } = new List<AgentApp>();
+
     public virtual UserMaster CreatedByNavigation { get; set; } = null!;
 
     public virtual ICollection<Deal> Deals { get; set; } = new List<Deal>();

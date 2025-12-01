@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using AspNetCoreGeneratedDocument;
 using CFP.Common.Utility;
 using CFP.Patient.Controllers;
 using CFP.Provider.IProvider;
@@ -6,6 +6,10 @@ using CFP.Provider.Provider;
 using CFP.Web.Filter;
 using CFP.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using Twilio.Types;
 
 namespace CFP.Web.Controllers
 {
@@ -25,7 +29,7 @@ namespace CFP.Web.Controllers
         #endregion
 
         #region Methods
-        public IActionResult Index()
+        public IActionResult Index(int appId=0)
         {
             ViewBag.IsAuthenticated = User.Identity.IsAuthenticated;
             DashboardViewModel model = new DashboardViewModel()
@@ -35,8 +39,11 @@ namespace CFP.Web.Controllers
                 UserAccess = _sessionManager.UserAccess,
                 DealCount = _commonProvider.GetDealCount(GetSessionProviderParameters()),
                 DealSummaryList = _commonProvider.GetDealSummary(),
+                IsLogin = TempData["IsLogin"] != null,
                 AgentList = GetAgentList()
             };
+            if (appId != 0)
+                _sessionManager.AppId = appId;
             return View(model);
         }
         public JsonResult SaveTempFilter(string KitId, string PatientId)
@@ -58,7 +65,7 @@ namespace CFP.Web.Controllers
                 label = d.DateLabel,
                 applicantCount = d.ApplicantCount,
                 dealCount = d.DealCount,
-                agentCount=d.AgentCount
+                agentCount = d.AgentCount
             }).ToList();
             return Json(payload);
         }
@@ -68,6 +75,16 @@ namespace CFP.Web.Controllers
         {
             return Json(_commonProvider.GetAgentDealDashboard(days));
         }
+
+
+        public IActionResult LoadAppSelector()
+        {
+            DashboardViewModel viewModel = new DashboardViewModel();
+            viewModel.AgentAppList = _commonProvider.GetAgentAppList(GetSessionProviderParameters());
+
+            return PartialView("_SelectAppPartial", viewModel);
+        }
+
 
         #endregion
     }

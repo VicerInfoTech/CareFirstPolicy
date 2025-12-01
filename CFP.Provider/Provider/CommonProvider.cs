@@ -191,6 +191,26 @@ namespace CFP.Provider.Provider
             }
             return list;
         }
+
+        public List<AppMasterModel> GetAppsList()
+        {
+            List<AppMasterModel> list = new List<AppMasterModel>();
+            try
+            {
+
+                var applist = unitOfWork.AppMaster.GetAll(x => x.IsActive == true).ToList();
+                if (applist.Any())
+                {
+                    list = _mapper.Map<List<AppMasterModel>>(applist);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                AppCommon.LogException(ex, "CommonProvider=>GetAppsList");
+            }
+            return list;
+        }
         public List<MenuModel> GetMenuList(SessionProviderModel sessionProviderModel)
         {
             List<MenuModel> list = new List<MenuModel>();
@@ -655,6 +675,49 @@ namespace CFP.Provider.Provider
                 throw;
             }
             return list;
+        }
+
+
+        public List<AppMasterModel> GetAgentAppList(SessionProviderModel sessionProviderModel)
+        {
+            List<AppMasterModel> agentApps = new List<AppMasterModel>();
+            try
+            {
+                if (sessionProviderModel.RoleId == (int)Enumeration.Role.Super_Admin)
+                {
+                    var apps = unitOfWork.AppMaster.GetAll(x =>  x.IsActive).ToList();
+                    foreach (var item in apps)
+                    {
+                        agentApps.Add(new AppMasterModel
+                        {
+                            LogoName = item.LogoName,
+                            AppName = item.AppName,
+                            AppId = item.AppId,
+                        });
+                    }
+                }
+                else
+                {
+
+                    var apps = unitOfWork.AgentApp.GetAll(x => x.AgentId == sessionProviderModel.AgentId && x.IsActive).ToList();
+                    foreach (var item in apps)
+                    {
+                        agentApps.Add(new AppMasterModel
+                        {
+                            LogoName = item.App.LogoName,
+                            AppName = item.App.AppName,
+                            AppId = item.AppId,
+                        });
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return agentApps;
+
         }
 
         #endregion

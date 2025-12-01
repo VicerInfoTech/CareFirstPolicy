@@ -83,7 +83,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="common-lg-dialog" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div id="common-lg-dialog" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false">
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content" id="common-lg-dialogContent">
 					</div>
@@ -96,9 +96,15 @@
 				</div>
 				<!-- /.modal-dialog -->
 			</div>
+			<div id="common-lg-dialogApp" class="modal fade" tabindex="-1" role="dialog">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content" id="common-lg-dialogContentApp"></div>
+				</div>
+			</div>
 
 
 		</div>
+
 	</div>
 	<footer class="footer">
 		<div class="container-fluid">
@@ -116,6 +122,7 @@
 	</footer>
 	@await Html.PartialAsync("_FooterScriptPartial")
 	@RenderSection("scripts", required: false)
+	@RenderSection("AppSelectModalSection", required: false)
 </body>
 </html>
 

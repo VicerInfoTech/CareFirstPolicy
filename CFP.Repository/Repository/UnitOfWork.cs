@@ -52,6 +52,8 @@ namespace CFP.Repository.Repository
         private GenericRepository<ChatRoom> _ChatRoom;
         private GenericRepository<ChatRoomMember> _ChatRoomMember;
         private GenericRepository<DealDocument> _DealDocument;
+        private GenericRepository<AppMaster> _AppMaster;
+        private GenericRepository<AgentApp> _AgentApp;
         #endregion
 
         #region Generic Classes Of DB Entities
@@ -171,6 +173,25 @@ namespace CFP.Repository.Repository
                 if (_DealDocument == null)
                     _DealDocument = new GenericRepository<DealDocument>(context);
              return _DealDocument;
+            }
+        }
+
+        public GenericRepository<AppMaster> AppMaster
+        {
+            get
+            {
+                if (_AppMaster == null)
+                    _AppMaster = new GenericRepository<AppMaster>(context);
+             return _AppMaster;
+            }
+        }
+        public GenericRepository<AgentApp> AgentApp
+        {
+            get
+            {
+                if (_AgentApp == null)
+                    _AgentApp = new GenericRepository<AgentApp>(context);
+             return _AgentApp;
             }
         }
         #endregion

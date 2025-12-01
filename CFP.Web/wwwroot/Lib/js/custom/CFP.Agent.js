@@ -84,6 +84,9 @@ CFP.Agent = new function () {
             success: function (data) {
                 $("#common-lg-dialogContent").html(data);
                 $.validator.unobtrusive.parse($("#AgentMasterForm"));
+                $('#multipleSelect').select2({
+                    dropdownParent: $('#common-lg-dialog')
+                });
                 $("#common-lg-dialog").modal('show');
                 CFP.Common.InitDatePicker();
                 $(".preloader").hide();

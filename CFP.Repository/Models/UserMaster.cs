@@ -37,6 +37,10 @@ public partial class UserMaster
 
     public int UserAccess { get; set; }
 
+    public virtual ICollection<AgentApp> AgentAppCreatedByNavigations { get; set; } = new List<AgentApp>();
+
+    public virtual ICollection<AgentApp> AgentAppUpdatedByNavigations { get; set; } = new List<AgentApp>();
+
     public virtual ICollection<AgentMaster> AgentMasterCreatedByNavigations { get; set; } = new List<AgentMaster>();
 
     public virtual ICollection<AgentMaster> AgentMasterUpdatedByNavigations { get; set; } = new List<AgentMaster>();
