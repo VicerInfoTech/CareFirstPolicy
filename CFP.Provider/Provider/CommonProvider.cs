@@ -691,7 +691,7 @@ namespace CFP.Provider.Provider
             {
                 if (sessionProviderModel.RoleId == (int)Enumeration.Role.Super_Admin)
                 {
-                    var apps = unitOfWork.AppMaster.GetAll(x => x.IsActive).ToList();
+                    var apps = unitOfWork.AppMaster.GetAll().ToList();
                     foreach (var item in apps)
                     {
                         agentApps.Add(new AppMasterModel
@@ -699,6 +699,7 @@ namespace CFP.Provider.Provider
                             LogoName = item.LogoName,
                             AppName = item.AppName,
                             AppId = item.AppId,
+                            IsActive=item.IsActive,
                         });
                     }
                 }

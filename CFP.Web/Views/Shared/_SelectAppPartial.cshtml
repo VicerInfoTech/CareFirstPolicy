@@ -1,86 +1,119 @@
 ﻿@model DashboardViewModel
 
 <style>
-    #common-lg-dialogApp .modal-dialog {
-        width: 100vw !important;
-        max-width: 100vw !important;
-        height: 100vh !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
+	#common-lg-dialogApp .modal-dialog {
+		width: 100vw !important;
+		max-width: 100vw !important;
+		height: 100vh !important;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
 
-    #common-lg-dialogApp .modal-content {
-        height: 100vh !important;
-        border-radius: 0 !important;
-    }
+	#common-lg-dialogApp .modal-content {
+		height: 100vh !important;
+		border-radius: 0 !important;
+		display: flex;
+		flex-direction: column;
+	}
 
-    .app-cards-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-    }
+	#common-lg-dialogApp .card {
+		height: 100%;
+		margin-bottom: 0 !important;
+	}
 
-    .app-card {
-        width: calc((100% / 3) - 1rem); /* 3 cards per row */
-        max-width: 200px;
-        height: 180px;
-        border-radius: 15px;
-        background: #ffffff;
-        padding: 15px;
-        cursor: pointer;
-        box-shadow: 0px 0px 12px rgba(0,0,0,0.2);
-        transition: 0.2s;
-        text-align: center;
-    }
+	#common-lg-dialogApp .card-body {
+		height: 100%;
+		display: flex;
+		justify-content: center; /* Vertical center */
+		align-items: center; /* Horizontal center */
+		padding: 1rem;
+	}
 
-        .app-card:hover {
-            transform: scale(1.08);
-        }
+	.app-cards-container {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 3rem;
+	}
 
-    .app-logo {
-        width: 75px;
-        height: 75px;
-        object-fit: contain;
-        margin-bottom: 5px;
-    }
+	.app-card {
+		width: calc((100% / 2) - 1rem); /* <-- 2 cards per row */
+		max-width: 200px;
+		height: 180px;
+		border-radius: 15px;
+		background: #ffffff;
+		padding: 25px;
+		cursor: pointer;
+		box-shadow: 0px 0px 12px rgba(0,0,0,0.2);
+		transition: 0.2s;
+		text-align: center;
+	}
 
-    @@media (max-width: 768px) {
-        .app-card
+		.app-card:hover {
+			transform: scale(1.08);
+		}
 
-    {
-        width: calc((100% / 2) - 1rem); /* 2 cards per row on tablets */
-    }
+	.app-logo {
+		width: 75px;
+		height: 75px;
+		object-fit: contain;
+		margin-bottom: 5px;
+		font-size: 60px;
+		background: linear-gradient(45deg, #ff6b6b, #573dff);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+/* 
+	.app-logo {
+		font-size: 60px;
+		background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	} */
 
-    }
+	/* Tablet */
+	@@media (max-width: 768px) {
+		.app-card {
+			width: calc((100% / 2) - 1rem);
+		}
+	}
 
-    @@media (max-width: 480px) {
-        .app-card
-
-    {
-        width: 100%; /* 1 card per row on mobile */
-    }
-
-    }
+	/* Mobile */
+	@@media (max-width: 480px) {
+		.app-card {
+			width: 100%;
+		}
+	}
 </style>
 
 <div class="modal-header">
-    <h4 class="modal-title fw-600" id="myModalLabel">
-        <i class="ri-apps-line font-20"></i> Select Your App
-    </h4>
+	<h4 class="modal-title fw-600" id="myModalLabel">
+		<i class="ri-apps-line font-20"></i> Select Your App
+	</h4>
 </div>
 
 <div class="card" style="margin-bottom:0px !important">
-    <div class="card-body" style="padding-left:1rem;padding-right:1rem;">
-        <div class="app-cards-container">
-            @foreach (var app in Model.AgentAppList)
-            {
-                <div class="app-card" onclick="CFP.Dashboard.SelectApp(@app.AppId)">
-                    <i class="@app.LogoName app-logo" style="width:40px; height:40px; font-weight:900;font-size:xxx-large;"></i>
-
-                    <h3>@app.AppName</h3>
-                </div>
-            }
-        </div>
-    </div>
+	<div class="card-body" style="">
+		<div class="app-cards-container">
+			@{
+				foreach (var app in Model.AgentAppList)
+				{
+					if (app.IsActive)
+					{
+						<div class="app-card" onclick="CFP.Dashboard.SelectApp(@app.AppId)">
+							<i class="@app.LogoName app-logo" style="width:40px; height:40px; font-weight:900;font-size:75px;"></i>
+							<h5>@app.AppName</h5>
+						</div>
+					}
+					else
+					{
+						<div class="app-card" style="opacity:0.5">
+							<i class="@app.LogoName app-logo" style="width:40px; height:40px; font-weight:900;font-size:75px;"></i>
+							<h5>@app.AppName</h5>
+						</div>
+					}
+				}
+			}
+		</div>
+	</div>
 </div>
