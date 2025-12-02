@@ -705,8 +705,7 @@ namespace CFP.Provider.Provider
                 }
                 else
                 {
-
-                    var apps = unitOfWork.AgentApp.GetAll(x => x.AgentId == sessionProviderModel.AgentId && x.IsActive).ToList();
+                    var apps = unitOfWork.AgentApp.GetAll(x => x.AgentId == sessionProviderModel.AgentId).ToList();
                     foreach (var item in apps)
                     {
                         agentApps.Add(new AppMasterModel
@@ -714,6 +713,7 @@ namespace CFP.Provider.Provider
                             LogoName = item.App.LogoName,
                             AppName = item.App.AppName,
                             AppId = item.AppId,
+                            IsActive = item.IsActive,
                         });
                     }
                 }
