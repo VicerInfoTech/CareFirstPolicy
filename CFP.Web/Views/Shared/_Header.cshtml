@@ -33,6 +33,25 @@
 						<span></span>
 					</span>
 				</button>
+				<h4 style="margin-top: 8px;">
+                    @if (SessionData.AppId == 1)
+                    {
+                        <i class="ri-shield-check-line"></i> <span>ACA</span>
+                    }
+                    else if (SessionData.AppId == 2)
+                    {
+                        <i class="ri-stethoscope-line"></i> <span>Medicare</span>
+                    }
+                    else if (SessionData.AppId == 3)
+                    {
+                        <i class="ri-money-dollar-circle-line"></i> <span>Taxation</span>
+                    }
+                    else if (SessionData.AppId == 4)
+                    {
+                        <i class="ri-rocket-line"></i> <span>Launch Pad</span>
+                    }
+                </h4>
+
 			</div>
 
 			<div class="d-flex align-items-center gap-3">

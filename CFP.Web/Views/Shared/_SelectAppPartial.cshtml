@@ -76,7 +76,8 @@
             @foreach (var app in Model.AgentAppList)
             {
                 <div class="app-card" onclick="CFP.Dashboard.SelectApp(@app.AppId)">
-                    <img src="/lib/images/@app.LogoName" class="app-logo" />
+                    <i class="@app.LogoName app-logo" style="width:40px; height:40px; font-weight:900;font-size:xxx-large;"></i>
+
                     <h3>@app.AppName</h3>
                 </div>
             }
