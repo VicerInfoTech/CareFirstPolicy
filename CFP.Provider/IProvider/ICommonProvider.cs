@@ -33,7 +33,7 @@ namespace CFP.Provider.IProvider
         List<DropDownModel> GetRoomList();
         List<AppMasterModel> GetAppsList();
         List<DealChartPoint> GetDealDataForChart(int agentId);
-        AgentDealDashboardViewModel GetAgentDealDashboard(int days);
+        AgentDealDashboardViewModel GetAgentDealDashboard(string startDate, string endDate);
         List<DealSummaryModel> GetDealSummary();
         DatatablePageResponseModel<ChatMessageModel> GetChatHistoryList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel);
         List<NotificationDto> GetNotification(SessionProviderModel sessionProviderModel);

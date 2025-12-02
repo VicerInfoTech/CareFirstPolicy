@@ -49,8 +49,8 @@ namespace CFP.Web.Controllers
         [HttpGet]
         public IActionResult GetMessages(int targetUserId)
         {
-            var messages = _chatProvider.GetMessages(_sessionManager.UserId, targetUserId);
             _chatProvider.MarkMessagesRead(_sessionManager.UserId, targetUserId);
+            var messages = _chatProvider.GetMessages(_sessionManager.UserId, targetUserId);
             return Json(messages);
         }
 

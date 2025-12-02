@@ -212,7 +212,7 @@
 
     this.LoadMessages = function () {
         if (!selectedUserId) return;
-
+        currentChatType = "private";
         $.get(`/Chat/GetMessages?targetUserId=${selectedUserId}`, function (msgs) {
 
             $("#users-conversation").html("");
@@ -255,12 +255,17 @@
         } else {
             dateLabel = msgDate.toLocaleDateString(); // fallback to full date
         }
+        debugger;
         //let contentHtml = msg.isAttachment
         //    ? `<a href="${msg.downloadUrl}" target="_blank" download><i class="ri-attachment-line text-success fs-18"></i> ${msg.message}</a>`
         //    : msg.message;
         let contentHtml = msg.isAttachment ? CFP.ChatClient.showAttachmentBubble(msg.downloadUrl, msg.message) : msg.message;
         let html = "";
-
+        let statusIcon = "";
+        if (currentChatType === "private") {
+            // Using single quotes inside template for clarity
+            statusIcon = `<i class="ri-check-double-line ${msg.isRead ? "text-primary" : ""}"></i>`;
+        }
         if (msg.isOwnMessage) {
             html = `
 			<li class="right">
@@ -270,6 +275,7 @@
 							<div class="ctext-wrap-content">${contentHtml}</div>
 						</div>
 						<small class="text-muted">${dateLabel}, ${time}</small>
+                          <span class="msg-status">${statusIcon}</span>
 					</div>
 				</div>
 			</li>`;
@@ -312,7 +318,8 @@
                 toUserId: selectedUserId,
                 message: text,
                 sentAt: new Date(new Date().toLocaleString("en-US", CFP.Common.TimeZoneOptions)),
-                isOwnMessage: true
+                isOwnMessage: true,
+                isRead:false,
             });
 
             CFP.ChatClient.ScrollBottom();
@@ -887,7 +894,7 @@
 
         // Create toast container
         const toastHTML = `        
-            <div class="toast show toast-slide-in" role="alert" aria-live="assertive" aria-atomic="true" data-bs-toggle="toast" style="position: fixed; bottom: 16px; right: 16px;z-index:1100;">
+            <div class="toast show toast-slide-in" role="alert" aria-live="assertive" aria-atomic="true" data-bs-toggle="toast" style="position: fixed; top: 16px; right: 16px;z-index:1100;">
                 <div class="toast-header">
                     <img src="assets/images/logo-sm.png" class="rounded me-2" alt="..." height="20">
                     <strong class="me-auto">`+ msg.senderName + `</strong>

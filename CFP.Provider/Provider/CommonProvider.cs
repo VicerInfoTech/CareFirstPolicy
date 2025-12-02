@@ -426,16 +426,22 @@ namespace CFP.Provider.Provider
 
 
 
-        public AgentDealDashboardViewModel GetAgentDealDashboard(int days)
+        public AgentDealDashboardViewModel GetAgentDealDashboard(string StartDate, string EndDate)
         {
             try
             {
-                DateTime fromDate = AppCommon.CurrentDate.Date.AddDays(-days);
+                var deals = new List<Deal>();
+                if (!string.IsNullOrEmpty(StartDate) && !string.IsNullOrEmpty(EndDate))
+                {
+                    if (DateTime.TryParse(StartDate, out DateTime startDate) &&
+                        DateTime.TryParse(EndDate, out DateTime endDate))
+                    {
+                        deals = unitOfWork.Deal.GetAll(d => d.IsActive && d.CreatedOn.Date >= startDate && d.CreatedOn.Date <= endDate).ToList();
+                    }
+                }
 
                 // Fetch deals
-                var deals = unitOfWork.Deal
-                    .GetAll(d => d.IsActive && d.CreatedOn.Date >= fromDate)
-                    .ToList();
+
 
                 // Fetch agents only once
                 var allAgents = unitOfWork.AgentMaster
@@ -642,7 +648,7 @@ namespace CFP.Provider.Provider
 
                 // ROOM MESSAGES (Unread)
                 var roomMessages = (
-                        from msg in unitOfWork.ChatMessage.GetAll(x => x.ChatRoomId != null 
+                        from msg in unitOfWork.ChatMessage.GetAll(x => x.ChatRoomId != null
                         && !x.IsAttachment && x.FromUserId != sessionProviderModel.UserId)
                         join member in unitOfWork.ChatRoomMember.GetAll(m => m.UserMasterId == sessionProviderModel.UserId)
                             on msg.ChatRoomId equals member.ChatRoomId
@@ -685,7 +691,7 @@ namespace CFP.Provider.Provider
             {
                 if (sessionProviderModel.RoleId == (int)Enumeration.Role.Super_Admin)
                 {
-                    var apps = unitOfWork.AppMaster.GetAll(x =>  x.IsActive).ToList();
+                    var apps = unitOfWork.AppMaster.GetAll(x => x.IsActive).ToList();
                     foreach (var item in apps)
                     {
                         agentApps.Add(new AppMasterModel

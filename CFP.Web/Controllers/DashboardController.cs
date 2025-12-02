@@ -7,6 +7,7 @@ using CFP.Web.Filter;
 using CFP.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Twilio.Types;
@@ -40,6 +41,8 @@ namespace CFP.Web.Controllers
                 DealCount = _commonProvider.GetDealCount(GetSessionProviderParameters()),
                 DealSummaryList = _commonProvider.GetDealSummary(),
                 IsLogin = TempData["IsLogin"] != null,
+                StartDate = new DateOnly(AppCommon.CurrentDate.Year, AppCommon.CurrentDate.Month, 1),
+                EndDate = DateOnly.FromDateTime(AppCommon.CurrentDate),
                 AgentList = GetAgentList()
             };
             if (appId != 0)
@@ -71,9 +74,9 @@ namespace CFP.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult FetchDealDataAllAgents(int days)
+        public JsonResult FetchDealDataAllAgents(string startDate,string endDate)
         {
-            return Json(_commonProvider.GetAgentDealDashboard(days));
+            return Json(_commonProvider.GetAgentDealDashboard(startDate, endDate));
         }
 
 

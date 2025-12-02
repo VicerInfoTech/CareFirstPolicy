@@ -109,13 +109,13 @@ namespace CFP.Provider.Provider
 
         public List<ChatMessageModel> GetMessages(int currentUserId, int targetUserId)
         {
+            DateTime cutoffDate = AppCommon.CurrentDate.AddDays(-90);
             var chatData = unitOfWork.ChatMessage
                 .GetAll(x =>
                     (x.FromUserId == currentUserId && x.ToUserId == targetUserId) ||
                     (x.FromUserId == targetUserId && x.ToUserId == currentUserId)
-                )
+                 && x.SentAt >= cutoffDate)
                 .OrderByDescending(x => x.ChatMessageId)
-                .Take(20)
                 .OrderBy(x => x.ChatMessageId)
                 .ToList();
 
@@ -374,7 +374,8 @@ namespace CFP.Provider.Provider
         public List<ChatMessageModel> GetRoomMessages(int roomId)
         {
             List<ChatMessageModel> chatMessages = new List<ChatMessageModel>();
-            var roomMessage = unitOfWork.ChatMessage.GetAll(x => x.ChatRoomId == roomId)
+            DateTime cutoffDate = DateTime.Now.AddDays(-90);
+            var roomMessage = unitOfWork.ChatMessage.GetAll(x => x.ChatRoomId == roomId && x.SentAt >= cutoffDate)
                 .OrderBy(x => x.SentAt).ToList();
             chatMessages = _mapper.Map<List<ChatMessageModel>>(roomMessage);
             foreach (var item in chatMessages)

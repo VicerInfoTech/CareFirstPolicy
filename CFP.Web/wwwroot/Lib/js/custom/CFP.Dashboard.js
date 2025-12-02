@@ -514,16 +514,17 @@
 
 
     this.LoadPortfolioChart = function () {
-        const days = parseInt($('#portfolioRange').val() || '7', 10);
-
+        var start_date = $('#startDate').val();
+        var end_date = $('#endDate').val();
         // show spinner / placeholder if you want
         $.ajax({
             type: 'POST',
             url: UrlContent('Dashboard/FetchDealDataAllAgents'),
-            data: { days: days },
+            data: { startDate: start_date, endDate: end_date },
             success: function (result) {
                 // result is array of AgentDealChartViewModel {AgentId, AgentName, DealCount}
-
+                $('#portfolioDonut').empty();
+                $('#portfolioTop5').empty();
                 // If no data
                 if (!result || !result.chartAgents || result.chartAgents.length === 0) {
                     CFP.Dashboard.RenderEmptyPortfolio();
