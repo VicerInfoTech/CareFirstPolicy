@@ -289,4 +289,24 @@
 
     }
 
+    this.DownloadDealData = function () {
+        $(".preloader").show();
+        let searchValue = $("#txtSearch").val();
+        $.ajax({
+            type: "POST",
+            url: UrlContent("Deal/DownloadDealData"),
+            data: {
+                searchValue: searchValue,
+            },
+            success: function (result) {
+                $(".preloader").hide();
+                if (result.isSuccess) {
+                    window.location = result.message;
+                } else {
+                    CFP.Agent.ToastrError(result.message)
+                }
+            }
+        })
+    }
+
 }

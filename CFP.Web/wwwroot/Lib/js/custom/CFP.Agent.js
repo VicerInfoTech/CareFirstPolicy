@@ -230,4 +230,24 @@ CFP.Agent = new function () {
             }
         })
     }
+
+    this.DownloadAgentData = function () {
+        $(".preloader").show();
+        let searchValue = $("#txtSearch").val();        
+        $.ajax({
+            type: "POST",
+            url: UrlContent("Agent/DownloadAgentData"),
+            data: {
+                searchValue: searchValue,
+            },
+            success: function (result) {
+                $(".preloader").hide();
+                if (result.isSuccess) {
+                    window.location = result.message;
+                } else {
+                    CFP.Agent.ToastrError(result.message)
+                }
+            }
+        })
+    }
 }

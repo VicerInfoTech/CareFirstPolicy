@@ -8,7 +8,10 @@ using CFP.Web.Models;
 using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text.Json;
 
 namespace CFP.Web.Controllers
@@ -199,5 +202,111 @@ namespace CFP.Web.Controllers
             }
             return Json(model);
         }
+
+        public JsonResult DownloadDealData(string searchValue)
+        {
+            ResponseModel response = new ResponseModel();
+            try
+            {
+                DatatablePageRequestModel model = new DatatablePageRequestModel
+                {
+                    StartIndex = 0,
+                    PageSize = int.MaxValue,
+                    SortColumnName = "DealIdString",
+                    SortDirection = "DESC",
+                    SearchText = searchValue,
+                };
+
+                var listData = _provider.GetDealList(model, GetSessionProviderParameters());
+                if (listData != null && listData.data.Count > 0)
+                {
+                    string fileName = "Deal_Details_" + Guid.NewGuid().ToString() + ".xlsx";
+                    string fullPath = Path.Combine(_webHostEnvironment.WebRootPath, "ExtraFiles", "Temp");
+
+                    if (!Directory.Exists(fullPath))
+                        Directory.CreateDirectory(fullPath);
+
+                    fullPath = Path.Combine(fullPath, fileName);
+
+                    if (System.IO.File.Exists(fullPath))
+                        System.IO.File.Delete(fullPath);
+
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                    using (ExcelPackage package = new ExcelPackage(new FileInfo(fullPath)))
+                    {
+                        var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+
+                        int index = 1;
+                        int k = 1;
+
+                        int indDealId = index++;
+                        int indFullName = index++;
+                        int indApplicantNo = index++;
+                        int indCareerName = index++;
+                        int indCloseDate = index++;
+                        int indAgentName = index++;
+                        int indCreatedOn = index++;
+                        int indCreatedBy = index++;
+
+                        // Header
+                        workSheet.Cells[k, indDealId].Value = "Deal #";
+                        workSheet.Cells[k, indFullName].Value = "Full Name";
+                        workSheet.Cells[k, indApplicantNo].Value = "# Applicants";
+                        workSheet.Cells[k, indCareerName].Value = "Career ";
+                        workSheet.Cells[k, indCloseDate].Value = "Close Date";
+                        workSheet.Cells[k, indAgentName].Value = "Agent ";
+                        workSheet.Cells[k, indCreatedOn].Value = "Created On";
+                        workSheet.Cells[k, indCreatedBy].Value = "Created By";
+
+                        workSheet.Cells[k, 1, k, indCreatedBy].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        workSheet.Cells[k, 1, k, indCreatedBy].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#666666"));
+                        workSheet.Cells[k, 1, k, indCreatedBy].Style.Font.Color.SetColor(Color.White);
+                        workSheet.Cells[k, 1, k, indCreatedBy].Style.Font.Bold = true;
+                        workSheet.Cells[k, 1, k, indCreatedBy].Style.Font.Size = 11;
+
+                        k++;
+
+                        foreach (var item in listData.data)
+                        {
+                            workSheet.Cells[k, indDealId].Value = item.DealIdString;
+                            workSheet.Cells[k, indFullName].Value = item.FullName;
+                            workSheet.Cells[k, indApplicantNo].Value = item.NoOfApplicants;
+                            workSheet.Cells[k, indCareerName].Value = item.CareerName;
+                            workSheet.Cells[k, indCloseDate].Value = item.CloseDateString;
+                            workSheet.Cells[k, indAgentName].Value = item.AgentName;
+                            workSheet.Cells[k, indCreatedOn].Value = item.CreatedOnString;
+                            workSheet.Cells[k, indCreatedBy].Value = item.CreatedByString;                        
+
+                            k++;
+                        }
+
+                        workSheet.Cells.AutoFitColumns();
+                        workSheet.Cells[1, 1, k - 1, indCreatedBy].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[1, 1, k - 1, indCreatedBy].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[1, 1, k - 1, indCreatedBy].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[1, 1, k - 1, indCreatedBy].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                        package.Save();
+                        response.IsSuccess = true;
+                        response.Message = Url.Content("~/ExtraFiles/Temp/" + fileName);
+                    }
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "No data available to download";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = AppCommon.ErrorMessage;
+                AppCommon.LogException(ex, "DealController=>DownloadDealData");
+            }
+
+            return Json(response);
+        }
+
     }
 }

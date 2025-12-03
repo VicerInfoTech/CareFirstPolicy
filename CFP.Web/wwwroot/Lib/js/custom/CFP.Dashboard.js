@@ -703,21 +703,21 @@
     this.SelectApp = function (appId) {
         $("#common-lg-dialogApp").modal('hide');
         
-        if (appId == 1) {
-            $(".appname").html('<i class="ri-shield-check-line"></i> <span>ACA</span>');                        
-        }
-        else if (appId == 2) {
-            $(".appname").html('<i class="ri-stethoscope-line"></i> <span>Medicare</span>');                        
-        }
-        else if (appId == 3) {
-            $(".appname").html('<i class="ri-money-dollar-circle-line"></i> <span>Taxation</span>');                        
-        }
-        else if (appId == 4) {
-            $(".appname").html('<i class="ri-rocket-line"></i> <span>Launch Pad</span>');                        
-        }
+        //if (appId == 1) {
+        //    $(".appname").html('<i class="ri-shield-check-line"></i> <span>ACA</span>');                        
+        //}
+        //else if (appId == 2) {
+        //    $(".appname").html('<i class="ri-stethoscope-line"></i> <span>Medicare</span>');                        
+        //}
+        //else if (appId == 3) {
+        //    $(".appname").html('<i class="ri-money-dollar-circle-line"></i> <span>Taxation</span>');                        
+        //}
+        //else if (appId == 4) {
+        //    $(".appname").html('<i class="ri-rocket-line"></i> <span>Launch Pad</span>');                        
+        //}
 
         // Redirect directly with appId
-        window.top.location.href = '/Dashboard/Index?appId=' + appId;
+        window.top.location.href = '/Dashboard/UpdateAppId?appId=' + appId;
     }
 
 }

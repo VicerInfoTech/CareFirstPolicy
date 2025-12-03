@@ -30,7 +30,7 @@ namespace CFP.Web.Controllers
         #endregion
 
         #region Methods
-        public IActionResult Index(int appId=0)
+        public IActionResult Index()
         {
             ViewBag.IsAuthenticated = User.Identity.IsAuthenticated;
             DashboardViewModel model = new DashboardViewModel()
@@ -45,8 +45,6 @@ namespace CFP.Web.Controllers
                 EndDate = DateOnly.FromDateTime(AppCommon.CurrentDate),
                 AgentList = GetAgentList()
             };
-            if (appId != 0)
-                _sessionManager.AppId = appId;
             return View(model);
         }
         public JsonResult SaveTempFilter(string KitId, string PatientId)
@@ -74,7 +72,7 @@ namespace CFP.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult FetchDealDataAllAgents(string startDate,string endDate)
+        public JsonResult FetchDealDataAllAgents(string startDate, string endDate)
         {
             return Json(_commonProvider.GetAgentDealDashboard(startDate, endDate));
         }
@@ -87,7 +85,12 @@ namespace CFP.Web.Controllers
 
             return PartialView("_SelectAppPartial", viewModel);
         }
-
+        public IActionResult UpdateAppId(int appId = 0)
+        {
+            if (appId != 0)
+                _sessionManager.AppId = appId;
+            return RedirectToAction("Index", "Dashboard");
+        }
 
         #endregion
     }

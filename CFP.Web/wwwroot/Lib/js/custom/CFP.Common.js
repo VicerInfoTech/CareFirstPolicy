@@ -260,7 +260,7 @@ CFP.Common = new function () {
                     autoWidth: true,
                     className: "col-1",
                     render: function (data, type, row, meta) {
-                        return data ? "Multimedia" : "Text";
+                        return data ? "Media" : "Text";
                     }
                 }
             ],
@@ -272,4 +272,51 @@ CFP.Common = new function () {
     this.ChatSearch = function () {
         CFP.Common.Option.Table.ajax.reload();
     }
+
+
+    this.DownloadChatHistData = function () {
+        $(".preloader").show();
+
+        let searchValue = $("#txtSearch").val();
+        let chatTypeValue = $("#chatTypeId").val();
+        let fromValue = $("#fromUserId").val();
+        let startDate = $("#startDate").val();
+        let endDate = $("#endDate").val();
+
+        let toUserValue = 0;
+        let roomIdValue = 0;
+        let msgTypeValue = 0;
+
+        if (chatTypeValue == "1") {
+            toUserValue = $("#toUserid").val();
+        } else {
+            roomIdValue = $("#roomid").val();
+            msgTypeValue = $("#msgTypeId").val();
+        }
+
+        $.ajax({
+            type: "POST",
+            url: UrlContent("Common/DownloadChatHistData"),
+            data: {
+                searchValue: searchValue,
+                chatTypeValue: chatTypeValue,
+                fromValue: fromValue,
+                startDate: startDate,
+                endDate: endDate,
+                toUserValue: toUserValue,
+                roomIdValue: roomIdValue,
+                msgTypeValue: msgTypeValue,
+            },
+            success: function (result) {
+                $(".preloader").hide();
+
+                if (result.isSuccess) {
+                    window.location = result.message; // download
+                } else {
+                    CFP.Agent.ToastrError(result.message);
+                }
+            }
+        });
+    }
+
 }
