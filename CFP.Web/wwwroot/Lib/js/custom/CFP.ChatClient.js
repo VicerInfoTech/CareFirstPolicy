@@ -15,18 +15,29 @@
             .withUrl("/chathub", {
                 withCredentials: true
             })
-            .withAutomaticReconnect()
+            .withAutomaticReconnect([0, 2000, 5000, 10000])
             .build();
 
 
         // Receive message
         connection.on("ReceiveMessage", function (msg) {
+            debugger;
+            if (msg.isOwnMessage) {
+                CFP.ChatClient.AppendMessageToChat(msg);
+                CFP.ChatClient.ScrollBottom();
+                return;
+            }
 
             if (selectedUserId && selectedUserId === msg.fromUserId) {
                 CFP.ChatClient.AppendMessageToChat(msg);
                 setTimeout(CFP.ChatClient.ScrollBottom, 50);
 
-                $.get("/Chat/MarkMessagesRead", { targetUserId: msg.fromUserId });
+                debugger;
+                //  $.get("/Chat/MarkMessagesRead", { targetUserId: msg.fromUserId });
+                // CFP.ChatClient.MarkMessageAsReadInUI(msg.messageId);
+                connection.invoke("MarkMessagesRead", msg.fromUserId);
+
+
 
                 CFP.ChatClient.RemoveUnreadBadge(msg.fromUserId);
             }
@@ -73,6 +84,16 @@
 
         });
 
+        connection.on("UpdateMarkMessage", function (msg) {
+            debugger;
+
+            // msg.FromUserId => The user who read the messages
+            // msg.MessageId = -1 => mark all as read
+
+            CFP.ChatClient.MarkMessageAsReadInUI(msg.messageId);
+        });
+
+
         connection.on("ForceLogout", () => {
             console.log("Your session has expired. Logging out...");
             window.location.href = "/Account/Logout";
@@ -110,78 +131,145 @@
         row.find("small.text-muted").first().text(new Date(msg.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }));
     }
 
+    //this.LoadUserList = function () {
+    //    var roomIdFromHidden = $("#hfOpenRoomId").val();
+    //    $.get("/Chat/GetChatUsers", function (users) {
+
+    //        let html = "";
+
+    //        users.forEach((u, index) => {
+    //            html += `
+				//			<li class="chat-user-item" id="private${u.userId}" onclick="CFP.ChatClient.OpenChat(${u.userId}, '${u.userName}', ${u.isOnline},'${u.lastSeen}')">
+				//		<a class="d-flex align-items-center" href="javascript:void(0)">
+
+				//			 <!-- Theme Avatar + Status -->
+				//	<div class="chat-user-img me-2 ${u.isOnline ? "online" : ""}">
+				//			<img src="/assets/images/users/user-dummy-img.jpg"
+				//				 class="rounded-circle avatar-xs" />
+				//			<span class="user-status"></span>
+				//		</div>
+
+				//		<div class="flex-grow-1">
+				//			<h6 class="mb-0">${u.userName}</h6>
+				//		</div>
+
+				//		<div class="ms-auto">
+				//			${u.unreadCount > 0
+    //                    ? `<span class="badge bg-dark-subtle text-body rounded p-1 unread-badge">${u.unreadCount}</span>`
+    //                    : ``
+    //                }
+				//		</div>
+
+				//		</a>
+				//	</li>`;
+    //            debugger;
+    //            var userIdFromHidden = $("#hfOpenUserId").val();
+    //            if (!roomIdFromHidden) {
+
+    //                if (!userIdFromHidden && index === 0) {
+    //                    selectedUserId = u.userId;
+    //                    $(".username").text(u.userName);
+
+    //                    if (u.isOnline) {
+    //                        $(".user-own-img").addClass("online");
+    //                        $(".member-count").text("Online");   // Show Online in member-count
+    //                    } else {
+    //                        $(".user-own-img").removeClass("online");
+    //                        $(".member-count").text(formatLastSeen(u.lastSeen));  // Show Offline
+    //                    }
+    //                }
+    //                else if (userIdFromHidden && u.userId == userIdFromHidden) {
+    //                    selectedUserId = userIdFromHidden;
+    //                    $(".username").text(u.userName);
+
+    //                    if (u.isOnline) {
+    //                        $(".user-own-img").addClass("online");
+    //                        $(".member-count").text("Online");   // Show Online in member-count
+    //                    } else {
+    //                        $(".user-own-img").removeClass("online");
+    //                        $(".member-count").text(formatLastSeen(u.lastSeen));  // Show Offline
+    //                    }
+    //                }
+    //            }
+    //        });
+
+    //        $("#chatUserList").html(html);
+    //        if (!roomIdFromHidden) {
+    //            $("#private" + selectedUserId).addClass("active");
+    //            // If there is at least one user, load their messages
+    //            if (users.length > 0) {
+    //                CFP.ChatClient.LoadMessages();
+    //            }
+    //        }
+    //    });
+    //}
+
+
     this.LoadUserList = function () {
+
         var roomIdFromHidden = $("#hfOpenRoomId").val();
+        var userIdFromHidden = $("#hfOpenUserId").val();
+
         $.get("/Chat/GetChatUsers", function (users) {
 
             let html = "";
 
-            users.forEach((u, index) => {
+            users.forEach((u) => {
                 html += `
-							<li class="chat-user-item" id="private${u.userId}" onclick="CFP.ChatClient.OpenChat(${u.userId}, '${u.userName}', ${u.isOnline},'${u.lastSeen}')">
-						<a class="d-flex align-items-center" href="javascript:void(0)">
+                <li class="chat-user-item" id="private${u.userId}" 
+                     onclick="CFP.ChatClient.OpenChat(${u.userId}, '${u.userName}', ${u.isOnline}, '${u.lastSeen}')">
+                    <a class="d-flex align-items-center" href="javascript:void(0)">
+                        <div class="chat-user-img me-2 ${u.isOnline ? "online" : ""}">
+                            <img src="/assets/images/users/user-dummy-img.jpg"
+                                 class="rounded-circle avatar-xs" />
+                            <span class="user-status"></span>
+                        </div>
 
-							 <!-- Theme Avatar + Status -->
-					<div class="chat-user-img me-2 ${u.isOnline ? "online" : ""}">
-							<img src="/assets/images/users/user-dummy-img.jpg"
-								 class="rounded-circle avatar-xs" />
-							<span class="user-status"></span>
-						</div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">${u.userName}</h6>
+                        </div>
 
-						<div class="flex-grow-1">
-							<h6 class="mb-0">${u.userName}</h6>
-						</div>
-
-						<div class="ms-auto">
-							${u.unreadCount > 0
+                        <div class="ms-auto">
+                            ${u.unreadCount > 0
                         ? `<span class="badge bg-dark-subtle text-body rounded p-1 unread-badge">${u.unreadCount}</span>`
-                        : ``
-                    }
-						</div>
-
-						</a>
-					</li>`;
-                debugger;
-                var userIdFromHidden = $("#hfOpenUserId").val();
-                if (!roomIdFromHidden) {
-
-                    if (!userIdFromHidden && index === 0) {
-                        selectedUserId = u.userId;
-                        $(".username").text(u.userName);
-
-                        if (u.isOnline) {
-                            $(".user-own-img").addClass("online");
-                            $(".member-count").text("Online");   // Show Online in member-count                        
-                        } else {
-                            $(".user-own-img").removeClass("online");
-                            $(".member-count").text(formatLastSeen(u.lastSeen));  // Show Offline
-                        }
-                    }
-                    else if (userIdFromHidden && u.userId == userIdFromHidden) {
-                        selectedUserId = userIdFromHidden;
-                        $(".username").text(u.userName);
-
-                        if (u.isOnline) {
-                            $(".user-own-img").addClass("online");
-                            $(".member-count").text("Online");   // Show Online in member-count                        
-                        } else {
-                            $(".user-own-img").removeClass("online");
-                            $(".member-count").text(formatLastSeen(u.lastSeen));  // Show Offline
-                        }
-                    }
-                }
+                        : ``}
+                        </div>
+                    </a>
+                </li>`;
             });
 
             $("#chatUserList").html(html);
+
+            // ----------------------------
+            // Decide which chat to open
+            // ----------------------------
+
+            let selectedUserId;
+
+            // 1️⃣ If hfOpenUserId exists, use it
+            if (userIdFromHidden) {
+                selectedUserId = parseInt(userIdFromHidden);
+            }
+            // 2️⃣ Else, use first user
+            else if (users.length > 0) {
+                selectedUserId = users[0].userId;
+            }
+
+            // Apply active highlight
+            $("#private" + selectedUserId).addClass("active");
+
+            // Load messages only when roomIdFromHidden is not present
             if (!roomIdFromHidden) {
-                $("#private" + selectedUserId).addClass("active");
-                // If there is at least one user, load their messages
-                if (users.length > 0) {
-                    CFP.ChatClient.LoadMessages();
-                }
+                CFP.ChatClient.OpenChat(
+                    selectedUserId,
+                    users.find(x => x.userId == selectedUserId).userName,
+                    users.find(x => x.userId == selectedUserId).isOnline,
+                    users.find(x => x.userId == selectedUserId).lastSeen
+                );
             }
         });
-    }
+    };
+
 
     this.OpenChat = function (userId, name, isOnline, lastSeen) {
         debugger;
@@ -207,6 +295,8 @@
         $(".attachment-container").hide();
         $(".chat-header-actions").html("");
         CFP.ChatClient.RefreshNotification();
+      //  connection.invoke("MarkMessagesRead", userId);
+       // CFP.ChatClient.MarkMessageAsReadInUI(-1);
     }
 
 
@@ -221,6 +311,8 @@
 
             setTimeout(CFP.ChatClient.ScrollBottom, 100);
             CFP.ChatClient.RemoveUnreadBadge(selectedUserId);
+
+            connection.invoke("MarkMessagesRead", selectedUserId);
         });
     }
 
@@ -264,7 +356,7 @@
         let statusIcon = "";
         if (currentChatType === "private") {
             // Using single quotes inside template for clarity
-            statusIcon = `<i class="ri-check-double-line ${msg.isRead ? "text-primary" : ""}"></i>`;
+            statusIcon = `<i class="ri-check-double-line ${msg.isRead ? "text-success" : ""}"></i>`;
         }
         if (msg.isOwnMessage) {
             html = `
@@ -275,7 +367,7 @@
 							<div class="ctext-wrap-content">${contentHtml}</div>
 						</div>
 						<small class="text-muted">${dateLabel}, ${time}</small>
-                          <span class="msg-status">${statusIcon}</span>
+                          <span class="msg-status" data-id="${msg.messageId}">${statusIcon}</span>
 					</div>
 				</div>
 			</li>`;
@@ -313,14 +405,14 @@
             let text = $("#chatInput").val().trim();
             if (!text || !selectedUserId) return;
 
-            CFP.ChatClient.AppendMessageToChat({
-                fromUserId: currentUserId,
-                toUserId: selectedUserId,
-                message: text,
-                sentAt: new Date(new Date().toLocaleString("en-US", CFP.Common.TimeZoneOptions)),
-                isOwnMessage: true,
-                isRead:false,
-            });
+            //CFP.ChatClient.AppendMessageToChat({
+            //    fromUserId: currentUserId,
+            //    toUserId: selectedUserId,
+            //    message: text,
+            //    sentAt: new Date(new Date().toLocaleString("en-US", CFP.Common.TimeZoneOptions)),
+            //    isOwnMessage: true,
+            //    isRead:false,
+            //});
 
             CFP.ChatClient.ScrollBottom();
             connection.invoke("SendMessage", selectedUserId, text);
@@ -944,6 +1036,19 @@
     this.UpdateRoomVisit = function (roomId) {
         $.post("/Chat/UpdateRoomVisit", { roomId: roomId });
     }
+
+    this.MarkMessageAsReadInUI = function (messageId) {
+        debugger;
+
+        if (messageId === -1) {
+            // Mark ALL messages in current chat window as read
+            $('.msg-status i').addClass("text-success");
+            return;
+        }
+
+        // Mark only one message as read
+        $(`.msg-status[data-id="${messageId}"] i`).addClass("text-success");
+    };
 
 
     window.addEventListener("beforeunload", function () {

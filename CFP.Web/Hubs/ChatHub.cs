@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using OfficeOpenXml.FormulaParsing.Utilities;
+using Twilio.TwiML.Messaging;
 
 namespace CFP.Web.Hubs
 {
@@ -123,7 +124,8 @@ namespace CFP.Web.Hubs
                 Message = message,
                 SentAt = AppCommon.CurrentDate,
                 isOwnMessage = true,
-                response.SenderName
+                response.SenderName,
+                IsRead=false,
             });
 
             // Send to receiver if connected
@@ -185,6 +187,28 @@ namespace CFP.Web.Hubs
                 }
             }
         }
+
+
+        public async Task MarkMessagesRead(int targetUserId)
+        {
+            var currentUserId = _sessionManager.UserId; // RECEIVER is calling this
+
+            // 1. Update DB
+            _chatProvider.MarkMessagesRead(currentUserId, targetUserId);
+
+            // 2. Notify sender in real time
+            var senderConnectionId = _chatProvider.GetConnectionId(targetUserId);
+
+            if (!string.IsNullOrEmpty(senderConnectionId))
+            {
+                await Clients.Client(senderConnectionId).SendAsync("UpdateMarkMessage", new
+                {
+                    FromUserId = currentUserId,
+                    MessageId = -1  // indicate "all messages"
+                });
+            }
+        }
+
 
     }
 }
