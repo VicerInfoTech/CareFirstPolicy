@@ -720,4 +720,23 @@
         window.top.location.href = '/Dashboard/UpdateAppId?appId=' + appId;
     }
 
+    this.DownloadDealSummaryData = function () {
+        $(".preloader").show();
+
+      
+        $.ajax({
+            type: "POST",
+            url: UrlContent("Dashboard/DownloadDealSummaryData"),          
+            success: function (result) {
+                $(".preloader").hide();
+
+                if (result.isSuccess) {
+                    window.location = result.message; // download
+                } else {
+                    CFP.Common.ToastrError(result.message);
+                }
+            }
+        });
+    }
+
 }

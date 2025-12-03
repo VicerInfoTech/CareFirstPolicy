@@ -118,14 +118,18 @@ namespace CFP.Web.Controllers
                         int indFName = index++;
                         int indLName = index++;
                         int indEmail = index++;
-                        int indRole = index++;
+                        int indPhone = index++;
+                        int indDesignation = index++;
+                        int indUserAccess = index++;
                         int indStatus = index++;
 
                         // Header
                         workSheet.Cells[k, indFName].Value = "First Name";
                         workSheet.Cells[k, indLName].Value = "Last Name";
                         workSheet.Cells[k, indEmail].Value = "Email";
-                        workSheet.Cells[k, indRole].Value = "Role";
+                        workSheet.Cells[k, indPhone].Value = "Phone";
+                        workSheet.Cells[k, indDesignation].Value = "Designation";
+                        workSheet.Cells[k, indUserAccess].Value = "Access";
                         workSheet.Cells[k, indStatus].Value = "Status";
 
                         workSheet.Cells[k, 1, k, indStatus].Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -141,7 +145,9 @@ namespace CFP.Web.Controllers
                             workSheet.Cells[k, indFName].Value = item.FirstName;
                             workSheet.Cells[k, indLName].Value = item.LastName;
                             workSheet.Cells[k, indEmail].Value = item.Email;
-                            workSheet.Cells[k, indRole].Value = item.RoleName;
+                            workSheet.Cells[k, indPhone].Value = item.ContactNumber!=null? item.ContactNumber:"";
+                            workSheet.Cells[k, indDesignation].Value = item.Designation!=null?item.Designation:"";
+                            workSheet.Cells[k, indUserAccess].Value = item.UserAccess==(int)Enumeration.UserAccess.FullAccess?"Full Access":"Training";
 
                             var cell = workSheet.Cells[k, indStatus];
                             cell.Value = item.IsActive ? "Active" : "InActive";

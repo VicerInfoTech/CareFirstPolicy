@@ -48,7 +48,11 @@ namespace CFP.Provider.Provider
                         UserMasterId = x.UserMasterId,
                         EncId = _commonProvider.Protect(x.AgentMasterId),
                         AgentMasterId = x.AgentMasterId,
-                        RoleName = AppCommon.GetEnumDisplayName((Enumeration.Role)x.UserMaster.RoleId)
+                        RoleName = AppCommon.GetEnumDisplayName((Enumeration.Role)x.UserMaster.RoleId),
+                        ContactNumber=x.ContactNumber,
+                        Designation=x.Designation,
+                        UserAccess=x.UserMaster.UserAccess,
+
                     }).OrderBy(x => x.FirstName).ToList();
 
                 list.recordsTotal = dataList.Count();

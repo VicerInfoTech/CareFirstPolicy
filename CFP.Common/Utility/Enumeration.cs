@@ -90,5 +90,25 @@ namespace CFP.Common.Utility
             FullAccess=1,
             Training=2,
         }
+        public enum CoverageType
+        {
+            DENTAL=1,
+            VISION=2,
+            MEDICAL=3,
+        }
+        public enum DocNeeded
+        {
+            SS=1,
+            INCOME=2,
+            CITIZENSHIP=3,
+            IMMIGRATION=4,
+            NONE=5,
+        }
+        public enum SocialProvided
+        {
+            YES=1,
+            NO=2,
+            PARTIAL=3,
+        }
     }
 }

@@ -1,14 +1,19 @@
 using AspNetCoreGeneratedDocument;
+using CFP.Common.Common_Entities;
 using CFP.Common.Utility;
 using CFP.Patient.Controllers;
 using CFP.Provider.IProvider;
 using CFP.Provider.Provider;
 using CFP.Web.Filter;
 using CFP.Web.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
+using OfficeOpenXml.Style;
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using Twilio.Types;
 
@@ -20,12 +25,14 @@ namespace CFP.Web.Controllers
 
         #region Variables
         IUserMasterProvider _userProvider;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         #endregion
 
         #region Constructor
-        public DashboardController(ICommonProvider commonProvider, ISessionManager sessionManager, IUserMasterProvider userProvider) : base(commonProvider, sessionManager)
+        public DashboardController(ICommonProvider commonProvider, ISessionManager sessionManager, IUserMasterProvider userProvider, IWebHostEnvironment webHostEnvironment) : base(commonProvider, sessionManager)
         {
             _userProvider = userProvider;
+           _webHostEnvironment = webHostEnvironment;
         }
         #endregion
 
@@ -91,6 +98,148 @@ namespace CFP.Web.Controllers
                 _sessionManager.AppId = appId;
             return RedirectToAction("Index", "Dashboard");
         }
+
+
+        public JsonResult DownloadDealSummaryData()
+        {
+            ResponseModel response = new ResponseModel();
+
+            try
+            {
+                var listData = _commonProvider.GetDealSummary();
+
+                if (listData == null || listData.Count == 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "No data available to download";
+                    return Json(response);
+                }
+
+                string fileName = "Deal_Summary_" + Guid.NewGuid() + ".xlsx";
+                string fullPath = Path.Combine(_webHostEnvironment.WebRootPath, "ExtraFiles", "Temp");
+
+                if (!Directory.Exists(fullPath))
+                    Directory.CreateDirectory(fullPath);
+
+                fullPath = Path.Combine(fullPath, fileName);
+
+                if (System.IO.File.Exists(fullPath))
+                    System.IO.File.Delete(fullPath);
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                using (ExcelPackage package = new ExcelPackage(new FileInfo(fullPath)))
+                {
+                    var ws = package.Workbook.Worksheets.Add("Deal Summary");
+
+                    int row = 1;
+                    int col = 1;
+
+                    // -----------------------------
+                    // HEADER ROW 1 (Dates merged)
+                    // -----------------------------
+                    ws.Cells[row, col].Value = "Agent Name";
+                    ws.Cells[row, col, row + 1, col].Merge = true; // merge for two rows
+                    ws.Cells[row, col].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    ws.Cells[row, col].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                    col++;
+
+                    var firstAgentCounts = listData.First().Counts;
+
+                    foreach (var day in firstAgentCounts)
+                    {
+                        // Merge 2 columns for each date
+                        ws.Cells[row, col, row, col + 1].Merge = true;
+                        ws.Cells[row, col].Value = day.Date.ToString("dd-MMM-yyyy");
+                        ws.Cells[row, col].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        ws.Cells[row, col].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                        col += 2;
+                    }
+
+                    // -----------------------------
+                    // HEADER ROW 2 (Forms / Deals)
+                    // -----------------------------
+                    row++;
+                    col = 2; // start after Agent Name
+
+                    foreach (var day in firstAgentCounts)
+                    {
+                        ws.Cells[row, col].Value = "Forms";
+                        ws.Cells[row, col + 1].Value = "Deals";
+
+                        ws.Cells[row, col].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        ws.Cells[row, col + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                        col += 2;
+                    }
+
+                    // -----------------------------
+                    // Apply header styling
+                    // -----------------------------
+                    using (var rng = ws.Cells[1, 1, 2, col - 1])
+                    {
+                        rng.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        rng.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(240, 240, 240));
+                        rng.Style.Font.Bold = true;
+                        rng.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    }
+
+                    // -----------------------------
+                    // BODY ROWS
+                    // -----------------------------
+                    row++;
+                    foreach (var agent in listData.OrderBy(x => x.AgentName))
+                    {
+                        col = 1;
+
+                        ws.Cells[row, col].Value = agent.AgentName;
+                        col++;
+
+                        foreach (var c in agent.Counts)
+                        {
+                            ws.Cells[row, col].Value = c.DealCount > 0 ? c.DealCount : (object)"";
+                            ws.Cells[row, col + 1].Value = c.ApplicantCount > 0 ? c.ApplicantCount : (object)"";
+
+                            ws.Cells[row, col].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                            ws.Cells[row, col + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                            col += 2;
+                        }
+
+                        row++;
+                    }
+
+                    // -----------------------------
+                    // Borders
+                    // -----------------------------
+                    using (var rng = ws.Cells[1, 1, row - 1, col - 1])
+                    {
+                        rng.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        rng.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        rng.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        rng.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    }
+
+                    ws.Cells.AutoFitColumns();
+                    package.Save();
+                }
+
+                response.IsSuccess = true;
+                response.Message = Url.Content("~/ExtraFiles/Temp/" + fileName);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Error occurred while generating file";
+                AppCommon.LogException(ex, "DownloadDealSummaryData");
+            }
+
+            return Json(response);
+        }
+
+
 
         #endregion
     }

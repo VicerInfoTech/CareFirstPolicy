@@ -245,7 +245,7 @@ CFP.Agent = new function () {
                 if (result.isSuccess) {
                     window.location = result.message;
                 } else {
-                    CFP.Agent.ToastrError(result.message)
+                    CFP.Common.ToastrError(result.message)
                 }
             }
         })

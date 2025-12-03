@@ -313,7 +313,7 @@ CFP.Common = new function () {
                 if (result.isSuccess) {
                     window.location = result.message; // download
                 } else {
-                    CFP.Agent.ToastrError(result.message);
+                    CFP.Common.ToastrError(result.message);
                 }
             }
         });

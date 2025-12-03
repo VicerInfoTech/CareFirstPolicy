@@ -13,6 +13,7 @@ using OfficeOpenXml.Style;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text.Json;
+using static CFP.Common.Utility.Enumeration;
 
 namespace CFP.Web.Controllers
 {
@@ -242,20 +243,36 @@ namespace CFP.Web.Controllers
 
                         int indDealId = index++;
                         int indFullName = index++;
+                        int indCoverage = index++;
                         int indApplicantNo = index++;
+                        int indFfm = index++;
                         int indCareerName = index++;
+                        int indWorkType = index++;
+                        int indMonthIncome = index++;
+                        int indNeedDoc = index++;
+                        int indSocialProvided = index++;
+                        int indCustLang = index++;
                         int indCloseDate = index++;
                         int indAgentName = index++;
+                        int indNotes = index++;
                         int indCreatedOn = index++;
                         int indCreatedBy = index++;
 
                         // Header
                         workSheet.Cells[k, indDealId].Value = "Deal #";
                         workSheet.Cells[k, indFullName].Value = "Full Name";
+                        workSheet.Cells[k, indCoverage].Value = "Coverage";
                         workSheet.Cells[k, indApplicantNo].Value = "# Applicants";
+                        workSheet.Cells[k, indFfm].Value = "FFM";
                         workSheet.Cells[k, indCareerName].Value = "Career ";
+                        workSheet.Cells[k, indWorkType].Value = "Work Type ";
+                        workSheet.Cells[k, indMonthIncome].Value = "Monthly Income ";
+                        workSheet.Cells[k, indNeedDoc].Value = "Documents Needed";
+                        workSheet.Cells[k, indSocialProvided].Value = "Social Provided";
+                        workSheet.Cells[k, indCustLang].Value = "Customer Language";
                         workSheet.Cells[k, indCloseDate].Value = "Close Date";
                         workSheet.Cells[k, indAgentName].Value = "Agent ";
+                        workSheet.Cells[k, indNotes].Value = "Notes ";
                         workSheet.Cells[k, indCreatedOn].Value = "Created On";
                         workSheet.Cells[k, indCreatedBy].Value = "Created By";
 
@@ -271,12 +288,31 @@ namespace CFP.Web.Controllers
                         {
                             workSheet.Cells[k, indDealId].Value = item.DealIdString;
                             workSheet.Cells[k, indFullName].Value = item.FullName;
+                            workSheet.Cells[k, indCoverage].Value = string.Join(", ",
+                                                                      (item.TypeOfCoverages ?? Array.Empty<string>())
+                                                                          .Select(x =>
+                                                                          {
+                                                                              if (int.TryParse(x, out int val))
+                                                                              {
+                                                                                  return AppCommon.GetEnumDisplayName((Enumeration.CoverageType)val);
+                                                                              }
+                                                                              return "";
+                                                                          })
+                                                                          .Where(v => !string.IsNullOrEmpty(v)));
+
                             workSheet.Cells[k, indApplicantNo].Value = item.NoOfApplicants;
-                            workSheet.Cells[k, indCareerName].Value = item.CareerName;
+                            workSheet.Cells[k, indFfm].Value = item.Ffm;
+                            workSheet.Cells[k, indCareerName].Value =AppCommon.GetEnumDisplayName((Career)item.Career);
+                            workSheet.Cells[k, indWorkType].Value = item.TypeOfWork==1?"Full Time":"Part Time";
+                            workSheet.Cells[k, indMonthIncome].Value = item.MonthlyIncome;
+                            workSheet.Cells[k, indNeedDoc].Value = AppCommon.GetEnumDisplayName((DocNeeded)item.DocNeeded);
+                            workSheet.Cells[k, indSocialProvided].Value =AppCommon.GetEnumDisplayName((SocialProvided)item.SocialProvided);
+                            workSheet.Cells[k, indCustLang].Value = item.CustomerLanguage==1?"English": "Spanish";
                             workSheet.Cells[k, indCloseDate].Value = item.CloseDateString;
                             workSheet.Cells[k, indAgentName].Value = item.AgentName;
+                            workSheet.Cells[k, indNotes].Value = item.Notes;
                             workSheet.Cells[k, indCreatedOn].Value = item.CreatedOnString;
-                            workSheet.Cells[k, indCreatedBy].Value = item.CreatedByString;                        
+                            workSheet.Cells[k, indCreatedBy].Value = item.CreatedByString;
 
                             k++;
                         }
