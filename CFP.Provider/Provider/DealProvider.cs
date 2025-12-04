@@ -79,7 +79,7 @@ namespace CFP.Provider.Provider
                         IsShowDelBtn = sessionProviderModel.RoleId == (int)Enumeration.Role.Super_Admin,
 
                     }).OrderByDescending(x => x.DealId).ToList();
-                if (sessionProviderModel.RoleId != (int)Enumeration.Role.Super_Admin)
+                if (sessionProviderModel.RoleId == (int)Enumeration.Role.Agent)
                 {
                     dataList = dataList.Where(x => x.AgentId == sessionProviderModel.AgentId).ToList();
                 }
