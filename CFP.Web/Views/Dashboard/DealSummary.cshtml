@@ -1,0 +1,43 @@
+﻿@model DashboardViewModel
+
+<div class="table-responsive table-card">
+    <table class="table table-nowrap table-centered table-bordered align-middle">
+        <thead class="bg-light text-muted">
+            <tr>
+                <th scope="col" rowspan="2" style="vertical-align:middle;">Agent Name</th>
+                @if (Model.DealSummaryList.Any())
+                {
+                    foreach (var day in Model.DealSummaryList.First().Counts)
+                    {
+                        <th colspan="2" class="col-xl-2 text-center">@day.Date.ToString("dd-MMM-yyyy")</th>
+                    }
+                }
+            </tr><!-- end tr -->
+            <tr>
+                @if (Model.DealSummaryList.Any())
+                {
+                    foreach (var day in Model.DealSummaryList.First().Counts)
+                    {
+                        <th class="text-center">Forms</th>
+                        <th class="text-center">Deals</th>
+                    }
+                }
+            </tr>
+        </thead><!-- thead -->
+
+        <tbody>
+            @foreach (var agent in Model.DealSummaryList.OrderBy(x => x.AgentName))
+            {
+                <tr>
+                    <td class="text-left">@agent.AgentName</td>
+                    @foreach (var count in agent.Counts)
+                    {
+                        <td class="text-center">@(count.DealCount > 0 ? count.DealCount : "")</td>
+                        <td class="text-center">@(count.ApplicantCount > 0 ? count.ApplicantCount : "")</td>
+                    }
+                </tr>
+            }
+
+        </tbody><!-- end tbody -->
+    </table><!-- end table -->
+</div>

@@ -38,7 +38,10 @@ namespace CFP.Web.Controllers
         #endregion
         public IActionResult Index()
         {
-            return View();
+            DashboardViewModel viewModel = new DashboardViewModel();
+           viewModel.StartDate = new DateOnly(AppCommon.CurrentDate.Year, AppCommon.CurrentDate.Month, 1);
+            viewModel.EndDate = DateOnly.FromDateTime(AppCommon.CurrentDate);
+            return View(viewModel);
         }
 
         public JsonResult GetList()
@@ -204,7 +207,7 @@ namespace CFP.Web.Controllers
             return Json(model);
         }
 
-        public JsonResult DownloadDealData(string searchValue)
+        public JsonResult DownloadDealData(string searchValue,string startDate, string endDate)
         {
             ResponseModel response = new ResponseModel();
             try
@@ -216,6 +219,8 @@ namespace CFP.Web.Controllers
                     SortColumnName = "DealIdString",
                     SortDirection = "DESC",
                     SearchText = searchValue,
+                    StartDate= AppCommon.ConvertToDate(startDate),
+                    EndDate= AppCommon.ConvertToDate(endDate)
                 };
 
                 var listData = _provider.GetDealList(model, GetSessionProviderParameters());

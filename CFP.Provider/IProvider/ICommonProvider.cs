@@ -26,7 +26,7 @@ namespace CFP.Provider.IProvider
         #region Other Methods
         List<MenuModel> GetMenuList(SessionProviderModel sessionProviderModel);
         List<DropDownModel> GetAgentList();
-        List<DropDownModel> GetLeaderBoard();
+        List<DropDownModel> GetLeaderBoard(string startDate);
         int GetDealCount(SessionProviderModel sessionProviderModel);
         bool IsAuthorized(int roleId, int menuId,int userAccess);
         List<DropDownModel> GetUserList();
@@ -34,7 +34,7 @@ namespace CFP.Provider.IProvider
         List<AppMasterModel> GetAppsList();
         List<DealChartPoint> GetDealDataForChart(int agentId);
         AgentDealDashboardViewModel GetAgentDealDashboard(string startDate, string endDate);
-        List<DealSummaryModel> GetDealSummary();
+        List<DealSummaryModel> GetDealSummary(string startDate, string endDate);
         DatatablePageResponseModel<ChatMessageModel> GetChatHistoryList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel);
         List<NotificationDto> GetNotification(SessionProviderModel sessionProviderModel);
         List<AppMasterModel> GetAgentAppList(SessionProviderModel sessionProviderModel);

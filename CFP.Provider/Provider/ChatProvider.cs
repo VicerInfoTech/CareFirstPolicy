@@ -137,7 +137,7 @@ namespace CFP.Provider.Provider
             {
 
 
-                var users = unitOfWork.UserMaster.GetAll(u => u.UserMasterId != userId).ToList();
+                var users = unitOfWork.UserMaster.GetAll(u => u.UserMasterId != userId && u.IsActive).ToList();
 
                 var messages = unitOfWork.ChatMessage.GetAll(m => m.FromUserId == userId || m.ToUserId == userId).ToList();
 

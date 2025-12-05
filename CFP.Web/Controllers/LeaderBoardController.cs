@@ -28,14 +28,15 @@ namespace CFP.Web.Controllers
             DashboardViewModel model = new DashboardViewModel()
             {
                 RoleId = _sessionManager.RoleId,
+                StartDate = DateOnly.FromDateTime(AppCommon.CurrentDate),
             };
-            model.LeaderBoard = _commonProvider.GetLeaderBoard();
+            //model.LeaderBoard = _commonProvider.GetLeaderBoard();
             return View(model);
         }
-        public JsonResult LeaderBoard()
-        {
-            return Json(_commonProvider.GetLeaderBoard().Select(x => new { x.Text, x.ExtraValue }).OrderByDescending(x => x.ExtraValue).ToList());
-        }
+        //public JsonResult LeaderBoard()
+        //{
+        //    return Json(_commonProvider.GetLeaderBoard().Select(x => new { x.Text, x.ExtraValue }).OrderByDescending(x => x.ExtraValue).ToList());
+        //}
         [HttpGet]
         public IActionResult _LeaderBoard()
         {
@@ -44,7 +45,7 @@ namespace CFP.Web.Controllers
                 RoleId = _sessionManager.RoleId,
 
             };
-            model.LeaderBoard = _commonProvider.GetLeaderBoard();
+            //model.LeaderBoard = _commonProvider.GetLeaderBoard();
             return PartialView(model);
         }
         #endregion

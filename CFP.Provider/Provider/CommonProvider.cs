@@ -120,7 +120,7 @@ namespace CFP.Provider.Provider
             }
             return list;
         }
-        public List<DropDownModel> GetLeaderBoard()
+        public List<DropDownModel> GetLeaderBoard(string startDate)
         {
             List<DropDownModel> list = new List<DropDownModel>();
             try
@@ -129,7 +129,7 @@ namespace CFP.Provider.Provider
                                        x => new DropDownModel
                                        {
                                            Text = x.FirstName + " " + x.LastName,
-                                           ExtraValue = x.Deals.Where(x => x.IsActive && x.CreatedOn.Date == AppCommon.CurrentDate.Date).Sum(x => x.NoOfApplicants)
+                                           ExtraValue = x.Deals.Where(x => x.IsActive && x.CreatedOn.Date == AppCommon.ConvertToDate(startDate)).Sum(x => x.NoOfApplicants)
                                        }).OrderBy(x => x.Text).ToList();
             }
             catch (Exception ex)
@@ -495,27 +495,87 @@ namespace CFP.Provider.Provider
             }
         }
 
-        public List<DealSummaryModel> GetDealSummary()
+        //public List<DealSummaryModel> GetDealSummary()
+        //{
+        //    var summaryData = new List<DealSummaryModel>();
+
+        //    try
+        //    {
+        //        var deals = unitOfWork.Deal.GetAll(d => d.CreatedOn >= AppCommon.CurrentDate.AddDays(-30)).ToList();
+
+        //        var recentActiveDays = deals.Select(d => d.CreatedOn.Date).Distinct().OrderByDescending(x => x.Date).Take(5).ToList();
+
+        //        summaryData = deals
+        //            .GroupBy(d => d.Agent.FirstName + " " + d.Agent.LastName)
+        //            .Select(g => new DealSummaryModel
+        //            {
+        //                AgentName = g.Key,
+        //                Counts = recentActiveDays.Select(day => new DayCount
+        //                {
+        //                    Date = day,
+        //                    ApplicantCount = g.Where(d => d.CreatedOn.Date == day).Sum(d => d.NoOfApplicants),
+        //                    DealCount = g.Count(d => d.CreatedOn.Date == day)
+        //                }).OrderBy(x => x.Date).ToList()
+        //            })
+        //            .ToList();
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+
+        //    return summaryData;
+        //}
+
+
+        public List<DealSummaryModel> GetDealSummary(string StartDate, string EndDate)
         {
             var summaryData = new List<DealSummaryModel>();
 
             try
             {
-                var deals = unitOfWork.Deal.GetAll(d => d.CreatedOn >= AppCommon.CurrentDate.AddDays(-30)).ToList();
-
-                var recentActiveDays = deals.Select(d => d.CreatedOn.Date).Distinct().OrderByDescending(x => x.Date).Take(5).ToList();
-
-                summaryData = deals
-                    .GroupBy(d => d.Agent.FirstName + " " + d.Agent.LastName)
-                    .Select(g => new DealSummaryModel
+                var deals = new List<Deal>();
+                if (!string.IsNullOrEmpty(StartDate) && !string.IsNullOrEmpty(EndDate))
+                {
+                    if (DateTime.TryParse(StartDate, out DateTime startDate) &&
+                        DateTime.TryParse(EndDate, out DateTime endDate))
                     {
-                        AgentName = g.Key,
+                        deals = unitOfWork.Deal.GetAll(d => d.IsActive && d.CreatedOn.Date >= startDate && d.CreatedOn.Date <= endDate).ToList();
+                    }
+                }
+                //var deals = unitOfWork.Deal
+                //    .GetAll(d => d.CreatedOn >= AppCommon.CurrentDate.AddDays(-30))
+                //    .ToList();
+
+                // 🔥 GET ALL AGENTS (this is important)
+                var allAgents = unitOfWork.AgentMaster.GetAll(x => x.IsActive).ToList();
+
+                // last 5 unique active days
+                var recentActiveDays = deals
+                    .Select(d => d.CreatedOn.Date)
+                    .Distinct()
+                    .OrderByDescending(x => x)
+                    .OrderBy(x => x)
+                    .ToList();
+
+                summaryData = allAgents
+                    .Select(agent => new DealSummaryModel
+                    {
+                        AgentName = agent.FirstName + " " + agent.LastName,
+
                         Counts = recentActiveDays.Select(day => new DayCount
                         {
                             Date = day,
-                            ApplicantCount = g.Where(d => d.CreatedOn.Date == day).Sum(d => d.NoOfApplicants),
-                            DealCount = g.Count(d => d.CreatedOn.Date == day)
-                        }).OrderBy(x => x.Date).ToList()
+
+                            // filter deals for this agent
+                            ApplicantCount = deals
+                                .Where(d => d.AgentId == agent.AgentMasterId && d.CreatedOn.Date == day)
+                                .Sum(d => d.NoOfApplicants),
+
+                            DealCount = deals
+                                .Count(d => d.AgentId == agent.AgentMasterId && d.CreatedOn.Date == day)
+
+                        }).ToList()
                     })
                     .ToList();
             }
@@ -526,6 +586,7 @@ namespace CFP.Provider.Provider
 
             return summaryData;
         }
+
 
         public DatatablePageResponseModel<ChatMessageModel> GetChatHistoryList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel)
         {
@@ -699,7 +760,7 @@ namespace CFP.Provider.Provider
                             LogoName = item.LogoName,
                             AppName = item.AppName,
                             AppId = item.AppId,
-                            IsActive=item.IsActive,
+                            IsActive = item.IsActive,
                         });
                     }
                 }

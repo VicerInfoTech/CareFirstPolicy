@@ -7,6 +7,26 @@
     ViewBag.PageName = "<i class='ri-shake-hands-line'></i>  Deals";
 }
 <link href="~/lib/css/gorev/bootstrap-datepicker.min.css" rel="stylesheet" asp-append-version="true" />
+<style>
+    .form-icon-container {
+        position: relative;
+    }
+
+    .form-icon {
+        position: absolute;
+        top: 50%;
+        left: 10px; /* icon goes inside left side of input */
+        transform: translateY(-50%);
+        pointer-events: none; /* so you can click inside input */
+        font-size: 16px;
+        color: #6c757d;
+    }
+
+    .form-icon-input {
+        padding-left: 2rem !important; /* space for the icon */
+    }
+
+</style>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -26,6 +46,20 @@
                                 <option value="@((int)Enumeration.ActiveInActiveStatus.Active)"> Active</option>
                                 <option value="@((int)Enumeration.ActiveInActiveStatus.In_Active)"> In-Active</option>
                             </select> *@
+                        @Html.Hidden("StartDate", Model.StartDate.ToString("MM/dd/yyyy"), new { id = "startDate" })
+                        @Html.Hidden("EndDate", Model.EndDate.ToString("MM/dd/yyyy"), new { id = "endDate" })
+
+                        <div class="form-icon-container flex-fill" style="max-width:14rem;margin-top:4px;" >
+                            <input type="text"
+                                   id="dateRange"
+                                   class="form-control  date-picker form-icon-input"
+                                   placeholder="Select date range"
+                                   data-provider="flatpickr"
+                                   data-mode="range"
+                                   data-date-format="m/d/Y"
+                                   autocomplete="off" />
+                            <span class="ri-calendar-line text-900 fs--1 form-icon"></span>
+                        </div>
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 text-right mt-1">
                         <button type="button" class="btn btn-success" onclick="CFP.Deal.DownloadDealData()">
@@ -72,7 +106,22 @@
             $("#txtSearch").on("keyup", function () {
                 CFP.Deal.Search();
             });
-           
+
+             var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+
+            $("#dateRange").flatpickr({
+                mode: "range",
+                dateFormat: "m/d/Y", // UI format
+                defaultDate: [startDate, endDate],
+                onChange: function (selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2) {
+                        $("#startDate").val(instance.formatDate(selectedDates[0], "m/d/Y"));
+                        $("#endDate").val(instance.formatDate(selectedDates[1], "m/d/Y"));
+                        CFP.Deal.Search();
+                    }
+                }
+            });
         });
     </script>
 }

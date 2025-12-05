@@ -18,6 +18,8 @@
                     url: UrlContent("Deal/GetList"),
                     data: function (dtParms) {
                         dtParms.search.value = $("#txtSearch").val();
+                        dtParms.startData = $('#startDate').val();
+                        dtParms.endDate = $('#endDate').val();
                         return dtParms;
                     },
                 },
@@ -292,11 +294,15 @@
     this.DownloadDealData = function () {
         $(".preloader").show();
         let searchValue = $("#txtSearch").val();
+        let startData = $('#startDate').val();
+        let endDate = $('#endDate').val();
         $.ajax({
             type: "POST",
             url: UrlContent("Deal/DownloadDealData"),
             data: {
                 searchValue: searchValue,
+                startDate: startData,
+                endDate: endDate
             },
             success: function (result) {
                 $(".preloader").hide();

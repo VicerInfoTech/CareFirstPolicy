@@ -2,35 +2,75 @@
 
 
 @{
-	ViewData["Title"] = "Leader Board";
-	Layout = "~/Views/Shared/_Layout.cshtml";
-	//ViewBag.ParentPageName = "Leader Board";
-	ViewBag.ParentPageName = "<a href='/Dashboard/Index'><i class='ri-home-2-line'></i> Home</a>";
-	ViewBag.PageName = "<i class='ri-dashboard-2-line'></i>  Leader Board";
+    ViewData["Title"] = "Leader Board";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //ViewBag.ParentPageName = "Leader Board";
+    ViewBag.ParentPageName = "<a href='/Dashboard/Index'><i class='ri-home-2-line'></i> Home</a>";
+    ViewBag.PageName = "<i class='ri-dashboard-2-line'></i>  Leader Board";
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css">
-<link rel="stylesheet" href="~/assets/css/leaderboard.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/assets/css/leaderboard.css" asp-append-version="true" />
 <style>
-	.progress {
-		width: 400px !important;
-	}
+    .progress {
+        width: 400px !important;
+    }
+
+    .form-icon-container {
+        position: relative;
+    }
+
+    .form-icon {
+        position: absolute;
+        top: 47%;
+        left: 10px; /* icon goes inside left side of input */
+        transform: translateY(-50%);
+        pointer-events: none; /* so you can click inside input */
+        font-size: 16px;
+        color: #6c757d;
+    }
+
+    .form-icon-input {
+        padding-left: 2rem !important; /* space for the icon */
+    }
+
 </style>
 <div class="card" style="">
-	<div class="card-body">
-		<div class="list" id="leaderboard"></div>
-	</div>
+    <div class="row" style="margin-top:10px;padding-right:18px;">
+
+        <div class="col-sm-10 "> </div>
+        <div class="col-sm-2">
+            <div class="form-icon-container">
+                <input asp-format="{0:MM/dd/yyyy}"
+                       id="startDate"
+                       asp-for="StartDate"
+                       placeholder="MM/dd/yyyy"
+                       class="form-control date-picker form-icon-input"
+                       type="text"
+                       autocomplete="off"
+                       onchange="CFP.Leaderboard.refreshScores();" />
+
+                <span class="ri-calendar-line form-icon"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+
+        <div class="list" id="leaderboard"></div>
+    </div>
 </div>
 <script src="~/lib/js/custom/CFP.js" asp-append-version="true"></script>
 <script src="~/lib/js/custom/CFP.Leaderboard.js" asp-append-version="true"></script>
 @section Scripts {
-	<script>
-		$(document).ready(function () {
-			CFP.Leaderboard.refreshScores();
-		});
-		const parentElement = document.getElementsByClassName('page-title-box');
-		parentElement[0].querySelector('.mb-sm-0').innerHTML="🏆 Live Leaderboard";
-		 
-	</script>
+    <script>
+        $(document).ready(function () {
+            CFP.Leaderboard.refreshScores();
+          CFP.Common.InitDatePicker();
+        });
+        const parentElement = document.getElementsByClassName('page-title-box');
+        parentElement[0].querySelector('.mb-sm-0').innerHTML="🏆 Live Leaderboard";
+
+    </script>
 }
 
 

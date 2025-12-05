@@ -103,6 +103,7 @@
                                 <div class="row g-0">
                                     <div class="col-xxl-12">
                                         <div class="">
+                                            <input asp-for="EndDate" hidden id="startDate" />
                                             <div class="card-header border-0 align-items-center d-flex">
                                                 <h4 class="card-title mb-0 flex-grow-1">🏆 Live Leaderboard</h4>
                                             </div><!-- end card header -->
@@ -270,55 +271,28 @@
         <div class="row g-4 mb-4">
 
             <div class="col-xl-12 mt-1">
+                @Html.Hidden("DealStartDate", Model.StartDate.ToString("MM/dd/yyyy"), new { id = "dealStartDate" })
+                @Html.Hidden("DealEndDate", Model.EndDate.ToString("MM/dd/yyyy"), new { id = "dealEndDate" })
                 <div class="card card-animate">
                     <div class="card-header d-flex align-items-center">
-                        <h4 class="card-title flex-grow-1 mb-0">Deals Summary By Date (Recent 5 Days)</h4>
+                        <h4 class="card-title flex-grow-1 mb-0">Deals Summary By Date </h4>
+                        <div class="form-icon-container flex-fill" style="max-width:14rem;margin-right:10px;" >
+                            <input type="text"
+                                   id="dealDateRange"
+                                   class="form-control form-control-sm date-picker form-icon-input"
+                                   placeholder="Select date range"
+                                   data-provider="flatpickr"
+                                   data-mode="range"
+                                   data-date-format="m/d/Y"
+                                   autocomplete="off" />
+                            <span class="ri-calendar-line text-900 fs--1 form-icon"></span>
+                        </div>
                         <button type="button" class="btn btn-sm btn-soft-success" onclick="CFP.Dashboard.DownloadDealSummaryData()">
                             <i class="ri-download-line"></i> Excel
                         </button>
                     </div><!-- end cardheader -->
                     <div class="card-body">
-                        <div class="table-responsive table-card">
-                            <table class="table table-nowrap table-centered table-bordered align-middle">
-                                <thead class="bg-light text-muted">
-                                    <tr>
-                                        <th scope="col" rowspan="2" style="vertical-align:middle;">Agent Name</th>
-                                        @if (Model.DealSummaryList.Any())
-                                        {
-                                            foreach (var day in Model.DealSummaryList.First().Counts)
-                                            {
-                                                <th colspan="2" class="col-xl-2 text-center">@day.Date.ToString("dd-MMM-yyyy")</th>
-                                            }
-                                        }
-                                    </tr><!-- end tr -->
-                                    <tr>
-                                        @if (Model.DealSummaryList.Any())
-                                        {
-                                            foreach (var day in Model.DealSummaryList.First().Counts)
-                                            {
-                                                <th class="text-center">Forms</th>
-                                                <th class="text-center">Deals</th>
-                                            }
-                                        }
-                                    </tr>
-                                </thead><!-- thead -->
-
-                                <tbody>
-                                    @foreach (var agent in Model.DealSummaryList.OrderBy(x => x.AgentName))
-                                    {
-                                        <tr>
-                                            <td class="text-left">@agent.AgentName</td>
-                                            @foreach (var count in agent.Counts)
-                                            {
-                                                <td class="text-center">@(count.DealCount > 0 ? count.DealCount : "")</td>
-                                                <td class="text-center">@(count.ApplicantCount > 0 ? count.ApplicantCount : "")</td>
-                                            }
-                                        </tr>
-                                    }
-
-                                </tbody><!-- end tbody -->
-                            </table><!-- end table -->
-                        </div>
+                       <div id="showDealSummary"></div>
 
                     </div><!-- end card body -->
                 </div><!-- end card -->
@@ -358,11 +332,30 @@
                     }
                 }
             });
+
+
+            var dealStartDate = $("#dealStartDate").val();
+            var dealEndDate = $("#dealEndDate").val();
+
+            $("#dealDateRange").flatpickr({
+                mode: "range",
+                dateFormat: "m/d/Y", // UI format
+                defaultDate: [dealStartDate, dealEndDate],
+                onChange: function (selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2) {
+                        $("#dealStartDate").val(instance.formatDate(selectedDates[0], "m/d/Y"));
+                        $("#dealEndDate").val(instance.formatDate(selectedDates[1], "m/d/Y"));
+                        CFP.Dashboard.DealSummary();
+                    }
+                }
+            });
+            CFP.Dashboard.DealSummary();
                 Chart.defaults.font.family = "'Montserrat', sans-serif";
               //  CFP.Common.MenuLink("/Order/Dashboard");
                   CFP.Dashboard.BindDealChart();
                   CFP.Dashboard.LoadPortfolioChart();
                 CFP.Leaderboard.refreshScores();
+                 
                 CFP.Dashboard.Init('@Model.RoleId');
                 $("#txtSearch").on("keyup", function () {
                     CFP.Dashboard.Search();

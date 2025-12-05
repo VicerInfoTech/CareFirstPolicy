@@ -46,10 +46,11 @@ namespace CFP.Web.Controllers
                 AgentId = _sessionManager.AgentId,
                 UserAccess = _sessionManager.UserAccess,
                 DealCount = _commonProvider.GetDealCount(GetSessionProviderParameters()),
-                DealSummaryList = _commonProvider.GetDealSummary(),
                 IsLogin = TempData["IsLogin"] != null,
                 StartDate = new DateOnly(AppCommon.CurrentDate.Year, AppCommon.CurrentDate.Month, 1),
                 EndDate = DateOnly.FromDateTime(AppCommon.CurrentDate),
+                DealStartDate = DateOnly.FromDateTime(AppCommon.CurrentDate.AddDays(-5)),
+                DealEndDate = DateOnly.FromDateTime(AppCommon.CurrentDate),
                 AgentList = GetAgentList()
             };
             return View(model);
@@ -60,9 +61,9 @@ namespace CFP.Web.Controllers
             SetDataInTemp(AppCommon.TMP_ENC_PATIENT_ID, PatientId);
             return Json(true);
         }
-        public JsonResult LeaderBoard()
+        public JsonResult LeaderBoard(string startDate)
         {
-            return Json(_commonProvider.GetLeaderBoard().Select(x => new { x.Text, x.ExtraValue }).OrderByDescending(x => x.ExtraValue).ToList());
+            return Json(_commonProvider.GetLeaderBoard(startDate).Select(x => new { x.Text, x.ExtraValue }).OrderByDescending(x => x.ExtraValue).ToList());
         }
         public JsonResult FetchDealData(int agentId)
         {
@@ -99,14 +100,20 @@ namespace CFP.Web.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+        public IActionResult DealSummary(string startDate, string endDate)
+        {
+            DashboardViewModel viewModel = new DashboardViewModel();
+            viewModel.DealSummaryList = _commonProvider.GetDealSummary(startDate, endDate);
 
-        public JsonResult DownloadDealSummaryData()
+            return PartialView(viewModel);
+        }
+        public JsonResult DownloadDealSummaryData(string startDate, string endDate)
         {
             ResponseModel response = new ResponseModel();
 
             try
             {
-                var listData = _commonProvider.GetDealSummary();
+                var listData = _commonProvider.GetDealSummary(startDate, endDate);
 
                 if (listData == null || listData.Count == 0)
                 {

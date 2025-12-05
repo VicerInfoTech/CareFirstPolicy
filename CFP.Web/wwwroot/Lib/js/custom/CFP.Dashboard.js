@@ -685,7 +685,7 @@
         $(".preloader").show();
         $.ajax({
             type: "GET",
-            url: UrlContent("Dashboard/LoadAppSelector/" ),
+            url: UrlContent("Dashboard/LoadAppSelector/"),
             success: function (data) {
                 debugger;
                 $("#common-lg-dialogContentApp").html(data);
@@ -702,7 +702,7 @@
 
     this.SelectApp = function (appId) {
         $("#common-lg-dialogApp").modal('hide');
-        
+
         //if (appId == 1) {
         //    $(".appname").html('<i class="ri-shield-check-line"></i> <span>ACA</span>');                        
         //}
@@ -720,13 +720,39 @@
         window.top.location.href = '/Dashboard/UpdateAppId?appId=' + appId;
     }
 
+
+    this.DealSummary = function () {
+        debugger;
+        $(".preloader").show();
+        var start_date = $('#dealStartDate').val();
+        var end_date = $('#dealEndDate').val();
+        $.ajax({
+            type: "GET",
+            url: UrlContent("Dashboard/DealSummary/"),
+            data: {
+                startDate: start_date,
+                endDate: end_date,
+            },
+            success: function (data) {
+                debugger;
+                $("#showDealSummary").html(data);
+                $(".preloader").hide();
+            }
+        })
+    }
+
     this.DownloadDealSummaryData = function () {
         $(".preloader").show();
 
-      
+        var start_date = $('#startDate').val();
+        var end_date = $('#endDate').val();
         $.ajax({
             type: "POST",
-            url: UrlContent("Dashboard/DownloadDealSummaryData"),          
+            url: UrlContent("Dashboard/DownloadDealSummaryData"),
+            data: {
+                startDate: start_date,
+                endDate: end_date,
+            },
             success: function (result) {
                 $(".preloader").hide();
 

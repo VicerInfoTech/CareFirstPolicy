@@ -1,10 +1,10 @@
 ﻿CFP.Leaderboard = new function () {
 
     let scores = [];
-    const players = [];   
+    const players = [];
 
     const board = document.getElementById('leaderboard');
-    
+
     let interval;
     let dailyTarget = 100;
 
@@ -105,9 +105,11 @@
 
     this.refreshScores = function () {
         console.log(1);
+        var startDate = $("#startDate").val();
         $.ajax({
             type: "GET",
             url: UrlContent("Dashboard/LeaderBoard"),
+            data: { startDate: startDate },
             success: function (data) {
                 players.length = 0;
                 scores = data;

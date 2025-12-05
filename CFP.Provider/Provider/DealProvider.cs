@@ -45,7 +45,7 @@ namespace CFP.Provider.Provider
 
             try
             {
-                var dataList = unitOfWork.Deal.GetAll(x => x.IsActive)
+                var dataList = unitOfWork.Deal.GetAll(x => x.IsActive && x.CreatedOn.Date >= requestModel.StartDate && x.CreatedOn.Date <= requestModel.EndDate)
                     .Select(x => new DealModel()
                     {
                         EncId = _commonProvider.Protect(x.DealId),

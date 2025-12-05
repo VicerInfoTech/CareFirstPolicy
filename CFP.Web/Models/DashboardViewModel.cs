@@ -25,5 +25,7 @@ namespace CFP.Web.Models
         public List<IFormFile> PictureofProblemList { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
+        public DateOnly DealStartDate { get; set; }
+        public DateOnly DealEndDate { get; set; }
     }
 }
