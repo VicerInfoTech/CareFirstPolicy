@@ -93,6 +93,25 @@
         $(".preloader").hide();
         initActiveMenu();
    
+        document.addEventListener("click", () => {
+            if (!audioUnlocked) {
+                const audClosed = document.getElementById("audClosed");
+                audClosed.play().then(() => {
+                    audClosed.pause();
+                    audClosed.currentTime = 0;
+                    audioUnlocked = true;
+                    console.log("Audio unlocked");
+                });
+                const audOpen = document.getElementById("audOpen");
+                audOpen.play().then(() => {
+                    audOpen.pause();
+                    audOpen.currentTime = 0;
+                    audioUnlocked = true;
+                    console.log("Audio unlocked");
+                });
+            }
+        });
+
         $("#topnav-hamburger-icon").click(function (e) {
             var windowSize = document.documentElement.clientWidth;
 

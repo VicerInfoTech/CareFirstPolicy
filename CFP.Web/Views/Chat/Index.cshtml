@@ -16,7 +16,28 @@
 		}
 	}
 
+	/* .chat-leftsidebar, .user-chat-topbar,user-chat {
+			background: #321e46 !important;
+	}
 
+		.chat-leftsidebar .h1,
+		.chat-leftsidebar .h2,
+		.chat-leftsidebar .h3,
+		.chat-leftsidebar .h4,
+		.chat-leftsidebar .h5,
+		.chat-leftsidebar .h6,
+		.chat-leftsidebar h1,
+		.chat-leftsidebar h2,
+		.chat-leftsidebar h3,
+		.chat-leftsidebar h4,
+		.chat-leftsidebar h5,
+		.chat-leftsidebar h6,
+		.member-count,
+		.user-chat-topbar h5,
+		.chat-leftsidebar a.nav-link,
+		.chat-leftsidebar p{
+			color: #fff !important;
+		} */
 
 	.chat-user-img .user-status {
 		width: 14px; /* increase the size */
@@ -107,9 +128,10 @@
 		border: 1px solid #ccc !important;
 	}
 
-
-
 </style>
+
+
+
 <input asp-for="CurrentUserId" id="currentUserId" type="hidden" />
 <input asp-for="openUserId" id="hfOpenUserId" type="hidden" />
 <input asp-for="openRoomId" id="hfOpenRoomId" type="hidden" />
@@ -141,12 +163,12 @@
 
 		<ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified" role="tablist">
 			<li class="nav-item">
-				<a class="nav-link active" data-bs-toggle="tab" href="#chats" role="tab">
+				<a class="nav-link active" data-bs-toggle="tab" href="#chats" role="tab" >
 					Chats
 				</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" data-bs-toggle="tab" href="#contacts" role="tab">
+				<a class="nav-link" data-bs-toggle="tab" href="#contacts" role="tab" >
 					Channels
 				</a>
 			</li>

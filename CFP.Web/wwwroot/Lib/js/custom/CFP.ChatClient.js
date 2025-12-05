@@ -1009,6 +1009,8 @@
 
         void toastElement.offsetWidth;
 
+        CFP.ChatClient.PlayNotificationSound(false);
+
         // Wire up close button to remove immediately
         const btnClose = toastElement.querySelector('.btn-close');
         if (btnClose) {
@@ -1029,6 +1031,7 @@
             setTimeout(() => toastElement.remove(), 400);
         }, 5000);
     }
+
     $(document).on("click", ".user-chat-remove", function () {
         $(".user-chat").removeClass("user-chat-show");
     });
@@ -1049,6 +1052,16 @@
         // Mark only one message as read
         $(`.msg-status[data-id="${messageId}"] i`).addClass("text-success");
     };
+
+    this.PlayNotificationSound = function (isOpen) {   
+        if (isOpen) {
+            audOpen.play().catch(err => console.log("Play failed:", err));
+        }
+        else {
+            audClosed.play().catch(err => console.log("Play failed:", err));
+        }
+
+    }
 
 
     window.addEventListener("beforeunload", function () {
