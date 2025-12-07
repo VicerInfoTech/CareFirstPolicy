@@ -134,8 +134,16 @@ namespace CFP.Patient.Controllers
                  Text = e.Text
              }).ToList();
         }
+        protected List<SelectListItem> GetStateList()
+        {
+            return _commonProvider.GetStateList()
+             .Select(e => new SelectListItem
+             {
+                 Value = e.Value,
+                 Text = e.Text
+             }).ToList();
+        }
 
-       
 
         #region Temp Data Methods
         public void DeleteAllFilter()

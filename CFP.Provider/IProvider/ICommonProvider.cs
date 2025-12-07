@@ -31,6 +31,7 @@ namespace CFP.Provider.IProvider
         bool IsAuthorized(int roleId, int menuId,int userAccess);
         List<DropDownModel> GetUserList();
         List<DropDownModel> GetRoomList();
+        List<DropDownModel> GetStateList();
         List<AppMasterModel> GetAppsList();
         List<DealChartPoint> GetDealDataForChart(int agentId);
         AgentDealDashboardViewModel GetAgentDealDashboard(string startDate, string endDate);
@@ -38,6 +39,7 @@ namespace CFP.Provider.IProvider
         DatatablePageResponseModel<ChatMessageModel> GetChatHistoryList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel);
         List<NotificationDto> GetNotification(SessionProviderModel sessionProviderModel);
         List<AppMasterModel> GetAgentAppList(SessionProviderModel sessionProviderModel);
+        ResponseModel SaveJobForm(MedicareJobModel model, List<JobDocModel> docList, SessionProviderModel sessionProviderModel);
         #endregion
 
     }

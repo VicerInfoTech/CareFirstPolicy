@@ -21,4 +21,10 @@ namespace CFP.Common.Business_Entities
 
         public string? DocumentPath { get; set; }
     }
+    public class JobDocModel
+    {
+        public int DocId { get; set; }
+        public string DocName { get; set; }
+        
+    }
 }

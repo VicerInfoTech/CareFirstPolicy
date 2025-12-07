@@ -40,11 +40,15 @@ public partial class EndeavorCRMContext : DbContext
 
     public virtual DbSet<LoginHistory> LoginHistories { get; set; }
 
+    public virtual DbSet<MedicareJobApplication> MedicareJobApplications { get; set; }
+
     public virtual DbSet<Menu> Menus { get; set; }
 
     public virtual DbSet<MenuRole> MenuRoles { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
+
+    public virtual DbSet<State> States { get; set; }
 
     public virtual DbSet<UserMaster> UserMasters { get; set; }
 
@@ -368,6 +372,84 @@ public partial class EndeavorCRMContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
+        modelBuilder.Entity<MedicareJobApplication>(entity =>
+        {
+            entity.HasKey(e => e.JobApplicationId).HasName("PK__Medicare__BD557F85B65568A2");
+
+            entity.ToTable("Medicare_JobApplications");
+
+            entity.Property(e => e.AboutAgent)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.AboutUs)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Address1)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Address2)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.Ahip).HasColumnName("AHIP");
+            entity.Property(e => e.AssignmentCommissionDoc)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.BankAccNo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.BankIfsc)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("BankIFSC");
+            entity.Property(e => e.BankName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.City)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+            entity.Property(e => e.Dob).HasColumnName("DOB");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.EnoCertificateDoc)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.LastName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Npn)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("NPN");
+            entity.Property(e => e.PhoneNo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ProfileDoc)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.StateLicence)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.StateLicenceDoc)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.StateLicenceNo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Yoe)
+                .HasColumnType("numeric(5, 2)")
+                .HasColumnName("YOE");
+
+            entity.HasOne(d => d.State).WithMany(p => p.MedicareJobApplications)
+                .HasForeignKey(d => d.StateId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Medicare_JobApplications_State");
+        });
+
         modelBuilder.Entity<Menu>(entity =>
         {
             entity.ToTable("Menu");
@@ -407,6 +489,18 @@ public partial class EndeavorCRMContext : DbContext
 
             entity.Property(e => e.RoleId).ValueGeneratedNever();
             entity.Property(e => e.RoleName).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<State>(entity =>
+        {
+            entity.ToTable("State");
+
+            entity.Property(e => e.StateCode)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.StateName)
+                .HasMaxLength(200)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<UserMaster>(entity =>

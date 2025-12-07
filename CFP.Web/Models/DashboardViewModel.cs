@@ -20,12 +20,16 @@ namespace CFP.Web.Models
         public List<SelectListItem> AgentList { get; set; }
         public List<SelectListItem> RoomList { get; set; }
         public List<SelectListItem> CareerList { get; set; }
+        public List<SelectListItem> StateList { get; set; }
         public List<NotificationDto> NotificationList { get; set; }
         public List<AppMasterModel> AgentAppList { get; set; }
+        public MedicareJobModel MedicareJobModel { get; set; }
         public List<IFormFile> PictureofProblemList { get; set; }
+        public IFormFile JobDoc { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public DateOnly DealStartDate { get; set; }
         public DateOnly DealEndDate { get; set; }
+        public int DocId { get; set; }
     }
 }

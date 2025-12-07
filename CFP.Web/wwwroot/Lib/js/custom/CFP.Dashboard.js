@@ -765,4 +765,70 @@
         });
     }
 
+    this.SaveJobForm = function () {
+        debugger;
+        if ($("#jobForm").valid()) {
+            $(".preloader").show();
+            var formdata = $("#jobForm").serialize();
+            $.ajax({
+                type: "Post",
+                url: UrlContent("Dashboard/SaveJobForm/"),
+                data: formdata,
+                success: function (result) {
+                    debugger;
+                    $(".preloader").hide();
+                    if (result.isSuccess) {
+                        Swal.fire({
+                            title: "Success!",
+                            text: "Your job application has been submitted successfully.",
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        }).then(function () {
+                            // Redirect to Job Application Dashboard
+                            window.location.href = UrlContent("Dashboard/MedicareJobApplication/");
+                        });
+                    } else {
+                        CFP.Common.ToastrError(result.message);
+                    }
+                },
+            })
+        }
+    }
+
+    this.SaveDocument = function (docId) {
+
+        var input = $("#JobDoc_" + docId)[0];
+        var file = input.files[0];
+
+        if (!file) {
+            CFP.Common.ToastrError("Please select a document");
+            return;
+        }
+
+        $(".preloader").show();
+
+        var formdata = new FormData();
+        formdata.append("file", file);
+        formdata.append("docId", docId);
+
+        $.ajax({
+            type: "POST",
+            url: UrlContent("Dashboard/SaveDoc"),
+            data: formdata,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+
+                $(".preloader").hide();
+
+                if (data.isSuccess) {
+                    CFP.Common.ToastrSuccess("Document uploaded successfully");
+                } else {
+                    CFP.Common.ToastrError(data.message);
+                }
+            }
+        });
+    }
+
+
 }

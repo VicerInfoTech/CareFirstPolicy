@@ -7,10 +7,10 @@ namespace CFP.Provider.Mapping
     public class MappingProfile : Profile
     {
         public MappingProfile()
-        {       
+        {
 
-           CreateMap<AgentMaster, AgentMasterModel>();
-           CreateMap<AgentMasterModel, AgentMaster>();
+            CreateMap<AgentMaster, AgentMasterModel>();
+            CreateMap<AgentMasterModel, AgentMaster>();
 
             CreateMap<UserMasterModel, UserMaster>();
             CreateMap<UserMaster, UserMasterModel>();
@@ -32,6 +32,9 @@ namespace CFP.Provider.Mapping
 
             CreateMap<AppMaster, AppMasterModel>();
             CreateMap<AppMasterModel, AppMaster>();
+
+            CreateMap<MedicareJobApplication, MedicareJobModel>();
+            CreateMap<MedicareJobModel, MedicareJobApplication>();
 
 
         }

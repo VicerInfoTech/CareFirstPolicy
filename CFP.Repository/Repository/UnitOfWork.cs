@@ -54,6 +54,8 @@ namespace CFP.Repository.Repository
         private GenericRepository<DealDocument> _DealDocument;
         private GenericRepository<AppMaster> _AppMaster;
         private GenericRepository<AgentApp> _AgentApp;
+        private GenericRepository<State> _State;
+        private GenericRepository<MedicareJobApplication> _MedicareJobApplication;
         #endregion
 
         #region Generic Classes Of DB Entities
@@ -192,6 +194,24 @@ namespace CFP.Repository.Repository
                 if (_AgentApp == null)
                     _AgentApp = new GenericRepository<AgentApp>(context);
              return _AgentApp;
+            }
+        }
+        public GenericRepository<State> State
+        {
+            get
+            {
+                if (_State == null)
+                    _State = new GenericRepository<State>(context);
+             return _State;
+            }
+        }
+        public GenericRepository<MedicareJobApplication> MedicareJobApplication
+        {
+            get
+            {
+                if (_MedicareJobApplication == null)
+                    _MedicareJobApplication = new GenericRepository<MedicareJobApplication>(context);
+             return _MedicareJobApplication;
             }
         }
         #endregion
