@@ -1063,107 +1063,61 @@
 
     }
 
+    //const micBtn = $("#micBtn");
+    //const chatInput = $("#chatInput");
 
+    //let recognition;
+    //if ('webkitSpeechRecognition' in window) {
+    //    recognition = new webkitSpeechRecognition();
+    //} else {
+    //    debugger;
+    //    recognition = new SpeechRecognition();
+    //}
 
+    //recognition.continuous = false;
+    //recognition.interimResults = true;
+    //recognition.lang = "en-US";
 
+    //let isRecording = false;
 
+    //// ✅ Only bind click IF mic button exists
+    //if (micBtn.length > 0) {
 
-    const micBtn = $("#micBtn");
-    const chatInput = $("#chatInput");
+    //    micBtn.on("click", function () {
 
-    let recognition;
-    if ('webkitSpeechRecognition' in window) {
-        recognition = new webkitSpeechRecognition();
-    } else {
-        debugger;
-        recognition = new SpeechRecognition();
-    }
+    //        if (!isRecording) {
+    //            recognition.start();
+    //            isRecording = true;
+    //            micBtn.html('<i class="ri-mic-fill align-middle"></i>');
+    //            micBtn.addClass("recording");
+    //        } else {
+    //            recognition.stop();
+    //            isRecording = false;
+    //            micBtn.html('<i class="ri-mic-line align-middle"></i>');
+    //            micBtn.removeClass("recording");
+    //        }
 
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.lang = "en-US";
+    //    });
+    //}
 
-    let isRecording = false;
+    //recognition.onresult = (event) => {
+    //    let transcript = "";
+    //    for (let i = 0; i < event.results.length; i++) {
+    //        transcript += event.results[i][0].transcript;
+    //    }
+    //    chatInput.val(transcript);
+    //};
 
-    // ✅ Only bind click IF mic button exists
-    if (micBtn.length > 0) {
+    //recognition.onerror = (event) => {
+    //    console.error(event.error);
+    //};
 
-        micBtn.on("click", function () {
-
-            if (!isRecording) {
-                recognition.start();
-                isRecording = true;
-                micBtn.html('<i class="ri-mic-fill align-middle"></i>');
-                micBtn.addClass("recording");
-            } else {
-                recognition.stop();
-                isRecording = false;
-                micBtn.html('<i class="ri-mic-line align-middle"></i>');
-                micBtn.removeClass("recording");
-            }
-
-        });
-    }
-
-    recognition.onresult = (event) => {
-        let transcript = "";
-        for (let i = 0; i < event.results.length; i++) {
-            transcript += event.results[i][0].transcript;
-        }
-        chatInput.val(transcript);
-    };
-
-    recognition.onerror = (event) => {
-        console.error(event.error);
-    };
-
-    recognition.onend = () => {
-        if (micBtn.length > 0) {
-            micBtn.html('<i class="ri-mic-line align-middle"></i>');
-            micBtn.removeClass("recording");
-        }
-    };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //recognition.onend = () => {
+    //    if (micBtn.length > 0) {
+    //        micBtn.html('<i class="ri-mic-line align-middle"></i>');
+    //        micBtn.removeClass("recording");
+    //    }
+    //};
 
 
     window.addEventListener("beforeunload", function () {

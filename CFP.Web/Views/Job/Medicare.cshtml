@@ -22,7 +22,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Medicare</h4>
+            <h4 class="mb-sm-0">Job Application for Medicare</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
@@ -38,7 +38,7 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0">Medicare Job </h4>
+                <h4 class="card-title mb-0">Application for Insurance Agent Position (Medicare Specialist)</h4>
             </div>
             <div class="card-body">
                 <form class="form-horizontal form-material mb-0  " id="jobForm">
@@ -96,11 +96,16 @@
                                     <span asp-validation-for="MedicareJobModel.LastName" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
+                                    <label>Date of Birth</label>
+                                    <input asp-for="MedicareJobModel.Dob" class="form-control date-picker req-border" />
+                                    <span asp-validation-for="MedicareJobModel.Dob" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
                                     <label>Address 1</label>
                                     <input asp-for="MedicareJobModel.Address1" type="text" class="form-control req-border" />
                                     <span asp-validation-for="MedicareJobModel.Address1" class="text-danger"></span>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label>Address 2</label>
                                     <input asp-for="MedicareJobModel.Address2" type="text" class="form-control" />
                                     <span asp-validation-for="MedicareJobModel.Address2" class="text-danger"></span>
@@ -109,22 +114,22 @@
                                     <label>City</label>
                                     <input asp-for="MedicareJobModel.City" type="text" class="form-control req-border" />
                                     <span asp-validation-for="MedicareJobModel.City" class="text-danger"></span>
-                                </div>
+                                </div>                                
                                 <div class="col-md-4">
                                     <label>State</label>
                                     <select class="form-select req-border" asp-for="MedicareJobModel.StateId" asp-items="Model.StateList"></select>
                                     <span asp-validation-for="MedicareJobModel.StateId" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
+                                    <label>Zip</label>
+                                    <input asp-for="MedicareJobModel.City" type="text" class="form-control req-border" />
+                                </div>
+                                <div class="col-md-4">
                                     <label>NPN</label>
                                     <input asp-for="MedicareJobModel.Npn" type="text" class="form-control req-border" />
                                     <span asp-validation-for="MedicareJobModel.Npn" class="text-danger"></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label>Date of Birth</label>
-                                    <input asp-for="MedicareJobModel.Dob" class="form-control date-picker req-border" />
-                                    <span asp-validation-for="MedicareJobModel.Dob" class="text-danger"></span>
-                                </div>
+                                
                                 <div class="col-md-4">
                                     <label>Email</label>
                                     <input asp-for="MedicareJobModel.Email" type="email" class="form-control email-inputmask req-border" />
@@ -202,9 +207,10 @@
                         <div class="step d-none" id="step3">
 
                             <div class="mb-3">
-                                <label>About Yourself</label>
-                                <textarea asp-for="MedicareJobModel.AboutUs" class="form-control req-border" rows="4"></textarea>
-                                <span asp-validation-for="MedicareJobModel.AboutUs" class="text-danger"></span>
+                                <label>About Us</label>
+                                <div>
+                                    We are @AppCommon.ApplicationTitle.
+                                </div>
                             </div>
 
                             <div class="d-flex justify-content-between mt-3">
@@ -219,42 +225,36 @@
                         <div class="step d-none" id="step4">
 
                             <div class="row g-3">
-
-                                <div class="col-md-4">
-                                    <label>Account Number</label>
-                                    <input asp-for="MedicareJobModel.BankAccNo" type="text" class="form-control req-border" />
-                                    <span asp-validation-for="MedicareJobModel.BankAccNo" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label>IFSC Code</label>
-                                    <input asp-for="MedicareJobModel.BankIfsc" type="text" class="form-control req-border" />
-                                    <span asp-validation-for="MedicareJobModel.BankIfsc" class="text-danger"></span>
-                                </div>
                                 <div class="col-md-4">
                                     <label>Bank Name</label>
                                     <input asp-for="MedicareJobModel.BankName" type="text" class="form-control req-border" />
                                     <span asp-validation-for="MedicareJobModel.BankName" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>Profile</label>
+                                    <label>Account Holder Name</label>
+                                    <input asp-for="MedicareJobModel.BankIfsc" type="text" class="form-control req-border" />
+                                    <span asp-validation-for="MedicareJobModel.BankIfsc" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Account Number</label>
+                                    <input asp-for="MedicareJobModel.BankAccNo" type="text" class="form-control req-border" />
+                                    <span asp-validation-for="MedicareJobModel.BankAccNo" class="text-danger"></span>
+                                </div>                                
+                                <div class="col-md-4">
+                                    <label>Profile Photo</label>
                                     <input type="file" id="JobDoc_1" class="form-control req-border"
                                            onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.ProfileDoc))" />
                                 </div>
-
-
-
                                 <div class="col-md-4">
-                                    <label>Assignment Commission Doc</label>
+                                    <label>Assignment of Commission</label>
                                     <input type="file" id="JobDoc_3" class="form-control req-border"
                                            onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.AssignentCommissionDoc))" />
                                 </div>
-
                                 <div class="col-md-4">
-                                    <label>ENO Certificate Doc</label>
+                                    <label>ENO Certificate</label>
                                     <input type="file" id="JobDoc_4" class="form-control req-border"
                                            onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.EnoCertificateDoc))" />
                                 </div>
-
                             </div>
 
                             <div class="d-flex justify-content-between mt-3">
