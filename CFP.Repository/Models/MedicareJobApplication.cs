@@ -37,9 +37,7 @@ public partial class MedicareJobApplication
 
     public byte? Carrier { get; set; }
 
-    public bool? Ahip { get; set; }
-
-    public string? AboutUs { get; set; }
+    public bool Ahip { get; set; }
 
     public string StateLicenceNo { get; set; } = null!;
 

@@ -59,9 +59,7 @@ namespace CFP.Common.Business_Entities
         public byte? Carrier { get; set; }
 
         [Required(ErrorMessage = "AHIP selection is required.")]
-        public bool? Ahip { get; set; }
-
-        public string? AboutUs { get; set; }
+        public bool Ahip { get; set; }
 
         [Required(ErrorMessage = "State Licence No is required.")]
         public string StateLicenceNo { get; set; } = null!;

@@ -381,9 +381,6 @@ public partial class EndeavorCRMContext : DbContext
             entity.Property(e => e.AboutAgent)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.AboutUs)
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.AccHolderName)
                 .HasMaxLength(200)
                 .IsUnicode(false);
