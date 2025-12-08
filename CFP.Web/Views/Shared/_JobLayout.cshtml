@@ -1,8 +1,7 @@
 ﻿@using CFP.Common.Utility
 
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="light">
-
+<html lang="en" data-layout="horizontal" data-sidebar="light" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable" data-be-installed="true" data-topbar="light" data-sidebar-visibility="show" data-layout-style="default" data-bs-theme="light" data-layout-width="fluid" data-layout-position="fixed" style="width: 100% !important;">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,60 +13,41 @@
     @RenderSection("CSS", required: false)
     @RenderSection("Style", required: false)
 
-    <style>
-        body {
-            background: #f8f9fa;
-        }
-
-        .public-header {
-            background: #fff;
-            border-bottom: 1px solid #e6e6e6;
-            padding: 15px 20px;
-        }
-
-        .public-logo h1 {
-            margin: 0;
-            font-weight: 900;
-            font-size: 26px;
-            color: #333;
-        }
-
-        .public-container {
-            padding: 30px 20px 50px 20px;
-            /* Removed container width restrictions */
-        }
-
-        footer.footer {
-            width: 100%;
-            background: #fff;
-            border-top: 1px solid #e6e6e6;
-            padding: 10px 0;
-            text-align: center;
-            margin: 0;
-            left: 0 !important;
-        }
-    </style>
+   
 </head>
 
 <body>
 
     <!-- HEADER -->
-    <header class="public-header d-flex align-items-center">
-        <div class="public-logo">
-            <h1>CFP</h1>
+    <header id="page-topbar"  style="background: #132649 !important;">
+        <div class="layout-width">
+            <div class="navbar-header">
+                <h1 class="text-white">@AppCommon.ApplicationTitle</h1>
+            </div>
         </div>
     </header>
 
     <!-- MAIN CONTENT -->
-    <main class="public-container">
-        @RenderBody()
-    </main>
+    <div class="main-content">
+
+        <div class="page-content" >
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
 
     <!-- FOOTER -->
-    
-    <footer class="footer d-flex align-items-center">
-        <div class="public-logo">
-            @AppCommon.CurrentDate.Year © @AppCommon.ApplicationTitle
+
+  
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    @AppCommon.CurrentDate.Year © @AppCommon.ApplicationTitle
+                </div>
+               
+            </div>
         </div>
     </footer>
     @await Html.PartialAsync("_FooterScriptPartial")
