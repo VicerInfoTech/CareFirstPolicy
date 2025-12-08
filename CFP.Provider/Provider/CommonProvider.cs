@@ -817,13 +817,13 @@ namespace CFP.Provider.Provider
 
                 foreach (var item in docList)
                 {
-                    if (item.DocId == 1)
+                    if (item.DocId == ((int)Enumeration.MedicareJobDoc.ProfileDoc))
                         medicareJob.ProfileDoc = item.DocName;
-                    if (item.DocId == 2)
+                    if (item.DocId == ((int)Enumeration.MedicareJobDoc.StateLicenceDoc))
                         medicareJob.StateLicenceDoc = item.DocName;
-                    if (item.DocId == 3)
+                    if (item.DocId == ((int)Enumeration.MedicareJobDoc.AssignentCommissionDoc))
                         medicareJob.AssignmentCommissionDoc = item.DocName;
-                    if (item.DocId == 4)
+                    if (item.DocId == ((int)Enumeration.MedicareJobDoc.EnoCertificateDoc))
                         medicareJob.EnoCertificateDoc = item.DocName;
                 }
                 if (medicareJob.ProfileDoc == null || medicareJob.StateLicenceDoc ==null|| medicareJob.AssignmentCommissionDoc ==null|| medicareJob.EnoCertificateDoc == null)

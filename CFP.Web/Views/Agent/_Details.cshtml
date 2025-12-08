@@ -134,7 +134,7 @@
                 @if (string.IsNullOrEmpty(Model.AgentMasterModel.EncId))
                 {
                     <div class="col-6 mt-2">
-                        <label asp-for="AgentMasterModel.AppsList"></label>
+                        <label asp-for="AgentMasterModel.AppsList">Apps</label>
                         <select asp-for="AgentMasterModel.AppsList" class="form-select req-border" id="multipleSelect" multiple data-placeholder="Select">
                             @foreach (var item in Model.AppMasterModels)
                             {

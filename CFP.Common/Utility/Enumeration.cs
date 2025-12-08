@@ -110,5 +110,13 @@ namespace CFP.Common.Utility
             NO=2,
             PARTIAL=3,
         }
+        public enum MedicareJobDoc
+        {
+            ProfileDoc=1,
+            StateLicenceDoc=2,
+            AssignentCommissionDoc=3,
+            EnoCertificateDoc=4,
+
+        }
     }
 }

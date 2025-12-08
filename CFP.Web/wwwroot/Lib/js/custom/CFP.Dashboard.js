@@ -772,7 +772,7 @@
             var formdata = $("#jobForm").serialize();
             $.ajax({
                 type: "Post",
-                url: UrlContent("Dashboard/SaveJobForm/"),
+                url: UrlContent("Job/SaveJobForm/"),
                 data: formdata,
                 success: function (result) {
                     debugger;
@@ -785,7 +785,7 @@
                             confirmButtonText: "OK"
                         }).then(function () {
                             // Redirect to Job Application Dashboard
-                            window.location.href = UrlContent("Dashboard/MedicareJobApplication/");
+                            window.location.href = UrlContent("Job/Medicare/");
                         });
                     } else {
                         CFP.Common.ToastrError(result.message);
@@ -813,7 +813,7 @@
 
         $.ajax({
             type: "POST",
-            url: UrlContent("Dashboard/SaveDoc"),
+            url: UrlContent("Job/SaveDoc"),
             data: formdata,
             contentType: false,
             processData: false,
