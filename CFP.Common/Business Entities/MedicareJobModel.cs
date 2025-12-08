@@ -28,7 +28,8 @@ namespace CFP.Common.Business_Entities
 
         [Required(ErrorMessage = "State is required.")]
         public int StateId { get; set; }
-
+        [Required(ErrorMessage = "Zip code is required.")]
+        public string ZipCode { get; set; } = null!;
         [Required(ErrorMessage = "NPN is required.")]
         public string Npn { get; set; } = null!;
 
@@ -36,7 +37,6 @@ namespace CFP.Common.Business_Entities
         public DateOnly Dob { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; } = null!;
 
         [Required(ErrorMessage = "Phone number is required.")]
@@ -73,8 +73,8 @@ namespace CFP.Common.Business_Entities
         [Required(ErrorMessage = "Bank Name is required.")]
         public string BankName { get; set; } = null!;
 
-        [Required(ErrorMessage = "Bank IFSC is required.")]
-        public string BankIfsc { get; set; } = null!;
+        [Required(ErrorMessage = "Account holder name is required.")]
+        public string AccHolderName { get; set; } = null!;
 
         [Required(ErrorMessage = "Bank Account Number is required.")]
         public string BankAccNo { get; set; } = null!;

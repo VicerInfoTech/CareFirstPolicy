@@ -87,22 +87,26 @@
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <label>First Name</label>
-                                    <input asp-for="MedicareJobModel.FirstName" type="text" class="form-control req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.FirstName" type="text" class="form-control " />
                                     <span asp-validation-for="MedicareJobModel.FirstName" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label>Last Name</label>
-                                    <input asp-for="MedicareJobModel.LastName" type="text" class="form-control req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.LastName" type="text" class="form-control " />
                                     <span asp-validation-for="MedicareJobModel.LastName" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label>Date of Birth</label>
-                                    <input asp-for="MedicareJobModel.Dob" class="form-control date-picker req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.Dob" class="form-control date-picker " />
                                     <span asp-validation-for="MedicareJobModel.Dob" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label>Address 1</label>
-                                    <input asp-for="MedicareJobModel.Address1" type="text" class="form-control req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.Address1" type="text" class="form-control " />
                                     <span asp-validation-for="MedicareJobModel.Address1" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6">
@@ -112,32 +116,38 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label>City</label>
-                                    <input asp-for="MedicareJobModel.City" type="text" class="form-control req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.City" type="text" class="form-control " />
                                     <span asp-validation-for="MedicareJobModel.City" class="text-danger"></span>
                                 </div>                                
                                 <div class="col-md-4">
                                     <label>State</label>
-                                    <select class="form-select req-border" asp-for="MedicareJobModel.StateId" asp-items="Model.StateList"></select>
+                                    <span style="color:red;">*</span>
+                                    <select class="form-select " asp-for="MedicareJobModel.StateId" asp-items="Model.StateList"></select>
                                     <span asp-validation-for="MedicareJobModel.StateId" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label>Zip</label>
-                                    <input asp-for="MedicareJobModel.City" type="text" class="form-control req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.ZipCode" type="text" class="form-control  zipcode-inputmask" />
                                 </div>
                                 <div class="col-md-4">
                                     <label>NPN</label>
-                                    <input asp-for="MedicareJobModel.Npn" type="text" class="form-control req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.Npn" type="text" class="form-control " />
                                     <span asp-validation-for="MedicareJobModel.Npn" class="text-danger"></span>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <label>Email</label>
-                                    <input asp-for="MedicareJobModel.Email" type="email" class="form-control email-inputmask req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.Email"  class="form-control email-inputmask " />
                                     <span asp-validation-for="MedicareJobModel.Email" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label>Phone</label>
-                                    <input asp-for="MedicareJobModel.PhoneNo" type="text" class="form-control phone-inputmask req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.PhoneNo" type="text" class="form-control phone-inputmask " />
                                     <span asp-validation-for="MedicareJobModel.PhoneNo" class="text-danger "></span>
                                 </div>
                             </div>
@@ -153,41 +163,48 @@
                             <div class="row g-3">
                                 <div class="col-md-12">
                                     <label>About You</label>
-                                    <textarea asp-for="MedicareJobModel.AboutAgent" class="form-control req-border"></textarea>
+                                    <span style="color:red;">*</span>
+                                    <textarea asp-for="MedicareJobModel.AboutAgent" class="form-control "></textarea>
                                     <span asp-validation-for="MedicareJobModel.AboutAgent" class="text-danger"></span>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label>State License</label>
-                                    <select asp-for="MedicareJobModel.StateLicenceList" class="form-select req-border" id="multipleSelect" multiple data-placeholder="Select" asp-items="Model.StateList">
+                                    <span style="color:red;">*</span>
+                                    <select asp-for="MedicareJobModel.StateLicenceList" class="form-select " id="multipleSelect" multiple data-placeholder="Select" asp-items="Model.StateList">
                                     </select>
                                     <span asp-validation-for="MedicareJobModel.StateLicenceList" class="text-danger"></span>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <label>State Licence No.</label>
-                                    <input asp-for="MedicareJobModel.StateLicenceNo" type="text" class="form-control req-border" />
+                                    <label>State License No.</label>
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.StateLicenceNo" type="text" class="form-control " />
                                     <span asp-validation-for="MedicareJobModel.StateLicenceNo" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label>State License Doc</label>
-                                    <input type="file" id="JobDoc_2" class="form-control req-border"
+                                    <span style="color:red;">*</span>
+                                    <input type="file" id="JobDoc_2" class="form-control "
                                            onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.StateLicenceDoc))" />
                                 </div>
                                 <div class="col-md-4">
                                     <label>Years of Experience</label>
-                                    <input asp-for="MedicareJobModel.Yoe" type="number" class="form-control req-border" min="0" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.Yoe" type="number" class="form-control " min="0" />
                                     <span asp-validation-for="MedicareJobModel.Yoe" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label>Carrier</label>
-                                    <select asp-for="MedicareJobModel.Carrier" class="form-select req-border" asp-items="Model.CareerList">
+                                    <span style="color:red;">*</span>
+                                    <select asp-for="MedicareJobModel.Carrier" class="form-select " asp-items="Model.CareerList">
                                     </select>
                                     <span asp-validation-for="MedicareJobModel.Carrier" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label>Carrier</label>
-                                    <select asp-for="MedicareJobModel.Ahip" class="form-select req-border">
+                                    <span style="color:red;">*</span>
+                                    <select asp-for="MedicareJobModel.Ahip" class="form-select ">
                                         <option value="true">Yes</option>
                                         <option value="false">No</option>
                                     </select>
@@ -227,32 +244,38 @@
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <label>Bank Name</label>
-                                    <input asp-for="MedicareJobModel.BankName" type="text" class="form-control req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.BankName" type="text" class="form-control " />
                                     <span asp-validation-for="MedicareJobModel.BankName" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label>Account Holder Name</label>
-                                    <input asp-for="MedicareJobModel.BankIfsc" type="text" class="form-control req-border" />
-                                    <span asp-validation-for="MedicareJobModel.BankIfsc" class="text-danger"></span>
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.AccHolderName" type="text" class="form-control " />
+                                    <span asp-validation-for="MedicareJobModel.AccHolderName" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label>Account Number</label>
-                                    <input asp-for="MedicareJobModel.BankAccNo" type="text" class="form-control req-border" />
+                                    <span style="color:red;">*</span>
+                                    <input asp-for="MedicareJobModel.BankAccNo" type="text" class="form-control " />
                                     <span asp-validation-for="MedicareJobModel.BankAccNo" class="text-danger"></span>
                                 </div>                                
                                 <div class="col-md-4">
                                     <label>Profile Photo</label>
-                                    <input type="file" id="JobDoc_1" class="form-control req-border"
+                                    <span style="color:red;">*</span>
+                                    <input type="file" id="JobDoc_1" class="form-control "
                                            onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.ProfileDoc))" />
                                 </div>
                                 <div class="col-md-4">
                                     <label>Assignment of Commission</label>
-                                    <input type="file" id="JobDoc_3" class="form-control req-border"
+                                    <span style="color:red;">*</span>
+                                    <input type="file" id="JobDoc_3" class="form-control "
                                            onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.AssignentCommissionDoc))" />
                                 </div>
                                 <div class="col-md-4">
                                     <label>ENO Certificate</label>
-                                    <input type="file" id="JobDoc_4" class="form-control req-border"
+                                    <span style="color:red;">*</span>
+                                    <input type="file" id="JobDoc_4" class="form-control "
                                            onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.EnoCertificateDoc))" />
                                 </div>
                             </div>

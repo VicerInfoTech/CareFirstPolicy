@@ -384,6 +384,9 @@ public partial class EndeavorCRMContext : DbContext
             entity.Property(e => e.AboutUs)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.AccHolderName)
+                .HasMaxLength(200)
+                .IsUnicode(false);
             entity.Property(e => e.Address1)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -392,15 +395,11 @@ public partial class EndeavorCRMContext : DbContext
                 .IsFixedLength();
             entity.Property(e => e.Ahip).HasColumnName("AHIP");
             entity.Property(e => e.AssignmentCommissionDoc)
-                .HasMaxLength(50)
+                .HasMaxLength(500)
                 .IsUnicode(false);
             entity.Property(e => e.BankAccNo)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.BankIfsc)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("BankIFSC");
             entity.Property(e => e.BankName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -413,7 +412,7 @@ public partial class EndeavorCRMContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.EnoCertificateDoc)
-                .HasMaxLength(50)
+                .HasMaxLength(500)
                 .IsUnicode(false);
             entity.Property(e => e.FirstName)
                 .HasMaxLength(50)
@@ -429,13 +428,13 @@ public partial class EndeavorCRMContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.ProfileDoc)
-                .HasMaxLength(50)
+                .HasMaxLength(500)
                 .IsUnicode(false);
             entity.Property(e => e.StateLicence)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.StateLicenceDoc)
-                .HasMaxLength(50)
+                .HasMaxLength(500)
                 .IsUnicode(false);
             entity.Property(e => e.StateLicenceNo)
                 .HasMaxLength(50)
@@ -443,6 +442,9 @@ public partial class EndeavorCRMContext : DbContext
             entity.Property(e => e.Yoe)
                 .HasColumnType("numeric(5, 2)")
                 .HasColumnName("YOE");
+            entity.Property(e => e.ZipCode)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.State).WithMany(p => p.MedicareJobApplications)
                 .HasForeignKey(d => d.StateId)

@@ -5,6 +5,8 @@ namespace CFP.Repository.Models;
 
 public partial class MedicareJobApplication
 {
+    public int JobApplicationId { get; set; }
+
     public string FirstName { get; set; } = null!;
 
     public string LastName { get; set; } = null!;
@@ -14,6 +16,8 @@ public partial class MedicareJobApplication
     public string? Address2 { get; set; }
 
     public string City { get; set; } = null!;
+
+    public string ZipCode { get; set; } = null!;
 
     public int StateId { get; set; }
 
@@ -43,9 +47,9 @@ public partial class MedicareJobApplication
 
     public string ProfileDoc { get; set; } = null!;
 
-    public string BankName { get; set; } = null!;
+    public string AccHolderName { get; set; } = null!;
 
-    public string BankIfsc { get; set; } = null!;
+    public string BankName { get; set; } = null!;
 
     public string BankAccNo { get; set; } = null!;
 
@@ -56,8 +60,6 @@ public partial class MedicareJobApplication
     public bool IsActive { get; set; }
 
     public DateTime CreatedOn { get; set; }
-
-    public int JobApplicationId { get; set; }
 
     public virtual State State { get; set; } = null!;
 }
