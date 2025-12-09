@@ -116,6 +116,7 @@ namespace CFP.Common.Utility
             StateLicenceDoc=2,
             AssignentCommissionDoc=3,
             EnoCertificateDoc=4,
+            AhipDoc=5,
 
         }
     }

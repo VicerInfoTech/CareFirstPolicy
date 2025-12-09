@@ -18,7 +18,7 @@
         margin-top: 105px !important;
         padding: 0px !important;
     }
-   
+
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
         background-color: #6691e7;
     }
@@ -307,15 +307,18 @@
                         </button>
                     </div>
 
-                    <div class="progress mb-3 " style="margin-top: 2.5rem !important;">
+                    <div class="progress mb-3" style="margin-top: 2.5rem !important;">
                         <div id="completionProgress"
-                             class="progress-bar bg-success"
+                             class="progress-bar progress-bar-striped progress-bar-animated "
                              role="progressbar"
                              style="width: 0%;"
-                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                             aria-valuenow="0"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
                             0%
                         </div>
                     </div>
+
 
 
                     <div style=" margin-top: 3.5rem !important;">
@@ -388,15 +391,16 @@
                                     <label>Zip <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-pin-distance-line"></i></span>
-                                        <input asp-for="MedicareJobModel.ZipCode" type="text" class="form-control zipcode-inputmask  track-field" />
+                                        <input asp-for="MedicareJobModel.ZipCode" type="text" class="form-control zipcode-inputmaskCostom  track-field" />
                                     </div>
+                                    <span asp-validation-for="MedicareJobModel.ZipCode" class="text-danger"></span>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label>NPN <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-passport-line"></i></span>
-                                        <input asp-for="MedicareJobModel.Npn" type="text" class="form-control  track-field" />
+                                        <input asp-for="MedicareJobModel.Npn" type="text" class="form-control npn-inputmask track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.Npn" class="text-danger"></span>
                                 </div>
@@ -407,7 +411,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-mail-line"></i></span>
-                                        <input asp-for="MedicareJobModel.Email" class="form-control email-inputmask  track-field" />
+                                        <input asp-for="MedicareJobModel.Email" class="form-control   track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.Email" class="text-danger"></span>
                                 </div>
@@ -415,7 +419,7 @@
                                     <label>Phone <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-phone-line"></i></span>
-                                        <input asp-for="MedicareJobModel.PhoneNo" type="text" class="form-control phone-inputmask  track-field" />
+                                        <input asp-for="MedicareJobModel.PhoneNo" type="text" class="form-control   track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.PhoneNo" class="text-danger"></span>
                                 </div>
@@ -443,37 +447,9 @@
                                     <span asp-validation-for="MedicareJobModel.AboutAgent" class="text-danger"></span>
                                 </div>
 
-                                <!-- State License (multi-select) -->
-                                <div class="col-md-4">
-                                    <label>State License</label>
-                                    <span style="color:red;">*</span>
-                                    <select asp-for="MedicareJobModel.StateLicenceList"
-                                            class="form-select  track-field"
-                                            id="multipleSelect"
-                                            multiple
-                                            data-placeholder="Select"
-                                            asp-items="Model.StateList">
-                                    </select>
-                                    @*   <div class="input-group">
-                                        <span class="input-group-text"><i class="ri-folder-2-line"></i></span>
-                                       
-                                    </div> *@
-                                    <span asp-validation-for="MedicareJobModel.StateLicenceList" class="text-danger"></span>
-                                </div>
-
                                 <!-- State License Number -->
-                                <div class="col-md-4">
-                                    <label>State License No.</label>
-                                    <span style="color:red;">*</span>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="ri-numbers-line"></i></span>
-                                        <input asp-for="MedicareJobModel.StateLicenceNo" type="text" class="form-control  track-field" />
-                                        <span asp-validation-for="MedicareJobModel.StateLicenceNo" class="text-danger"></span>
-                                    </div>
-                                </div>
-
                                 <!-- State License Doc -->
-                                <div class="col-md-4">
+                                @*   <div class="col-md-4">
                                     <label>State License Doc</label>
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
@@ -483,7 +459,7 @@
                                                class="form-control  track-field"
                                                onchange="CFP.Job.SaveDocument(@((int)Enumeration.MedicareJobDoc.StateLicenceDoc))" />
                                     </div>
-                                </div>
+                                </div> *@
 
                                 <!-- Years of Experience -->
                                 <div class="col-md-4">
@@ -497,14 +473,22 @@
                                 </div>
 
                                 <!-- Carrier -->
+
                                 <div class="col-md-4">
                                     <label>Carrier</label>
                                     <span style="color:red;">*</span>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="ri-building-line"></i></span>
-                                        <select asp-for="MedicareJobModel.Carrier" class="form-select  track-field" asp-items="Model.CareerList"></select>
-                                    </div>
-                                    <span asp-validation-for="MedicareJobModel.Carrier" class="text-danger"></span>
+                                    <select asp-for="MedicareJobModel.CarrierList"
+                                            class="form-select  track-field multipleSelect"
+                                            id="carrierId"
+                                            multiple
+                                            data-placeholder="Select"
+                                            asp-items="Model.CareerList">
+                                    </select>
+                                    @*   <div class="input-group">
+                                        <span class="input-group-text"><i class="ri-folder-2-line"></i></span>
+                                       
+                                    </div> *@
+                                    <span asp-validation-for="MedicareJobModel.CarrierList" class="text-danger"></span>
                                 </div>
 
                                 <!-- AHIP -->
@@ -520,7 +504,42 @@
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.Ahip" class="text-danger"></span>
                                 </div>
-
+                                <div class="col-md-4">
+                                    <label>AHIP Proof</label>
+                                    <span style="color:red;">*</span>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="ri-camera-line"></i></span>
+                                        <input type="file" id="JobDoc_5" class="form-control  track-field"
+                                               onchange="CFP.Job.SaveDocument(@((int)Enumeration.MedicareJobDoc.AhipDoc))" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>State License No.</label>
+                                    <span style="color:red;">*</span>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="ri-numbers-line"></i></span>
+                                        <input asp-for="MedicareJobModel.StateLicenceNo" type="text" class="form-control  track-field" />
+                                        <span asp-validation-for="MedicareJobModel.StateLicenceNo" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <!-- State License (multi-select) -->
+                                <div class="col-md-4">
+                                    <label>State License</label>
+                                    <span style="color:red;">*</span>
+                                    <select asp-for="MedicareJobModel.StateLicenceList"
+                                            class="form-select  track-field multipleSelect"
+                                            id="stateLicenseId"
+                                            multiple
+                                            data-placeholder="Select"
+                                            asp-items="Model.StateList" onchange="renderStateLicenseUploads()">
+                                    </select>
+                                    @*   <div class="input-group">
+                                        <span class="input-group-text"><i class="ri-folder-2-line"></i></span>
+                                       
+                                    </div> *@
+                                    <span asp-validation-for="MedicareJobModel.StateLicenceList" class="text-danger"></span>
+                                </div>
+                                <div class="row mt-2" id="state-doc-container"></div>
                             </div>
 
 
@@ -714,7 +733,7 @@
 
                                 <!-- Profile Photo -->
                                 <div class="col-md-4">
-                                    <label>Profile Picture</label>
+                                    <label>Drivers license/Passport </label>
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-camera-line"></i></span>
@@ -768,7 +787,7 @@
               $.validator.unobtrusive.parse($("#jobForm"));
                CFP.Common.InitDatePicker();
                CFP.Common.InitMask();
-                  $('#multipleSelect').select2();
+                  $('.multipleSelect').select2();
          });
 
 
@@ -812,12 +831,12 @@
         // Next
         document.querySelectorAll('.next-btn').forEach(btn => {
             btn.addEventListener('click', function () {
-                 if ($("#jobForm").valid()) {
+                  if ($("#jobForm").valid()) {
                 if (currentStep < totalSteps) {
                     currentStep++;
                     updateSteps();
                 }
-                }
+                 }
             });
         });
 
@@ -858,5 +877,76 @@
                 calculateFormCompletion();
             }
         });
+
+
+                document.addEventListener("change", function (e) {
+            if (e.target.id === "MedicareJobModel_Dob") {
+                validateDob();
+            }
+        });
+
+        function validateDob() {
+            const dobInput = document.getElementById("MedicareJobModel_Dob");
+            const errorSpan = document.querySelector('[data-valmsg-for="MedicareJobModel.Dob"]');
+
+            const dobVal = dobInput.value;
+            if (!dobVal) return;
+
+            const dob = new Date(dobVal);
+            const today = new Date();
+
+            let age = today.getFullYear() - dob.getFullYear();
+            if (
+                dob.getMonth() > today.getMonth() ||
+                (dob.getMonth() === today.getMonth() && dob.getDate() > today.getDate())
+            ) {
+                age--;
+            }
+
+            if (age < 18) {
+                errorSpan.innerText = "Age must be at least 18.";
+                dobInput.classList.add("is-invalid");
+                return false;
+            }
+
+            if (age > 100) {
+                errorSpan.innerText = "Age cannot be more than 100.";
+                dobInput.classList.add("is-invalid");
+                return false;
+            }
+
+            errorSpan.innerText = "";
+            dobInput.classList.remove("is-invalid");
+            return true;
+        }
+
+                    function renderStateLicenseUploads() {
+            let container = document.getElementById("state-doc-container");
+            container.innerHTML = "";
+
+            $("#stateLicenseId option:selected").each(function () {
+                let stateId = $(this).val();        // e.g., 1
+                let stateName = $(this).text().trim(); // e.g., state 1
+
+                container.innerHTML += `
+                        <div class="col-4 mt-2">
+            <label>State License for ${stateName}</label>
+            <span style="color:red;">*</span>
+            <div class="input-group">
+                <span class="input-group-text"><i class="ri-file-upload-line"></i></span>
+
+                <input type="file"
+                       id="JobDoc_${stateId}"
+                       class="form-control track-field"
+                       onchange="CFP.Job.SaveDocument(@((int)Enumeration.MedicareJobDoc.StateLicenceDoc), '${stateId}')"/>
+            </div>
+        </div>
+                `;
+            });
+        }
+
+
+
+
     </script>
 }

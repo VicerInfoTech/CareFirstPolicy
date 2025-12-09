@@ -31,17 +31,17 @@ public partial class MedicareJobApplication
 
     public string? AboutAgent { get; set; }
 
+    public string Carrer { get; set; } = null!;
+
     public string StateLicence { get; set; } = null!;
 
     public decimal Yoe { get; set; }
 
-    public byte? Carrier { get; set; }
-
     public bool Ahip { get; set; }
 
-    public string StateLicenceNo { get; set; } = null!;
+    public string? Ahipdoc { get; set; }
 
-    public string StateLicenceDoc { get; set; } = null!;
+    public string StateLicenceNo { get; set; } = null!;
 
     public string ProfileDoc { get; set; } = null!;
 
@@ -58,6 +58,8 @@ public partial class MedicareJobApplication
     public bool IsActive { get; set; }
 
     public DateTime CreatedOn { get; set; }
+
+    public virtual ICollection<MedicareJobApplicationsDoc> MedicareJobApplicationsDocs { get; set; } = new List<MedicareJobApplicationsDoc>();
 
     public virtual State State { get; set; } = null!;
 }

@@ -42,6 +42,8 @@ public partial class EndeavorCRMContext : DbContext
 
     public virtual DbSet<MedicareJobApplication> MedicareJobApplications { get; set; }
 
+    public virtual DbSet<MedicareJobApplicationsDoc> MedicareJobApplicationsDocs { get; set; }
+
     public virtual DbSet<Menu> Menus { get; set; }
 
     public virtual DbSet<MenuRole> MenuRoles { get; set; }
@@ -391,6 +393,10 @@ public partial class EndeavorCRMContext : DbContext
                 .HasMaxLength(10)
                 .IsFixedLength();
             entity.Property(e => e.Ahip).HasColumnName("AHIP");
+            entity.Property(e => e.Ahipdoc)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("AHIPDoc");
             entity.Property(e => e.AssignmentCommissionDoc)
                 .HasMaxLength(500)
                 .IsUnicode(false);
@@ -398,6 +404,9 @@ public partial class EndeavorCRMContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.BankName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Carrer)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.City)
@@ -430,9 +439,6 @@ public partial class EndeavorCRMContext : DbContext
             entity.Property(e => e.StateLicence)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.StateLicenceDoc)
-                .HasMaxLength(500)
-                .IsUnicode(false);
             entity.Property(e => e.StateLicenceNo)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -447,6 +453,27 @@ public partial class EndeavorCRMContext : DbContext
                 .HasForeignKey(d => d.StateId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Medicare_JobApplications_State");
+        });
+
+        modelBuilder.Entity<MedicareJobApplicationsDoc>(entity =>
+        {
+            entity.HasKey(e => e.JobApplicatonDocId);
+
+            entity.ToTable("Medicare_JobApplicationsDoc");
+
+            entity.Property(e => e.DocName)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.JobApplication).WithMany(p => p.MedicareJobApplicationsDocs)
+                .HasForeignKey(d => d.JobApplicationId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Medicare_JobApplicationsDoc_Medicare_JobApplications");
+
+            entity.HasOne(d => d.State).WithMany(p => p.MedicareJobApplicationsDocs)
+                .HasForeignKey(d => d.StateId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Medicare_JobApplicationsDoc_State");
         });
 
         modelBuilder.Entity<Menu>(entity =>

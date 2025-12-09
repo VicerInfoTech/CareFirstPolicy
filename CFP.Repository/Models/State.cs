@@ -14,4 +14,6 @@ public partial class State
     public bool IsActive { get; set; }
 
     public virtual ICollection<MedicareJobApplication> MedicareJobApplications { get; set; } = new List<MedicareJobApplication>();
+
+    public virtual ICollection<MedicareJobApplicationsDoc> MedicareJobApplicationsDocs { get; set; } = new List<MedicareJobApplicationsDoc>();
 }

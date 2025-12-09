@@ -29,15 +29,24 @@ namespace CFP.Common.Business_Entities
         [Required(ErrorMessage = "State is required.")]
         public int StateId { get; set; }
         [Required(ErrorMessage = "Zip code is required.")]
+        [StringLength(5, MinimumLength = 5, ErrorMessage = "Zip code must be exactly 5 digits.")]
+        [RegularExpression(@"^\d{5}$", ErrorMessage = "Zip code must contain only digits.")]
         public string ZipCode { get; set; } = null!;
+
         [Required(ErrorMessage = "NPN is required.")]
+        [StringLength(7, MinimumLength = 7, ErrorMessage = "NPN must be exactly 7 digits.")]
+        [RegularExpression(@"^\d{7}$", ErrorMessage = "NPN must contain only digits.")]
         public string Npn { get; set; } = null!;
+
 
         [Required(ErrorMessage = "Date of birth is required.")]
         public DateOnly Dob { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Enter a valid email address.")]
+
         public string Email { get; set; } = null!;
+
 
         [Required(ErrorMessage = "Phone number is required.")]
         [Phone(ErrorMessage = "Invalid phone number.")]
@@ -56,10 +65,11 @@ namespace CFP.Common.Business_Entities
         public decimal Yoe { get; set; }
 
         [Required(ErrorMessage = "Carrier is required.")]
-        public byte? Carrier { get; set; }
+        public string[] CarrierList { get; set; } = Array.Empty<string>();
 
         [Required(ErrorMessage = "AHIP selection is required.")]
         public bool Ahip { get; set; }
+        public string? Ahipdoc { get; set; }
 
         [Required(ErrorMessage = "State Licence No is required.")]
         public string StateLicenceNo { get; set; } = null!;

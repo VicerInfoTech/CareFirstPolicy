@@ -47,7 +47,7 @@ namespace CFP.Web.Controllers
 
 
         [HttpPost]
-        public JsonResult SaveDoc(IFormFile file, int docId)
+        public JsonResult SaveDoc(IFormFile file, int docId,int stateId)
         {
             ResponseModel model = new ResponseModel();
 
@@ -73,7 +73,7 @@ namespace CFP.Web.Controllers
                     documentList = JsonSerializer.Deserialize<List<JobDocModel>>(data) ?? new List<JobDocModel>();
 
                 // Remove existing document for same docId
-                var existingDoc = documentList.FirstOrDefault(d => d.DocId == docId);
+                var existingDoc = documentList.FirstOrDefault(d => d.DocId == docId && d.StateId==stateId);
                 if (existingDoc != null)
                 {
                     string existingFilePath = Path.Combine(documentFullPath, existingDoc.DocName);
@@ -108,7 +108,8 @@ namespace CFP.Web.Controllers
                 documentList.Add(new JobDocModel
                 {
                     DocName = newFileName,
-                    DocId = docId
+                    DocId = docId,
+                    StateId=docId,
                 });
 
                 // Save updated list back to TEMP

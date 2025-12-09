@@ -31,6 +31,7 @@ CFP.Common = new function () {
         $(".ssn-inputmask").inputmask("999-99-9999");
         $(".zipcode-inputmask").inputmask("99999-9999");
         $(".zipcode-inputmaskCostom").inputmask("99999");
+        $(".npn-inputmask").inputmask("9999999");
         $(".otp-inputmask").inputmask("999999");
         $(".kitid-inputmask").inputmask({
             mask: "******-######-******-####",

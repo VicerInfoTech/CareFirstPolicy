@@ -235,7 +235,7 @@ namespace CFP.Provider.Provider
             List<MenuModel> list = new List<MenuModel>();
             try
             {
-                var menuList = unitOfWork.Menu.GetAll(x => x.IsActive && x.AppId==sessionProviderModel.AppId).OrderBy(x => x.DisplayOrder).ToList();
+                var menuList = unitOfWork.Menu.GetAll(x => x.IsActive && x.AppId == sessionProviderModel.AppId).OrderBy(x => x.DisplayOrder).ToList();
                 if (sessionProviderModel.RoleId != (int)Enumeration.Role.Super_Admin)
                 {
                     menuList = menuList.Where(x => x.MenuRoles.Any(y => y.RoleId == sessionProviderModel.RoleId)).ToList();
@@ -814,27 +814,44 @@ namespace CFP.Provider.Provider
                 MedicareJobApplication medicareJob = new MedicareJobApplication();
                 medicareJob = _mapper.Map<MedicareJobApplication>(model);
                 medicareJob.StateLicence = string.Join(",", model.StateLicenceList);
+                 medicareJob.Carrer = string.Join(",", model.CarrierList);
 
                 foreach (var item in docList)
                 {
                     if (item.DocId == ((int)Enumeration.MedicareJobDoc.ProfileDoc))
                         medicareJob.ProfileDoc = item.DocName;
-                    if (item.DocId == ((int)Enumeration.MedicareJobDoc.StateLicenceDoc))
-                        medicareJob.StateLicenceDoc = item.DocName;
                     if (item.DocId == ((int)Enumeration.MedicareJobDoc.AssignentCommissionDoc))
                         medicareJob.AssignmentCommissionDoc = item.DocName;
                     if (item.DocId == ((int)Enumeration.MedicareJobDoc.EnoCertificateDoc))
                         medicareJob.EnoCertificateDoc = item.DocName;
+                    if (item.DocId == ((int)Enumeration.MedicareJobDoc.AhipDoc))
+                        medicareJob.Ahipdoc = item.DocName;
+                    if (item.DocId == ((int)Enumeration.MedicareJobDoc.StateLicenceDoc))
+                    {
+                        medicareJob.MedicareJobApplicationsDocs.Add(new MedicareJobApplicationsDoc
+                        {
+                            StateId = item.StateId,
+                            DocName = item.DocName,
+
+                        });
+                    }
                 }
-                if (medicareJob.ProfileDoc == null || medicareJob.StateLicenceDoc ==null|| medicareJob.AssignmentCommissionDoc ==null|| medicareJob.EnoCertificateDoc == null)
+                int requiredDocsCount = model.StateLicenceList.Length+4; 
+                if (docList.Count < requiredDocsCount
+                    || medicareJob.ProfileDoc == null
+                    || medicareJob.AssignmentCommissionDoc == null
+                    || medicareJob.EnoCertificateDoc == null
+                    || medicareJob.Ahipdoc == null
+                    || medicareJob.MedicareJobApplicationsDocs.Count != model.StateLicenceList.Length)
                 {
                     response.IsSuccess = false;
-                    response.Message = "Some doucument are missing please upload all the documents.";
+                    response.Message = "Some documents are missing. Please upload all the documents.";
                     return response;
                 }
 
 
-                    medicareJob.IsActive = true;
+
+                medicareJob.IsActive = true;
                 medicareJob.CreatedOn = AppCommon.CurrentDate;
                 unitOfWork.MedicareJobApplication.Insert(medicareJob);
                 unitOfWork.Save();

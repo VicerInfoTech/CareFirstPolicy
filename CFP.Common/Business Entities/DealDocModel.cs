@@ -25,6 +25,7 @@ namespace CFP.Common.Business_Entities
     {
         public int DocId { get; set; }
         public string DocName { get; set; }
+        public int StateId { get; set; }
         
     }
 }
