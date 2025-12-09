@@ -23,7 +23,8 @@ namespace CFP.Web.ViewComponents
                 {
                     UserId = _sessionManager.UserId,
                     RoleId = _sessionManager.RoleId,
-                    UserAccess=_sessionManager.UserAccess
+                    UserAccess=_sessionManager.UserAccess,
+                    AppId= _sessionManager.AppId,
                 });
             return View(list);
         }

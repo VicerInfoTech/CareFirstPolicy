@@ -22,6 +22,228 @@
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
         background-color: #6691e7;
     }
+
+    .hero {
+        background: linear-gradient(135deg, #1a472a 0%, #2d5f3f 100%);
+        color: white;
+        padding: 100px 20px;
+        text-align: center;
+    }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .hero p {
+            font-size: 1.5em;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+    .abt-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 60px 20px;
+    }
+
+    .abt-section {
+        /* margin-bottom: 80px; */
+    }
+
+        .abt-section h2 {
+            font-size: 2.5em;
+            color: #1a472a;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .abt-section p {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.9;
+        }
+
+    .tagline-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 80px 20px;
+        text-align: center;
+    }
+
+        .tagline-section h2 {
+            font-size: 3em;
+            color: #1a472a;
+            margin-bottom: 20px;
+        }
+
+        .tagline-section p {
+            font-size: 1.3em;
+            max-width: 900px;
+            margin: 0 auto;
+            color: #444;
+        }
+
+    .two-column {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 50px;
+        margin-top: 40px;
+    }
+
+    .column-item h3 {
+        color: #1a472a;
+        font-size: 2em;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .column-item p {
+        font-size: 1.15em;
+        line-height: 1.8;
+    }
+
+    .services-section {
+        background-color: #f8f9fa;
+        /* padding: 80px 20px; */
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 35px;
+        margin-top: 40px;
+    }
+
+    .service-card {
+        background: white;
+        padding: 35px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .service-card h3 {
+            color: #1a472a;
+            font-size: 1.7em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .service-card p {
+            font-size: 1.1em;
+            color: #666;
+            line-height: 1.7;
+        }
+
+    .cta-section {
+        background: linear-gradient(135deg, #1a472a 0%, #2d5f3f 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+    }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 2.8em;
+            margin-bottom: 30px;
+        }
+
+    .cta-buttons {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 40px;
+    }
+
+    .cta-button {
+        background: white;
+        color: #1a472a;
+        padding: 18px 40px;
+        font-size: 1.2em;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: inline-block;
+    }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+    .stats-section {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-top: 50px;
+    }
+
+    .stat-item {
+        padding: 30px;
+    }
+
+    .stat-number {
+        font-size: 3.5em;
+        color: #1a472a;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        font-size: 1.2em;
+        color: #666;
+    }
+
+    .testimonial {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 60px 40px;
+        border-radius: 12px;
+        margin: 60px auto;
+        max-width: 900px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+        .testimonial p {
+            font-size: 1.3em;
+            font-style: italic;
+            color: #444;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+    .testimonial-author {
+        font-size: 1.1em;
+        color: #1a472a;
+        font-weight: 600;
+        font-style: normal;
+    }
+
+    .emphasis-text {
+        font-size: 1.4em;
+        text-align: center;
+        color: #1a472a;
+        font-weight: 600;
+        margin: 40px 0;
+        line-height: 1.6;
+    }
 </style>
 <div class="row">
     <div class="col-12">
@@ -40,7 +262,7 @@
 </div>
 <div class="row">
     <div class="col-xl-12">
-        <div class="card">
+        <div class="card" style="margin-bottom: 5rem !important;">
             <div class="card-header">
                 <h4 class="card-title mb-0">Application for Insurance Agent Position (Medicare Specialist)</h4>
             </div>
@@ -51,39 +273,50 @@
                     </div>
 
                     <div class="position-relative m-4" id="stepProgress">
-                        <div class="progress" style="height: 2px;">
+                        <div class="progress " style="height: 5px;">
                             <div id="progressLine" class="progress-bar" role="progressbar"
-                                 style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                 style="width: 0%;background-color:#11d1b7;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
 
                         <!-- Step 1 - 0% -->
                         <button type="button" id="stepBtn1"
-                                class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-primary rounded-pill"
-                                style="width: 2rem; height: 2rem;">
+                                class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-success rounded-pill"
+                                style="width: 3rem; height: 3rem;">
                             1
                         </button>
 
                         <!-- Step 2 - 33% -->
                         <button type="button" id="stepBtn2"
                                 class="position-absolute top-0 start-33 translate-middle btn btn-sm btn-light rounded-pill"
-                                style="width: 2rem; height: 2rem;">
+                                style="width: 3rem; height: 3rem;">
                             2
                         </button>
 
                         <!-- Step 3 - 66% -->
                         <button type="button" id="stepBtn3"
                                 class="position-absolute top-0 start-66 translate-middle btn btn-sm btn-light rounded-pill"
-                                style="width: 2rem; height: 2rem;">
+                                style="width: 3rem; height: 3rem;">
                             3
                         </button>
 
                         <!-- Step 4 - 100% -->
                         <button type="button" id="stepBtn4"
                                 class="position-absolute top-0 start-100 translate-middle btn btn-sm btn-light rounded-pill"
-                                style="width: 2rem; height: 2rem;">
+                                style="width: 3rem; height: 3rem;">
                             4
                         </button>
                     </div>
+
+                    <div class="progress mb-3 " style="margin-top: 2.5rem !important;">
+                        <div id="completionProgress"
+                             class="progress-bar bg-success"
+                             role="progressbar"
+                             style="width: 0%;"
+                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            0%
+                        </div>
+                    </div>
+
 
                     <div style=" margin-top: 3.5rem !important;">
                         <!-- STEP 1 -->
@@ -93,7 +326,7 @@
                                     <label>First Name <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-user-line"></i></span>
-                                        <input asp-for="MedicareJobModel.FirstName" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.FirstName" type="text" class="form-control  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.FirstName" class="text-danger"></span>
                                 </div>
@@ -102,7 +335,7 @@
                                     <label>Last Name <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-user-line"></i></span>
-                                        <input asp-for="MedicareJobModel.LastName" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.LastName" type="text" class="form-control  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.LastName" class="text-danger"></span>
                                 </div>
@@ -111,7 +344,7 @@
                                     <label>Date of Birth <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-calendar-line"></i></span>
-                                        <input asp-for="MedicareJobModel.Dob" class="form-control date-picker" />
+                                        <input asp-for="MedicareJobModel.Dob" class="form-control date-picker  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.Dob" class="text-danger"></span>
                                 </div>
@@ -120,7 +353,7 @@
                                     <label>Address 1 <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-map-pin-line"></i></span>
-                                        <input asp-for="MedicareJobModel.Address1" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.Address1" type="text" class="form-control  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.Address1" class="text-danger"></span>
                                 </div>
@@ -129,7 +362,7 @@
                                     <label>Address 2</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-map-pin-line"></i></span>
-                                        <input asp-for="MedicareJobModel.Address2" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.Address2" type="text" class="form-control  track-field" />
                                     </div>
                                 </div>
 
@@ -137,7 +370,7 @@
                                     <label>City <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-building-line"></i></span>
-                                        <input asp-for="MedicareJobModel.City" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.City" type="text" class="form-control  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.City" class="text-danger"></span>
                                 </div>
@@ -146,7 +379,7 @@
                                     <label>State <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-map-line"></i></span>
-                                        <select asp-for="MedicareJobModel.StateId" class="form-select" asp-items="Model.StateList"></select>
+                                        <select asp-for="MedicareJobModel.StateId" class="form-select  track-field" asp-items="Model.StateList"></select>
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.StateId" class="text-danger"></span>
                                 </div>
@@ -155,7 +388,7 @@
                                     <label>Zip <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-pin-distance-line"></i></span>
-                                        <input asp-for="MedicareJobModel.ZipCode" type="text" class="form-control zipcode-inputmask" />
+                                        <input asp-for="MedicareJobModel.ZipCode" type="text" class="form-control zipcode-inputmask  track-field" />
                                     </div>
                                 </div>
 
@@ -163,7 +396,7 @@
                                     <label>NPN <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-passport-line"></i></span>
-                                        <input asp-for="MedicareJobModel.Npn" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.Npn" type="text" class="form-control  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.Npn" class="text-danger"></span>
                                 </div>
@@ -174,7 +407,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-mail-line"></i></span>
-                                        <input asp-for="MedicareJobModel.Email" class="form-control email-inputmask " />
+                                        <input asp-for="MedicareJobModel.Email" class="form-control email-inputmask  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.Email" class="text-danger"></span>
                                 </div>
@@ -182,7 +415,7 @@
                                     <label>Phone <span style="color:red;">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-phone-line"></i></span>
-                                        <input asp-for="MedicareJobModel.PhoneNo" type="text" class="form-control phone-inputmask" />
+                                        <input asp-for="MedicareJobModel.PhoneNo" type="text" class="form-control phone-inputmask  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.PhoneNo" class="text-danger"></span>
                                 </div>
@@ -205,7 +438,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-edit-line"></i></span>
-                                        <textarea asp-for="MedicareJobModel.AboutAgent" class="form-control"></textarea>
+                                        <textarea asp-for="MedicareJobModel.AboutAgent" class="form-control  track-field"></textarea>
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.AboutAgent" class="text-danger"></span>
                                 </div>
@@ -215,7 +448,7 @@
                                     <label>State License</label>
                                     <span style="color:red;">*</span>
                                     <select asp-for="MedicareJobModel.StateLicenceList"
-                                            class="form-select"
+                                            class="form-select  track-field"
                                             id="multipleSelect"
                                             multiple
                                             data-placeholder="Select"
@@ -234,7 +467,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-numbers-line"></i></span>
-                                        <input asp-for="MedicareJobModel.StateLicenceNo" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.StateLicenceNo" type="text" class="form-control  track-field" />
                                         <span asp-validation-for="MedicareJobModel.StateLicenceNo" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -247,8 +480,8 @@
                                         <span class="input-group-text"><i class="ri-file-upload-line"></i></span>
                                         <input type="file"
                                                id="JobDoc_2"
-                                               class="form-control"
-                                               onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.StateLicenceDoc))" />
+                                               class="form-control  track-field"
+                                               onchange="CFP.Job.SaveDocument(@((int)Enumeration.MedicareJobDoc.StateLicenceDoc))" />
                                     </div>
                                 </div>
 
@@ -258,7 +491,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-timer-line"></i></span>
-                                        <input asp-for="MedicareJobModel.Yoe" type="number" class="form-control" min="0" />
+                                        <input asp-for="MedicareJobModel.Yoe" type="number" class="form-control  track-field" min="0" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.Yoe" class="text-danger"></span>
                                 </div>
@@ -269,7 +502,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-building-line"></i></span>
-                                        <select asp-for="MedicareJobModel.Carrier" class="form-select" asp-items="Model.CareerList"></select>
+                                        <select asp-for="MedicareJobModel.Carrier" class="form-select  track-field" asp-items="Model.CareerList"></select>
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.Carrier" class="text-danger"></span>
                                 </div>
@@ -280,7 +513,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-graduation-cap-line"></i></span>
-                                        <select asp-for="MedicareJobModel.Ahip" class="form-select">
+                                        <select asp-for="MedicareJobModel.Ahip" class="form-select  track-field">
                                             <option value="true">Yes</option>
                                             <option value="false">No</option>
                                         </select>
@@ -303,17 +536,141 @@
                         <div class="step d-none" id="step3">
 
                             <div class="mb-3">
-                                <label>About Us</label>
-                                <div>
-                                    We are @AppCommon.ApplicationTitle.
+                                <div class="hero">
+                                    <h1>Think Insurance First</h1>
+                                    <p>Empowering agents is our #1 priority.</p>
+                                </div>
+
+                                <div class="abt-container">
+                                    <div class="abt-section">
+                                        <p style="font-size: 1.3em; text-align: center; max-width: 900px; margin: 0 auto;">
+                                            Think Insurance First truly understands the value of Medicare coverage and the impact it has on seniors and their families. That's why we focus on maximizing benefits and getting clients money back while ensuring agents earn what they deserve—$200+ per deal.
+                                        </p>
+                                        <p style="font-size: 1.3em; text-align: center; max-width: 900px; margin: 20px auto 0;">
+                                            We support independent agents nationwide with a platform built to help you show clients real value. When your clients see money back in their pockets, they're happy. When you're earning strong commissions, you're successful. That's the Think Insurance First difference.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="tagline-section">
+                                    <h2>Agents. First.</h2>
+                                    <p>
+                                        The independent insurance agents who work with Think Insurance First have a passion for helping seniors get the Medicare coverage they deserve. It's not just a name, it's our entire identity. Your success is our mission.
+                                    </p>
+                                </div>
+
+                                <div class="abt-container">
+                                    <div class="abt-section">
+                                        <div class="two-column">
+                                            <div class="column-item">
+                                                <h3>A Perfect Fit.</h3>
+                                                <p>
+                                                    Think Insurance First is a Medicare-focused platform that partners with leading Medicare carriers across the country. This gives your clients more options and gives you the tools to ensure the best coverage for every situation. Our streamlined portal makes submitting deals faster and getting paid easier than ever.
+                                                </p>
+                                            </div>
+                                            <div class="column-item">
+                                                <h3>Built for You.</h3>
+                                                <p>
+                                                    We provide the resources, technology, and support for your growth and success. From lead generation to deal submission to commission tracking, everything you need is in one place. Focus on what you do best—helping seniors—while we handle the rest.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="services-section">
+                                    <div class="abt-container">
+                                        <h2>How Can We Help You?</h2>
+                                        <p class="emphasis-text">
+                                            Think Insurance First provides comprehensive solutions for Medicare agents.
+                                        </p>
+
+                                        <div class="services-grid">
+                                            <div class="service-card">
+                                                <h3>Maximum Benefits for Clients</h3>
+                                                <p>
+                                                    We don't just find coverage—we maximize benefits. Our platform helps you identify plans that give your clients money back, extra benefits, and the most value for their situation. Happy clients mean more referrals and a thriving business.
+                                                </p>
+                                            </div>
+
+                                            <div class="service-card">
+                                                <h3>Get Clients Money Back</h3>
+                                                <p>
+                                                    One of our biggest advantages: helping seniors get money back through their Medicare plans. Whether it's flex cards, grocery allowances, or other cash benefits, we help you show clients real savings. It's a game-changer for enrollment success.
+                                                </p>
+                                            </div>
+
+                                            <div class="service-card">
+                                                <h3>$200+ Per Deal</h3>
+                                                <p>
+                                                    You work hard for every client—we make sure you're rewarded. Earn $200 or more per deal with competitive commission rates that recognize your expertise. Fast payouts mean you get paid quickly for the work you do.
+                                                </p>
+                                            </div>
+
+                                            <div class="service-card">
+                                                <h3>Agent Support & Training</h3>
+                                                <p>
+                                                    From onboarding to advanced sales strategies, we provide ongoing training and support. Our team is always available to help you navigate complex cases, answer carrier questions, and grow your Medicare business.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="abt-container" style="padding-bottom:0px;">
+                                    <div class="testimonial">
+                                        <p>
+                                            "Today I helped a client switch to a plan that gives them $200 back every month for groceries and prescriptions. They were shocked they could get money back through Medicare. Think Insurance First makes it so easy to maximize benefits—I earned $250 on that deal and my client couldn't be happier. This platform changed my business."
+                                        </p>
+                                        <div class="testimonial-author">— Sarah M., Independent Medicare Agent</div>
+                                    </div>
+                                </div>
+
+                                <div class="stats-section">
+                                    <h2>Growing Together</h2>
+                                    <div class="stats-grid">
+                                        <div class="stat-item">
+                                            <div class="stat-number">50</div>
+                                            <div class="stat-label">States Covered</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-number">24/7</div>
+                                            <div class="stat-label">Agent Support</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-number">100%</div>
+                                            <div class="stat-label">Agent-Focused</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="cta-section">
+                                    <h2>Ready to Put Your Business First?</h2>
+                                    <p style="font-size: 1.3em; max-width: 800px; margin: 0 auto;">
+                                        Join the growing community of Medicare agents who are building successful businesses with Think Insurance First. We provide the platform, you provide the passion.
+                                    </p>
+                                    <div class="cta-buttons">
+                                        <a href="#" class="cta-button">Become an Agent</a>
+                                        <a href="#" class="cta-button">Learn More</a>
+                                    </div>
+                                </div>
+
+                                <div class="abt-container">
+                                    <div class="abt-section" style="text-align: center;">
+                                        <h2>Our Carrier Partners</h2>
+                                        <p style="max-width: 800px; margin: 20px auto;">
+                                            We partner with top Medicare insurance carriers to give you and your clients the best options available. From Medicare Advantage to Supplement plans, Think Insurance First proudly works with the industry's most trusted names to offer a comprehensive range of Medicare products.
+                                        </p>
+                                        <p class="emphasis-text" style="margin-top: 40px;">
+                                            This allows our agents to help seniors find the perfect coverage for their unique situation.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="d-flex justify-content-between mt-3">
                                 <button type="button" class="btn btn-link text-decoration-none btn-label prev-btn"><i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i> Back </button>
-
                                 <button type="button" class="btn btn-success btn-label right ms-auto   next-btn"><i class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Next</button>
-
                             </div>
                         </div>
 
@@ -328,7 +685,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-bank-line"></i></span>
-                                        <input asp-for="MedicareJobModel.BankName" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.BankName" type="text" class="form-control  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.BankName" class="text-danger"></span>
                                 </div>
@@ -339,7 +696,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-user-3-line"></i></span>
-                                        <input asp-for="MedicareJobModel.AccHolderName" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.AccHolderName" type="text" class="form-control  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.AccHolderName" class="text-danger"></span>
                                 </div>
@@ -350,7 +707,7 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-numbers-line"></i></span>
-                                        <input asp-for="MedicareJobModel.BankAccNo" type="text" class="form-control" />
+                                        <input asp-for="MedicareJobModel.BankAccNo" type="text" class="form-control  track-field" />
                                     </div>
                                     <span asp-validation-for="MedicareJobModel.BankAccNo" class="text-danger"></span>
                                 </div>
@@ -361,8 +718,8 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-camera-line"></i></span>
-                                        <input type="file" id="JobDoc_1" class="form-control"
-                                               onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.ProfileDoc))" />
+                                        <input type="file" id="JobDoc_1" class="form-control  track-field"
+                                               onchange="CFP.Job.SaveDocument(@((int)Enumeration.MedicareJobDoc.ProfileDoc))" />
                                     </div>
                                 </div>
 
@@ -372,8 +729,8 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-file-list-3-line"></i></span>
-                                        <input type="file" id="JobDoc_3" class="form-control"
-                                               onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.AssignentCommissionDoc))" />
+                                        <input type="file" id="JobDoc_3" class="form-control  track-field"
+                                               onchange="CFP.Job.SaveDocument(@((int)Enumeration.MedicareJobDoc.AssignentCommissionDoc))" />
                                     </div>
                                 </div>
 
@@ -383,8 +740,8 @@
                                     <span style="color:red;">*</span>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="ri-file-paper-line"></i></span>
-                                        <input type="file" id="JobDoc_4" class="form-control"
-                                               onchange="CFP.Dashboard.SaveDocument(@((int)Enumeration.MedicareJobDoc.EnoCertificateDoc))" />
+                                        <input type="file" id="JobDoc_4" class="form-control  track-field"
+                                               onchange="CFP.Job.SaveDocument(@((int)Enumeration.MedicareJobDoc.EnoCertificateDoc))" />
                                     </div>
                                 </div>
                             </div>
@@ -392,7 +749,7 @@
 
                             <div class="d-flex justify-content-between mt-3">
                                 <button type="button" class="btn btn-link text-decoration-none btn-label prev-btn"><i class="ri-arrow-left-line label-icon align-middle fs-16 me-2"></i> Back </button>
-                                <button type="button" class="btn btn-success btn-label right ms-auto " onclick="CFP.Dashboard.SaveJobForm()"><i class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Submit</button>
+                                <button type="button" class="btn btn-success btn-label right ms-auto " onclick="CFP.Job.SaveJobForm()"><i class="ri-arrow-right-line label-icon align-middle fs-16 ms-2"></i>Submit</button>
                             </div>
                         </div>
 
@@ -433,14 +790,14 @@
 
                 if (i < currentStep) {
                     btn.classList.remove("btn-light");
-                    btn.classList.add("btn-primary"); // completed
+                    btn.classList.add("btn-success"); // completed
                 }
                 else if (i === currentStep) {
                     btn.classList.remove("btn-light");
-                    btn.classList.add("btn-primary"); // current
+                    btn.classList.add("btn-success"); // current
                 }
                 else {
-                    btn.classList.remove("btn-primary");
+                    btn.classList.remove("btn-success");
                     btn.classList.add("btn-light"); // upcoming
                 }
             }
@@ -475,5 +832,31 @@
         });
 
         updateSteps();
+                function calculateFormCompletion() {
+            const fields = document.querySelectorAll('.track-field');
+            const totalFields = fields.length;
+            let filled = 0;
+
+            fields.forEach(field => {
+                if (field.value.trim() !== "") {
+                    filled++;
+                }
+            });
+
+            let percent = Math.round((filled / totalFields) * 100);
+
+            // Update the new independent progress bar
+            const bar = document.getElementById("completionProgress");
+            bar.style.width = percent + "%";
+            bar.setAttribute("aria-valuenow", percent);
+            bar.innerText = percent + "%";
+        }
+
+        // Recalculate on every input/change
+        document.addEventListener("input", function (e) {
+            if (e.target.classList.contains("track-field")) {
+                calculateFormCompletion();
+            }
+        });
     </script>
 }

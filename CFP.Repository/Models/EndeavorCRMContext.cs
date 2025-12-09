@@ -454,6 +454,7 @@ public partial class EndeavorCRMContext : DbContext
             entity.ToTable("Menu");
 
             entity.Property(e => e.MenuId).ValueGeneratedNever();
+            entity.Property(e => e.AppId).HasDefaultValue(1);
             entity.Property(e => e.Icon)
                 .HasMaxLength(30)
                 .IsUnicode(false);
@@ -467,6 +468,11 @@ public partial class EndeavorCRMContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("PageURL");
+
+            entity.HasOne(d => d.App).WithMany(p => p.Menus)
+                .HasForeignKey(d => d.AppId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Menu_AppMaster");
         });
 
         modelBuilder.Entity<MenuRole>(entity =>

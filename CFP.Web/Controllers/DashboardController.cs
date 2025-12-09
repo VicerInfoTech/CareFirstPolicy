@@ -92,19 +92,27 @@ namespace CFP.Web.Controllers
         }
 
 
-        public IActionResult LoadAppSelector()
-        {
-            DashboardViewModel viewModel = new DashboardViewModel();
-            viewModel.AgentAppList = _commonProvider.GetAgentAppList(GetSessionProviderParameters());
+        //public IActionResult LoadAppSelector()
+        //{
+        //    DashboardViewModel viewModel = new DashboardViewModel();
+        //    viewModel.AgentAppList = _commonProvider.GetAgentAppList(GetSessionProviderParameters());
 
-            return PartialView("_SelectAppPartial", viewModel);
-        }
+        //    return PartialView("_SelectAppPartial", viewModel);
+        //}
         public IActionResult UpdateAppId(int appId = 0)
         {
+            if (appId == 2)
+            {
+                _sessionManager.AppId = appId;
+                return RedirectToAction("Index", "Dashboard", new { area = "Medicare" });
+            }
+
             if (appId != 0)
                 _sessionManager.AppId = appId;
-            return RedirectToAction("Index", "Dashboard");
+
+            return RedirectToAction("Index", "Dashboard", new { area = "" }); // default area
         }
+
 
         public IActionResult DealSummary(string startDate, string endDate)
         {

@@ -16,4 +16,6 @@ public partial class AppMaster
     public bool IsActive { get; set; }
 
     public virtual ICollection<AgentApp> AgentApps { get; set; } = new List<AgentApp>();
+
+    public virtual ICollection<Menu> Menus { get; set; } = new List<Menu>();
 }

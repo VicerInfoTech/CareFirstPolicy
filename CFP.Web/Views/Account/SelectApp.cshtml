@@ -1,12 +1,137 @@
-﻿@section Scripts
-{
-    <script src="~/lib/js/custom/CFP.Dashboard.js" asp-append-version="true"></script>
-
-    <script>
-        $(document).ready(function () {
-
-        CFP.Dashboard.ShowAppList();
-        });
-
-    </script>
+﻿@model DashboardViewModel
+@{
+    Layout = null;
 }
+<link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
+
+<style>
+    /* Full page container to center content */
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .full-page {
+        display: flex;
+        justify-content: center; /* horizontal center */
+        align-items: center; /* vertical center */
+        min-height: 100vh;
+        background: #f5f5f5;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
+
+    .card {
+        background: transparent;
+        border: none;
+        width: 100%;
+        max-width: 800px; /* container width */
+        text-align: center;
+    }
+
+        .card h4 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+    .card-body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .app-cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2.5rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .app-card {
+        display: flex; /* Make <a> a flex container */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: calc(50% - 1.25rem);
+        max-width: 200px;
+        height: 180px;
+        border-radius: 15px;
+        background: #ffffff;
+        padding: 20px;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-align: center;
+        text-decoration: none; /* remove underline */
+        color: inherit; /* inherit text color */
+        box-sizing: border-box;
+    }
+
+        .app-card:hover {
+            transform: translateY(-6px) scale(1.03);
+        }
+
+    .app-logo {
+        width: 75px;
+        height: 75px;
+        object-fit: contain;
+        margin-bottom: 8px;
+        font-size: 60px;
+        background: linear-gradient(45deg, #132649, #50c3e6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+
+    .app-card h5 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    /* Tablet: 2 per row but smaller cards */
+    @@media (max-width: 768px) {
+        .app-card {
+            width: calc(50% - 1rem);
+        }
+    }
+
+    /* Mobile: 1 card per row */
+    @@media (max-width: 480px) {
+        .app-card {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+
+<div class="full-page">
+    <div class="card">
+        <h4><i class="ri-apps-line font-20"></i> Select Your App</h4>
+        <div class="card-body">
+            <div class="app-cards-container">
+                @foreach (var app in Model.AgentAppList)
+                {
+                    @if (app.IsActive)
+                    {
+                        <a href="/Dashboard/UpdateAppId?appId=@app.AppId" class="app-card" role="button">
+                            <i class="@app.LogoName app-logo"></i>
+                            <h5>@app.AppName</h5>
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="app-card" style="opacity:0.5">
+                            <i class="@app.LogoName app-logo"></i>
+                            <h5>@app.AppName</h5>
+                        </div>
+                    }
+
+                }
+            </div>
+        </div>
+    </div>
+</div>

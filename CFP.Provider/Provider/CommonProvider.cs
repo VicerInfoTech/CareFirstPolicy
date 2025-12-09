@@ -235,7 +235,7 @@ namespace CFP.Provider.Provider
             List<MenuModel> list = new List<MenuModel>();
             try
             {
-                var menuList = unitOfWork.Menu.GetAll(x => x.IsActive).OrderBy(x => x.DisplayOrder).ToList();
+                var menuList = unitOfWork.Menu.GetAll(x => x.IsActive && x.AppId==sessionProviderModel.AppId).OrderBy(x => x.DisplayOrder).ToList();
                 if (sessionProviderModel.RoleId != (int)Enumeration.Role.Super_Admin)
                 {
                     menuList = menuList.Where(x => x.MenuRoles.Any(y => y.RoleId == sessionProviderModel.RoleId)).ToList();

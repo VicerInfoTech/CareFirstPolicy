@@ -662,7 +662,7 @@
         });
     };
 
-    this.RenderEmptyPortfolio = function () {
+    this.RenderEmptyPortfolio = function () {   
         if (window.portfolioDonutChart) {
             window.portfolioDonutChart.destroy();
             $('#portfolioDonut').empty();
@@ -681,42 +681,27 @@
             .replace(/'/g, '&#039;');
     }
 
-    this.ShowAppList = function () {
-        $(".preloader").show();
-        $.ajax({
-            type: "GET",
-            url: UrlContent("Dashboard/LoadAppSelector/"),
-            success: function (data) {
-                debugger;
-                $("#common-lg-dialogContentApp").html(data);
-                $("#common-lg-dialogApp").modal({
-                    backdrop: "static",   // prevents closing on outside click
-                    keyboard: false,      // prevents ESC close
-                    show: true
-                });
-                $("#common-lg-dialogApp").modal('show');
-                $(".preloader").hide();
-            }
-        })
-    }
+    //this.ShowAppList = function () {
+    //    $(".preloader").show();
+    //    $.ajax({
+    //        type: "GET",
+    //        url: UrlContent("Dashboard/LoadAppSelector/"),
+    //        success: function (data) {
+    //            debugger;
+    //            $("#common-lg-dialogContentApp").html(data);
+    //            $("#common-lg-dialogApp").modal({
+    //                backdrop: "static",   // prevents closing on outside click
+    //                keyboard: false,      // prevents ESC close
+    //                show: true
+    //            });
+    //            $("#common-lg-dialogApp").modal('show');
+    //            $(".preloader").hide();
+    //        }
+    //    })
+    //}
 
     this.SelectApp = function (appId) {
-        $("#common-lg-dialogApp").modal('hide');
-
-        //if (appId == 1) {
-        //    $(".appname").html('<i class="ri-shield-check-line"></i> <span>ACA</span>');                        
-        //}
-        //else if (appId == 2) {
-        //    $(".appname").html('<i class="ri-stethoscope-line"></i> <span>Medicare</span>');                        
-        //}
-        //else if (appId == 3) {
-        //    $(".appname").html('<i class="ri-money-dollar-circle-line"></i> <span>Taxation</span>');                        
-        //}
-        //else if (appId == 4) {
-        //    $(".appname").html('<i class="ri-rocket-line"></i> <span>Launch Pad</span>');                        
-        //}
-
-        // Redirect directly with appId
+       
         window.top.location.href = '/Dashboard/UpdateAppId?appId=' + appId;
     }
 
@@ -765,70 +750,7 @@
         });
     }
 
-    this.SaveJobForm = function () {
-        debugger;
-        if ($("#jobForm").valid()) {
-            $(".preloader").show();
-            var formdata = $("#jobForm").serialize();
-            $.ajax({
-                type: "Post",
-                url: UrlContent("Job/SaveJobForm/"),
-                data: formdata,
-                success: function (result) {
-                    debugger;
-                    $(".preloader").hide();
-                    if (result.isSuccess) {
-                        Swal.fire({
-                            title: "Success!",
-                            text: "Your job application has been submitted successfully.",
-                            icon: "success",
-                            confirmButtonText: "OK"
-                        }).then(function () {
-                            // Redirect to Job Application Dashboard
-                            window.location.href = UrlContent("Job/Medicare/");
-                        });
-                    } else {
-                        CFP.Common.ToastrError(result.message);
-                    }
-                },
-            })
-        }
-    }
-
-    this.SaveDocument = function (docId) {
-
-        var input = $("#JobDoc_" + docId)[0];
-        var file = input.files[0];
-
-        if (!file) {
-            CFP.Common.ToastrError("Please select a document");
-            return;
-        }
-
-        $(".preloader").show();
-
-        var formdata = new FormData();
-        formdata.append("file", file);
-        formdata.append("docId", docId);
-
-        $.ajax({
-            type: "POST",
-            url: UrlContent("Job/SaveDoc"),
-            data: formdata,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-
-                $(".preloader").hide();
-
-                if (data.isSuccess) {
-                    CFP.Common.ToastrSuccess("Document uploaded successfully");
-                } else {
-                    CFP.Common.ToastrError(data.message);
-                }
-            }
-        });
-    }
+  
 
 
 }

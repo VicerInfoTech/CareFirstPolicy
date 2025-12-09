@@ -1,6 +1,7 @@
 ﻿using CFP.Common.Business_Entities;
 using CFP.Common.Utility;
 using CFP.Provider.IProvider;
+using CFP.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -218,8 +219,9 @@ namespace CFP.Patient.Controllers
 
         public IActionResult SelectApp()
         {
-           
-            return View();
+            DashboardViewModel viewModel = new DashboardViewModel();
+            viewModel.AgentAppList = _commonProvider.GetAgentAppList(GetSessionProviderParameters());
+            return View(viewModel);
         }
         #endregion
     }

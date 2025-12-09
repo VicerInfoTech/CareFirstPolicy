@@ -25,5 +25,9 @@ public partial class Menu
 
     public bool IsShowtoAdmin { get; set; }
 
+    public int AppId { get; set; }
+
+    public virtual AppMaster App { get; set; } = null!;
+
     public virtual ICollection<MenuRole> MenuRoles { get; set; } = new List<MenuRole>();
 }
