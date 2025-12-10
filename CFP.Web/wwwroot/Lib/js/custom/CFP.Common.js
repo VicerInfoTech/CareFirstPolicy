@@ -86,6 +86,33 @@ CFP.Common = new function () {
         CFP.Common.InitDateKeyEvent();
     }
 
+    this.InitCustomDatePicker = function () {
+
+        const today = new Date();
+        const maxDob = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+        const minDob = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+
+        $('.date-picker').flatpickr({
+            dateFormat: "m/d/Y",
+            allowInput: true,
+            defaultDate: null,
+
+            maxDate: maxDob,   // ? user cannot select future DOB or < 18 years
+            minDate: minDob,   // ? user cannot select > 100 years old
+        });
+
+        $('.date-picker-time').flatpickr({
+            enableTime: true,
+            enableSeconds: true,
+            time_24hr: false,
+            dateFormat: "m/d/Y h:i:S K",
+            allowInput: true
+        });
+
+        // ? Remove keypress logic completely
+        // CFP.Common.InitDateKeyEvent();  <-- NOT NEEDED NOW
+    };
+
     this.InitDateKeyEvent = function () {
         $('.date-picker, .date-picker-time').on('keypress', function (e) {
             var Id = "#" + $(this).attr("Id");

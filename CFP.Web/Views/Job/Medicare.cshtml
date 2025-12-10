@@ -785,7 +785,7 @@
 
          $(document).ready(function () {
               $.validator.unobtrusive.parse($("#jobForm"));
-               CFP.Common.InitDatePicker();
+               CFP.Common.InitCustomDatePicker();
                CFP.Common.InitMask();
                   $('.multipleSelect').select2();
          });
@@ -794,7 +794,7 @@
         let currentStep = 1;
         const totalSteps = 4;
 
-                        function updateSteps() {
+        function updateSteps() {
                                   const stepTitles = ["Create Profile", "Welcome", "About Us", "Bank Details"];
         document.getElementById("stepTitle").innerText = stepTitles[currentStep - 1];
             // Hide all steps

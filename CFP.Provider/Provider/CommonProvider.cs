@@ -849,8 +849,17 @@ namespace CFP.Provider.Provider
                     return response;
                 }
 
+                var today = DateOnly.FromDateTime(AppCommon.CurrentDate);
 
+                int age = today.Year - model.Dob.Year;
+                if (model.Dob > today.AddYears(-age)) age--;
 
+                if (age < 18 || age > 100)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Age must be between 18 and 100.";
+                    return response;
+                }
                 medicareJob.IsActive = true;
                 medicareJob.CreatedOn = AppCommon.CurrentDate;
                 unitOfWork.MedicareJobApplication.Insert(medicareJob);
