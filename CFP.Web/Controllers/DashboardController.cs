@@ -101,11 +101,11 @@ namespace CFP.Web.Controllers
         //}
         public IActionResult UpdateAppId(int appId = 0)
         {
-            //if (appId == 2)
-            //{
-            //    _sessionManager.AppId = appId;
-            //    return RedirectToAction("Index", "Dashboard", new { area = "Medicare" });
-            //}
+            if (appId == 2)
+            {
+                _sessionManager.AppId = appId;
+                return RedirectToAction("Index", "Dashboard", new { area = "Medicare" });
+            }
 
             if (appId != 0)
                 _sessionManager.AppId = appId;

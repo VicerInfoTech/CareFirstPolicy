@@ -109,7 +109,7 @@ namespace CFP.Web.Controllers
                 {
                     DocName = newFileName,
                     DocId = docId,
-                    StateId=docId,
+                    StateId= stateId,
                 });
 
                 // Save updated list back to TEMP

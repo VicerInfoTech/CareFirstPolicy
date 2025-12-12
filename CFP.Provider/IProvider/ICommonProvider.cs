@@ -40,6 +40,7 @@ namespace CFP.Provider.IProvider
         List<NotificationDto> GetNotification(SessionProviderModel sessionProviderModel);
         List<AppMasterModel> GetAgentAppList(SessionProviderModel sessionProviderModel);
         ResponseModel SaveJobForm(MedicareJobModel model, List<JobDocModel> docList, SessionProviderModel sessionProviderModel);
+        List<JobDayCount> GetJobDayCount();
         #endregion
 
     }

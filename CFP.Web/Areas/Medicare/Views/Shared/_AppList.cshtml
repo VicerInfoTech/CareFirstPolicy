@@ -1,0 +1,42 @@
+﻿@model DashboardViewModel
+@{
+	var apps = Model.AgentAppList;
+}
+
+<div class="dropdown topbar-head-dropdown ms-1 header-item">
+	<button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
+			data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		<i class="bx bx-category-alt fs-22"></i>
+	</button>
+
+	<div class="dropdown-menu dropdown-menu-lg p-0 dropdown-menu-end">
+		<div class="p-3 border-top-0 border-start-0 border-end-0 border-dashed border">
+			<div class="row align-items-center">
+				<div class="col">
+					<h6 class="m-0 fw-semibold fs-15"> Applications </h6>
+				</div>
+			</div>
+		</div>
+
+		<div class="p-2">
+			<div class="row g-0">
+				@foreach (var app in apps)
+				{
+					<div class="col-6 text-center mb-2" style="opacity:@(app.IsActive ? "1" : "0.5")">
+						<span onclick="@(app.IsActive ? "CFP.Dashboard.SelectApp(" + app.AppId + ")" : "")" class="dropdown-icon-item d-flex flex-column align-items-center" style="cursor:pointer;">
+							@if (!string.IsNullOrEmpty(app.LogoName))
+							{
+								<i class="@app.LogoName app-logo" style="width:40px; height:40px; font-weight:900;font-size:xxx-large;"></i>
+							}
+							else
+							{
+								<i class="ri-apps-line fs-24 text-primary"></i>
+							}
+							<span class="mt-1">@app.AppName</span>
+						</span>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>

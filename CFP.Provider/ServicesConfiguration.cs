@@ -27,6 +27,7 @@ namespace CFP.Provider
             services.AddTransient<IDealProvider, DealProvider>();
             services.AddTransient<IChatProvider, ChatProvider>();
             services.AddTransient<IAiAssistantProvider, AiAssistantProvider>();
+            services.AddTransient<IMedApplicationProvider, MedApplicationProvider>();
 
             AppCommon.APP_URL = configuration.GetSection("AppCommonSettings:APP_URL").Value;
 

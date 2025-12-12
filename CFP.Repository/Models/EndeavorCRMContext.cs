@@ -394,7 +394,7 @@ public partial class EndeavorCRMContext : DbContext
                 .IsFixedLength();
             entity.Property(e => e.Ahip).HasColumnName("AHIP");
             entity.Property(e => e.Ahipdoc)
-                .HasMaxLength(50)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("AHIPDoc");
             entity.Property(e => e.AssignmentCommissionDoc)
@@ -423,6 +423,10 @@ public partial class EndeavorCRMContext : DbContext
             entity.Property(e => e.FirstName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Ip)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("IP");
             entity.Property(e => e.LastName)
                 .HasMaxLength(50)
                 .IsUnicode(false);

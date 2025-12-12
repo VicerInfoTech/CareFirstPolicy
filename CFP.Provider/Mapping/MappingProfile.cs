@@ -36,6 +36,9 @@ namespace CFP.Provider.Mapping
             CreateMap<MedicareJobApplication, MedicareJobModel>();
             CreateMap<MedicareJobModel, MedicareJobApplication>();
 
+            CreateMap<MedicareJobApplicationsDoc, MedicareJobDocModel>();
+            CreateMap<MedicareJobDocModel, MedicareJobApplicationsDoc>();
+
 
         }
     }

@@ -59,6 +59,8 @@ public partial class MedicareJobApplication
 
     public DateTime CreatedOn { get; set; }
 
+    public string Ip { get; set; } = null!;
+
     public virtual ICollection<MedicareJobApplicationsDoc> MedicareJobApplicationsDocs { get; set; } = new List<MedicareJobApplicationsDoc>();
 
     public virtual State State { get; set; } = null!;

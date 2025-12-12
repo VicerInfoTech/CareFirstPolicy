@@ -11,3 +11,6 @@ CFP.Repository/obj/
 .vs/
 CFP.Web/Properties/PublishProfiles/
 CFP.Web/wwwroot/ExtraFiles/Uploads
+CFP.Web/wwwroot/ExtraFiles/DealDoc
+CFP.Web/wwwroot/ExtraFiles/JobDoc
+CFP.Web/wwwroot/ExtraFiles/Temp

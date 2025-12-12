@@ -11,6 +11,7 @@ namespace CFP.Common.Business_Entities
     public class MedicareJobModel
     {
         public int JobApplicationId { get; set; }
+        public string EncJobApplicationId { get; set; }
 
         [Required(ErrorMessage = "First name is required.")]
         public string FirstName { get; set; } = null!;
@@ -28,6 +29,7 @@ namespace CFP.Common.Business_Entities
 
         [Required(ErrorMessage = "State is required.")]
         public int StateId { get; set; }
+        public string StateName { get; set; }
         [Required(ErrorMessage = "Zip code is required.")]
         [StringLength(5, MinimumLength = 5, ErrorMessage = "Zip code must be exactly 5 digits.")]
         [RegularExpression(@"^\d{5}$", ErrorMessage = "Zip code must contain only digits.")]
@@ -93,6 +95,19 @@ namespace CFP.Common.Business_Entities
         public bool IsActive { get; set; }
 
         public DateTime CreatedOn { get; set; }
+        public string DobString { get; set; }
+        public string CreatedOnString { get; set; }
+        public string Carrer { get; set; } = null!; 
+
+        public List<MedicareJobDocModel> MedicareJobApplicationsDocs { get; set; } = new List<MedicareJobDocModel>();
+
+    }
+
+
+    public class JobDayCount
+    {
+        public DateTime Date { get; set; }
+        public int Count { get; set; }
     }
 
 }

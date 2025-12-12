@@ -1,0 +1,392 @@
+﻿@model CFP.Web.Areas.Medicare.Models.ApplicationViewModel
+
+<style>
+    .summary-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #27426d;
+        margin: 20px 0 10px;
+    }
+
+    .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+    }
+
+        .summary-table td {
+            padding: 6px 8px;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+    .label-col {
+        font-weight: 600;
+        color: #333;
+        width: 30%;
+    }
+
+    .value-col {
+        color: #444;
+        word-break: break-all;
+    }
+
+    .btn-doc {
+        font-size: 13px;
+        padding: 4px 10px;
+    }
+
+    .summary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+    }
+
+    /* On mobile, go back to full width */
+    @@media(max - width: 768px) {
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .summary-section {
+        border-bottom: 1px solid #e5e5e5;
+        padding-bottom: 15px;
+        margin-bottom: 25px;
+    }
+
+    .summary-table tr td {
+        border-bottom: 1px solid #f2f2f2;
+    }
+
+    .summary-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .card-body {
+        background: #fafafa;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .summary-table td {
+        padding: 8px 12px;
+        vertical-align: middle;
+    }
+
+    .btn-doc {
+        min-width: 90px;
+    }
+
+</style>
+
+
+<div class="modal-header">
+    <h4 class="modal-title fw-600">
+        <i class="ri-user-3-line font-20"></i> Application Summary
+    </h4>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="card mb-0">
+    <div class="card-body" style="padding-left:1rem;padding-right:1rem;">
+        <div class="summary-grid">
+            <div>
+                <!-- ===========================
+                     PERSONAL DETAILS
+                ============================ -->
+                <div class="summary-section">
+                    <div class="summary-title">Personal Details</div>
+                    <table class="summary-table">
+                        <tr>
+                            <td class="label-col">Name</td>
+                            <td class="value-col">@Model.MedicareJobModel.FirstName @Model.MedicareJobModel.LastName</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Date of Birth</td>
+                            <td class="value-col">@Model.MedicareJobModel.DobString</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Email</td>
+                            <td class="value-col">@Model.MedicareJobModel.Email</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Phone</td>
+                            <td class="value-col">@Model.MedicareJobModel.PhoneNo</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div>
+
+                <!-- ===========================
+                     ADDRESS DETAILS
+                ============================ -->
+                <div class="summary-section">
+                    <div class="summary-title">Address</div>
+                    <table class="summary-table">
+                        <tr>
+                            <td class="label-col">Address Line 1</td>
+                            <td class="value-col">@Model.MedicareJobModel.Address1</td>
+                        </tr>
+                        @if (!string.IsNullOrEmpty(Model.MedicareJobModel.Address2))
+                        {
+                            <tr>
+                                <td class="label-col">Address Line 2</td>
+                                <td class="value-col">@Model.MedicareJobModel.Address2</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td class="label-col">City</td>
+                            <td class="value-col">@Model.MedicareJobModel.City</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">State</td>
+                            <td class="value-col">@Model.MedicareJobModel.StateId</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Zip Code</td>
+                            <td class="value-col">@Model.MedicareJobModel.ZipCode</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="summary-grid">
+            <div>
+                <!-- ===========================
+                     LICENSING
+                ============================ -->
+                <div class="summary-section">
+                    <div class="summary-title">Licensing Details</div>
+                    <table class="summary-table">
+                        <tr>
+                            <td class="label-col">NPN</td>
+                            <td class="value-col">@Model.MedicareJobModel.Npn</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">State Licence</td>
+                            <td class="value-col">
+                                @string.Join(", ", Model.MedicareJobModel.MedicareJobApplicationsDocs.Select(x => x.StateName))
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="label-col">State Licence No</td>
+                            <td class="value-col">@Model.MedicareJobModel.StateLicenceNo</td>
+                        </tr>
+                        @*   <tr>
+                            <td class="label-col">States Licensed</td>
+                            <td class="value-col">
+                                @string.Join(", ", Model.MedicareJobModel.StateLicenceList)
+                            </td>
+                        </tr> *@
+                    </table>
+                </div>
+            </div>
+            <div>
+                <div class="summary-section">
+                    <div class="summary-title">Documents</div>
+
+                    <div class="container-fluid">
+
+                        @foreach (var item in Model.MedicareJobModel.MedicareJobApplicationsDocs)
+                        {
+                            <div class="row mb-2 align-items-center">
+                                <!-- Label -->
+                                <div class="col-7 fw-bold">
+                                    @item.StateName License
+                                </div>
+
+                                <!-- View -->
+                                <div class="col-2">
+                                    <a href="~/extrafiles/jobdoc/@item.DocName"
+                                       target="_blank"
+                                       class="btn btn-outline-primary btn-sm w-100"
+                                       asp-append-version="true">
+                                        View
+                                    </a>
+                                </div>
+
+                                <!-- Download -->
+                                <div class="col-3">
+                                    <a href="~/extrafiles/jobdoc/@item.DocName"
+                                       download
+                                       class="btn btn-primary btn-sm w-100"
+                                       asp-append-version="true">
+                                        Download
+                                    </a>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Profile -->
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-7 fw-bold">
+                                Driver License / Passport
+                            </div>
+
+                            <div class="col-2">
+                                <a href="~/extrafiles/jobdoc/@Model.MedicareJobModel.ProfileDoc"
+                                   target="_blank"
+                                   class="btn btn-outline-success btn-sm w-100">
+                                    View
+                                </a>
+                            </div>
+
+                            <div class="col-3">
+                                <a href="~/extrafiles/jobdoc/@Model.MedicareJobModel.ProfileDoc"
+                                   download
+                                   class="btn btn-success btn-sm w-100">
+                                    Download
+                                </a>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.MedicareJobModel.Ahipdoc))
+                        {
+                            <div class="row mb-2 align-items-center">
+                                <div class="col-7 fw-bold">AHIP Certificate</div>
+
+                                <div class="col-2">
+                                    <a href="~/extrafiles/jobdoc/@Model.MedicareJobModel.Ahipdoc"
+                                       target="_blank"
+                                       class="btn btn-outline-info btn-sm w-100">
+                                        View
+                                    </a>
+                                </div>
+
+                                <div class="col-3">
+                                    <a href="~/extrafiles/jobdoc/@Model.MedicareJobModel.Ahipdoc"
+                                       download
+                                       class="btn btn-info btn-sm w-100">
+                                        Download
+                                    </a>
+                                </div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.MedicareJobModel.AssignmentCommissionDoc))
+                        {
+                            <div class="row mb-2 align-items-center">
+                                <div class="col-7 fw-bold">Assignment Commission</div>
+
+                                <div class="col-2">
+                                    <a href="~/extrafiles/jobdoc/@Model.MedicareJobModel.AssignmentCommissionDoc"
+                                       target="_blank"
+                                       class="btn btn-outline-warning btn-sm w-100">
+                                        View
+                                    </a>
+                                </div>
+
+                                <div class="col-3">
+                                    <a href="~/extrafiles/jobdoc/@Model.MedicareJobModel.AssignmentCommissionDoc"
+                                       download
+                                       class="btn btn-warning btn-sm w-100">
+                                        Download
+                                    </a>
+                                </div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.MedicareJobModel.EnoCertificateDoc))
+                        {
+                            <div class="row mb-2 align-items-center">
+                                <div class="col-7 fw-bold">E&O Certificate</div>
+
+                                <div class="col-2">
+                                    <a href="~/extrafiles/jobdoc/@Model.MedicareJobModel.EnoCertificateDoc"
+                                       target="_blank"
+                                       class="btn btn-outline-dark btn-sm w-100">
+                                        View
+                                    </a>
+                                </div>
+
+                                <div class="col-3">
+                                    <a href="~/extrafiles/jobdoc/@Model.MedicareJobModel.EnoCertificateDoc"
+                                       download
+                                       class="btn btn-dark btn-sm w-100">
+                                       Download
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="summary-grid">
+            <div>
+                <!-- ===========================
+                     EXPERIENCE
+                ============================ -->
+                <div class="summary-section">
+                    <div class="summary-title">Experience</div>
+                    <table class="summary-table">
+                        <tr>
+                            <td class="label-col">Years of Experience</td>
+                            <td class="value-col">@Model.MedicareJobModel.Yoe Year(s)</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Carriers</td>
+                            <td class="value-col">@Model.MedicareJobModel.Carrer</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">About Agent</td>
+                            <td class="value-col">@Model.MedicareJobModel.AboutAgent</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div>
+
+                <!-- ===========================
+                     BANK DETAILS
+                ============================ -->
+                <div class="summary-section">
+                    <div class="summary-title">Bank Details</div>
+                    <table class="summary-table">
+                        <tr>
+                            <td class="label-col">Bank Name</td>
+                            <td class="value-col">@Model.MedicareJobModel.BankName</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Account Holder</td>
+                            <td class="value-col">@Model.MedicareJobModel.AccHolderName</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Account No</td>
+                            <td class="value-col">@Model.MedicareJobModel.BankAccNo</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===========================
+             META
+        ============================ -->
+        <div class="summary-section">
+            <div class="summary-title">Submission Info</div>
+            <table class="summary-table">
+                <tr>
+                    <td class="label-col">Created On</td>
+                    <td class="value-col">@Model.MedicareJobModel.CreatedOnString</td>
+                </tr>
+                <tr>
+                    <td class="label-col">Active</td>
+                    <td class="value-col">@Model.MedicareJobModel.IsActive</td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer mt-3">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <i class="ri-close-line"></i> Close
+    </button>
+</div>

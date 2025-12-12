@@ -10,8 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Dynamic;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using static CFP.Common.Utility.Enumeration;
 
 namespace CFP.Provider.Provider
@@ -812,9 +814,20 @@ namespace CFP.Provider.Provider
             try
             {
                 MedicareJobApplication medicareJob = new MedicareJobApplication();
+                var error = MedicareJobValidationHelper(model, docList);
+
+                if (error != null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = error;
+                    return response;
+                }
+
+
+
                 medicareJob = _mapper.Map<MedicareJobApplication>(model);
                 medicareJob.StateLicence = string.Join(",", model.StateLicenceList);
-                 medicareJob.Carrer = string.Join(",", model.CarrierList);
+                medicareJob.Carrer = string.Join(",", model.CarrierList);
 
                 foreach (var item in docList)
                 {
@@ -836,32 +849,11 @@ namespace CFP.Provider.Provider
                         });
                     }
                 }
-                int requiredDocsCount = model.StateLicenceList.Length+4; 
-                if (docList.Count < requiredDocsCount
-                    || medicareJob.ProfileDoc == null
-                    || medicareJob.AssignmentCommissionDoc == null
-                    || medicareJob.EnoCertificateDoc == null
-                    || medicareJob.Ahipdoc == null
-                    || medicareJob.MedicareJobApplicationsDocs.Count != model.StateLicenceList.Length)
-                {
-                    response.IsSuccess = false;
-                    response.Message = "Some documents are missing. Please upload all the documents.";
-                    return response;
-                }
 
-                var today = DateOnly.FromDateTime(AppCommon.CurrentDate);
-
-                int age = today.Year - model.Dob.Year;
-                if (model.Dob > today.AddYears(-age)) age--;
-
-                if (age < 18 || age > 100)
-                {
-                    response.IsSuccess = false;
-                    response.Message = "Age must be between 18 and 100.";
-                    return response;
-                }
                 medicareJob.IsActive = true;
                 medicareJob.CreatedOn = AppCommon.CurrentDate;
+                medicareJob.Ip = sessionProviderModel.Ip;
+
                 unitOfWork.MedicareJobApplication.Insert(medicareJob);
                 unitOfWork.Save();
                 response.IsSuccess = true;
@@ -875,6 +867,128 @@ namespace CFP.Provider.Provider
             return response;
         }
 
+        public static string? MedicareJobValidationHelper(MedicareJobModel model, List<JobDocModel> docList)
+        {
+            // -------------------------
+            // 1. BASIC FIELD VALIDATION
+            // -------------------------
+
+            if (string.IsNullOrWhiteSpace(model.FirstName))
+                return "First name is required.";
+
+            if (string.IsNullOrWhiteSpace(model.LastName))
+                return "Last name is required.";
+
+            if (string.IsNullOrWhiteSpace(model.Address1))
+                return "Address 1 is required.";
+
+            if (string.IsNullOrWhiteSpace(model.City))
+                return "City is required.";
+
+            if (model.StateId <= 0)
+                return "State is required.";
+
+            if (string.IsNullOrWhiteSpace(model.ZipCode) ||
+                !Regex.IsMatch(model.ZipCode, @"^\d{5}$"))
+                return "Zip code must be exactly 5 digits.";
+
+            if (string.IsNullOrWhiteSpace(model.Npn) ||
+                !Regex.IsMatch(model.Npn, @"^\d{7}$"))
+                return "NPN must be exactly 7 digits.";
+
+            if (string.IsNullOrWhiteSpace(model.Email) ||
+                !new EmailAddressAttribute().IsValid(model.Email))
+                return "Enter a valid email address.";
+
+            if (string.IsNullOrWhiteSpace(model.PhoneNo))
+                return "Phone number is required.";
+
+            //if (string.IsNullOrWhiteSpace(model.StateLicence))
+            //    return "State license  is required.";
+
+            if (model.StateLicenceList == null || model.StateLicenceList.Length == 0)
+                return "State license  is required.";
+
+            if (model.Yoe < 0)
+                return "Years of experience cannot be negative.";
+
+            if (model.CarrierList == null || model.CarrierList.Length == 0)
+                return "Carrier selection is required.";
+
+            if (string.IsNullOrWhiteSpace(model.StateLicenceNo))
+                return "State license  No is required.";
+
+            if (string.IsNullOrWhiteSpace(model.BankName))
+                return "Bank Name is required.";
+
+            if (string.IsNullOrWhiteSpace(model.AccHolderName))
+                return "Account holder name is required.";
+
+            if (string.IsNullOrWhiteSpace(model.BankAccNo))
+                return "Bank Account Number is required.";
+
+            // -------------------------
+            // 2. DOB AGE VALIDATION
+            // -------------------------
+            var today = DateOnly.FromDateTime(AppCommon.CurrentDate);
+            int age = today.Year - model.Dob.Year;
+
+            if (model.Dob > today.AddYears(-age)) age--;
+
+            if (age < 18 || age > 100)
+                return "Age must be between 18 and 100.";
+
+            // -------------------------
+            // 3. DOCUMENT VALIDATION
+            // -------------------------
+            int requiredDocsCount = model.StateLicenceList.Length + 4;
+
+            // Check required root documents exist
+            bool hasProfile = docList.Any(x => x.DocId == (int)Enumeration.MedicareJobDoc.ProfileDoc);
+            bool hasAssign = docList.Any(x => x.DocId == (int)Enumeration.MedicareJobDoc.AssignentCommissionDoc);
+            bool hasEno = docList.Any(x => x.DocId == (int)Enumeration.MedicareJobDoc.EnoCertificateDoc);
+            bool hasAhip = docList.Any(x => x.DocId == (int)Enumeration.MedicareJobDoc.AhipDoc);
+
+            if (!hasProfile) return "Profile document is missing.";
+            if (!hasAssign) return "Assignment Commission document is missing.";
+            if (!hasEno) return "E&O Certificate document is missing.";
+            if (!hasAhip) return "AHIP Certificate document is missing.";
+
+            // State license docs must match selected states
+            int uploadedStateDocs = docList.Count(x => x.DocId == (int)Enumeration.MedicareJobDoc.StateLicenceDoc);
+
+            if (uploadedStateDocs != model.StateLicenceList.Length)
+                return "State license  documents count mismatch.";
+
+            // All good
+            return null;
+        }
+
+        public List<JobDayCount> GetJobDayCount()
+        {
+            List<JobDayCount> jobSummar = new List<JobDayCount>();
+            try
+            {
+                var apps = unitOfWork.MedicareJobApplication.GetAll().ToList();
+
+                jobSummar = Enumerable.Range(0, 5)
+                    .Select(i => DateTime.Today.AddDays(-i))
+                    .Select(day => new JobDayCount
+                    {
+                        Date = day,
+                        Count = apps.Count(x => x.CreatedOn.Date == day)
+                    })
+                    .OrderByDescending(x => x.Date)
+                    .ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return jobSummar;
+
+        }
         #endregion
 
         #region Email & SMS Methods

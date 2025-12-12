@@ -1,0 +1,36 @@
+﻿@using CFP.Common.Utility
+@using CFP.Web.Areas.Medicare.Models
+@model MedDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewBag.ParentPageName = "<a href='/Dashboard/Index'><i class='ri-home-2-line'></i> Home</a>";
+    ViewBag.PageName = "<i class='ri-dashboard-line'></i>  Dashboard";
+}
+@if (Model.RoleId == (int)Enumeration.Role.Super_Admin)
+{
+    <div class="card shadow-sm border-0 mt-3">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Job Applications (Last 5 Days)</h5>
+        </div>
+
+        <div class="card-body p-0">
+            <table class="table table-bordered mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th class="text-center">Total Applications</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.JobDayCounts)
+                    {
+                        <tr>
+                            <td>@item.Date.ToString("dd MMM yyyy")</td>
+                            <td class="text-center">@item.Count</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

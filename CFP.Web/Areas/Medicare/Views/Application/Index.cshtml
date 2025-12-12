@@ -1,0 +1,63 @@
+﻿@model CFP.Web.Areas.Medicare.Models.ApplicationViewModel
+
+@{
+	ViewData["Title"] = "Job Application";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewBag.ParentPageName = "<a href='#'><i class='ri-home-2-line'></i> Home</a>";
+	ViewBag.PageName = "<i class='ri-file-user-line'></i>  Job Application";
+}
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+						<div class="input-group mt-1" id="searchId">
+							<input class="form-control" id="txtSearch" autocomplete="off" placeholder="Search..." />
+							<div class="input-group-append pointermouse" onclick="CFP.Agent.Search()">
+								<span class="input-group-text"><i class="ri-search-line"></i></span>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="row">
+					<div class="col-12 table-responsive">
+						<table class="table table-hover table-bordered display responsive nowrap" width="100%" id="jobApplicationTableId">
+							<thead>
+								<tr>
+									<th><b>First Name</b></th>
+									<th><b>Last Name</b></th>
+									<th><b>Email</b></th>
+									<th><b>Phone</b></th>
+									<th><b>DOB</b></th>
+									<th><b>State License</b></th>
+									<th><b>Applied Date</b></th>
+									<th><b>Action</b></th>
+								</tr>
+
+							</thead>
+							<tbody id="jobApplicationTableBody"></tbody>
+							<tfoot id="tablefoot" class="highlight" style="background-color:darkgray;overflow-y:scroll">
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section Scripts {
+
+	<script>
+		$(document).ready(function () {
+			CFP.Medicare.Application.Init();
+			$("#txtSearch").on("keyup", function () {
+				CFP.Medicare.Application.Search();
+			});
+		});
+	</script>
+}

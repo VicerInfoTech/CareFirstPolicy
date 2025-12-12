@@ -271,8 +271,8 @@
         <div class="row g-4 mb-4">
 
             <div class="col-xl-12 mt-1">
-                @Html.Hidden("DealStartDate", Model.StartDate.ToString("MM/dd/yyyy"), new { id = "dealStartDate" })
-                @Html.Hidden("DealEndDate", Model.EndDate.ToString("MM/dd/yyyy"), new { id = "dealEndDate" })
+                @Html.Hidden("DealStartDate", Model.DealStartDate.ToString("MM/dd/yyyy"), new { id = "dealStartDate" })
+                @Html.Hidden("DealEndDate", Model.DealEndDate.ToString("MM/dd/yyyy"), new { id = "dealEndDate" })
                 <div class="card card-animate">
                     <div class="card-header d-flex align-items-center">
                         <h4 class="card-title flex-grow-1 mb-0">Deals Summary By Date </h4>

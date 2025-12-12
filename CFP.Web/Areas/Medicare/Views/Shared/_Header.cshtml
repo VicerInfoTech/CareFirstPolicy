@@ -1,0 +1,79 @@
+﻿@using CFP.Common.Utility
+@inject CFP.Common.Utility.ISessionManager SessionData
+
+<header id="page-topbar">
+	<div class="layout-width">
+		<div class="navbar-header d-flex justify-content-between align-items-center w-100">
+			<div class="d-flex">
+				<!-- LOGO -->
+				<div class="navbar-brand-box horizontal-logo">
+					<a asp-action="Index" asp-controller="Dashboard" class="logo logo-dark" style="margin:10px;">
+						<span class="logo-sm">
+							<img src="~/assets/images/logo-sm.png" alt="" height="22">
+						</span>
+						<span class="logo-lg">
+							<h1 style="font-weight:900">CFP</h1>
+						</span>
+					</a>
+					<!-- Light Logo-->
+					<a asp-action="Index" asp-controller="Dashboard" class="logo logo-light" style="margin:10px;">
+						<span class="logo-sm">
+							<img src="~/assets/images/logo-sm.png" alt="" height="22">
+						</span>
+						<span class="logo-lg">
+							<h1 class="text-white" style="font-weight:900">CFP</h1>
+						</span>
+					</a>
+				</div>
+
+				<button type="button" class="btn btn-sm px-3 fs-16 vertical-menu-btn topnav-hamburger" id="topnav-hamburger-icon">
+					<span class="hamburger-icon">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+				</button>
+				 <h4 style="margin-top: 8px;" class="appname">
+                    @if (SessionData.AppId == 1)
+                    {
+                        <i class="ri-shield-check-line"></i> <span>ACA</span>
+                    }
+                    else if (SessionData.AppId == 2)
+                    {
+                        <i class="ri-stethoscope-line"></i> <span>Medicare</span>
+                    }
+                    else if (SessionData.AppId == 3)
+                    {
+                        <i class="ri-money-dollar-circle-line"></i> <span>Taxation</span>
+                    }
+                    else if (SessionData.AppId == 4)
+                    {
+                        <i class="ri-rocket-line"></i> <span>Launch Pad</span>
+                    }
+                </h4> 
+			</div>
+
+			<div class="d-flex align-items-center gap-3">
+
+				@if (SessionData.RoleId == (int)Enumeration.Role.Super_Admin)   // 1 = Admin
+				{
+					<div style="display:none">
+						<a asp-controller="AiAssistant" asp-action="Index"
+						   class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle">
+							<i class="ri-robot-2-line fs-22"></i>
+						</a>
+					</div>
+				}
+				<div id="appListArea">
+					@await Component.InvokeAsync("AppList")
+				</div>
+				
+				<div>
+					@await Component.InvokeAsync("UserNameHeader")
+				</div>
+
+			</div>
+		</div>
+	</div>
+</header>
+

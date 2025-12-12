@@ -1,9 +1,10 @@
 using CFP.Common.Utility;
 using CFP.Provider;
 using CFP.Web.Hubs;
+using CFP.Web.Middleware;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
-using CFP.Web.Middleware;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +77,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "Areas", "Medicare", "wwwroot")),
+    RequestPath = "/medicare"
+});
+
 
 // Rate limiter middleware - place early in pipeline
 app.Use(async (context, next) =>
@@ -100,10 +108,15 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// AREA ROUTE
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+// DEFAULT ROUTE
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Index}/{id?}"
-);
+    pattern: "{controller=Account}/{action=Index}/{id?}");
 
 app.MapHub<ChatHub>("/chathub").RequireAuthorization();
 
