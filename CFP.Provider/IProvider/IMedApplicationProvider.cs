@@ -12,6 +12,8 @@ namespace CFP.Provider.IProvider
     {
         DatatablePageResponseModel<MedicareJobModel> GetApplicationList(DatatablePageRequestModel requestModel, SessionProviderModel sessionProviderModel);
         MedicareJobModel GetApplicationById(int id);
-       
+        ResponseModel SaveStatus(MedicareJobModel model,SessionProviderModel sessionProviderModel);
+
+
     }
 }

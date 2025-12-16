@@ -93,6 +93,9 @@ namespace CFP.Common.Business_Entities
         public string? EnoCertificateDoc { get; set; }
 
         public bool IsActive { get; set; }
+        public byte Status { get; set; }
+
+        public string? Comment { get; set; }
 
         public DateTime CreatedOn { get; set; }
         public string DobString { get; set; }

@@ -119,5 +119,14 @@ namespace CFP.Common.Utility
             AhipDoc=5,
 
         }
+        public enum MedicareJobStatus
+        {
+            [Display(Name = "Pending")]
+            Pending =1,
+            [Display(Name = "Approved")]
+            Approved =2,
+            [Display(Name = "Rejected")]
+            Rejected =3,
+        }
     }
 }

@@ -61,6 +61,10 @@ public partial class MedicareJobApplication
 
     public string Ip { get; set; } = null!;
 
+    public byte Status { get; set; }
+
+    public string? Comment { get; set; }
+
     public virtual ICollection<MedicareJobApplicationsDoc> MedicareJobApplicationsDocs { get; set; } = new List<MedicareJobApplicationsDoc>();
 
     public virtual State State { get; set; } = null!;

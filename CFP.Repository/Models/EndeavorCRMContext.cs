@@ -412,6 +412,9 @@ public partial class EndeavorCRMContext : DbContext
             entity.Property(e => e.City)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Comment)
+                .HasMaxLength(500)
+                .IsUnicode(false);
             entity.Property(e => e.CreatedOn).HasColumnType("datetime");
             entity.Property(e => e.Dob).HasColumnName("DOB");
             entity.Property(e => e.Email)
@@ -446,6 +449,7 @@ public partial class EndeavorCRMContext : DbContext
             entity.Property(e => e.StateLicenceNo)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Status).HasDefaultValue((byte)1);
             entity.Property(e => e.Yoe)
                 .HasColumnType("numeric(5, 2)")
                 .HasColumnName("YOE");

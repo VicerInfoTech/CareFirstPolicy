@@ -51,6 +51,7 @@ namespace CFP.Provider.Provider
                         PhoneNo = x.PhoneNo,
                         Dob = x.Dob,
                         StateLicence = x.StateLicence,
+                        Status= x.Status,
                     }).OrderBy(x => x.FirstName).ToList();
 
                 list.recordsTotal = dataList.Count();
@@ -153,6 +154,30 @@ namespace CFP.Provider.Provider
             return model;
         }
 
-       
+      public  ResponseModel SaveStatus(MedicareJobModel model, SessionProviderModel sessionProviderModel)
+        {
+            ResponseModel response= new ResponseModel();    
+            try
+            {
+                var jobData = unitOfWork.MedicareJobApplication.Get(_commonProvider.UnProtect(model.EncJobApplicationId));
+                if (jobData != null) { 
+                   jobData.Status= model.Status;
+                    jobData.Comment= model.Comment;
+                    unitOfWork.MedicareJobApplication.Update(jobData);
+                    unitOfWork.Save();
+                    response.Message = "Job application status updated successfully";
+                    response.IsSuccess = true;
+                }
+            }
+            catch (Exception)
+            {
+                response.Message = "Something went wrong";
+                response.IsSuccess = false;
+                throw;
+            }
+            return response;
+        }
+
+
     }
 }

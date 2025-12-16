@@ -376,8 +376,26 @@
                     <td class="value-col">@Model.MedicareJobModel.CreatedOnString</td>
                 </tr>
                 <tr>
-                    <td class="label-col">Active</td>
-                    <td class="value-col">@Model.MedicareJobModel.IsActive</td>
+                    <td class="label-col">Status</td>
+                    <td class="value-col">
+                            @if (Model.MedicareJobModel.Status == 2)
+                            {
+                                <span class="badge bg-success font-14">Approved</span>
+                            }
+                            else if (Model.MedicareJobModel.Status == 3)
+                            {
+                                <span class="badge bg-danger font-14">Rejected</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning font-14">Pending</span>
+                            }
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label-col">Comment</td>
+                    <td class="value-col">@Model.MedicareJobModel.Comment</td>
                 </tr>
             </table>
 

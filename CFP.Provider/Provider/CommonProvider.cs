@@ -853,6 +853,7 @@ namespace CFP.Provider.Provider
                 medicareJob.IsActive = true;
                 medicareJob.CreatedOn = AppCommon.CurrentDate;
                 medicareJob.Ip = sessionProviderModel.Ip;
+                medicareJob.Status = (int)Enumeration.MedicareJobStatus.Pending;
 
                 unitOfWork.MedicareJobApplication.Insert(medicareJob);
                 unitOfWork.Save();
