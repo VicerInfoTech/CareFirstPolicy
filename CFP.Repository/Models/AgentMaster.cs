@@ -20,6 +20,7 @@ public partial class AgentMaster
     public string? Ssn { get; set; }
 
     public string? ContactNumber { get; set; }
+    public string? TwilioNumber { get; set; }
 
     public string? Designation { get; set; }
 

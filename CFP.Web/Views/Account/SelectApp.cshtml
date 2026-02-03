@@ -126,7 +126,7 @@
 					}
 					else
 					{
-						<div class="app-card" style="opacity:0.5">
+						<div class="app-card" style="opacity:0.5;@(app.AppId == 4 ? "max-width: 485px; width: calc(70% - 1.25rem);" : "")">
 							<i class="@app.LogoName app-logo"></i>
 							<h5>@app.AppName</h5>
 						</div>

@@ -82,9 +82,16 @@ namespace CFP.Provider.Provider
                      .GetAll(x => x.UserMasterId == userId)
                      .OrderByDescending(x => x.ChatConnectionId)
                      .Select(x => x.ConnectionId)
-                     .FirstOrDefault();
+                     .FirstOrDefault() ?? "";
         }
 
+        public int GetAgentByTwilio(string twilioNumber)
+        {
+            return unitOfWork.AgentMaster
+                     .GetAll(x => x.IsActive && (x.TwilioNumber ?? "").Replace(" ", "") == twilioNumber.Replace(" ", ""))
+                     .Select(x => x.UserMasterId)
+                     .FirstOrDefault();
+        }
 
         public ChatMessageModel SaveMessage(int fromUserId, int toUserId, string message)
         {
@@ -178,7 +185,6 @@ namespace CFP.Provider.Provider
             return list;
         }
 
-
         public void MarkMessagesRead(int currentUserId, int targetUserId)
         {
             var unread = unitOfWork.ChatMessage.GetAll()
@@ -221,6 +227,7 @@ namespace CFP.Provider.Provider
                  }).OrderBy(x => x.Name).ToList();
         }
         #endregion
+
         #region RoomMessage
         public List<ChatRoomModel> GetAllRooms(SessionProviderModel sessionProviderModel)
         {
@@ -445,11 +452,11 @@ namespace CFP.Provider.Provider
             return model;
         }
 
-       public void UpdateRoomVisit(int roomId, SessionProviderModel sessionProviderModel)
+        public void UpdateRoomVisit(int roomId, SessionProviderModel sessionProviderModel)
         {
             try
             {
-                var ru = unitOfWork.ChatRoomMember.Get(x => x.ChatRoomId == roomId && x.UserMasterId== sessionProviderModel.UserId);
+                var ru = unitOfWork.ChatRoomMember.Get(x => x.ChatRoomId == roomId && x.UserMasterId == sessionProviderModel.UserId);
 
                 if (ru != null)
                 {

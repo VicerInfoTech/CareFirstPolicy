@@ -38,6 +38,11 @@ namespace CFP.Common.Business_Entities
         [Phone(ErrorMessage = "Invalid contact number.")]
         [MaxLength(15, ErrorMessage = "Contact Number should not exceed 15 digits.")]
         public string? ContactNumber { get; set; }
+
+        [DisplayName("Twilio Number")]
+        [Phone(ErrorMessage = "Invalid twilio number.")]
+        [MaxLength(15, ErrorMessage = "Twilio Number should not exceed 15 digits.")]
+        public string? TwilioNumber { get; set; }
         [DisplayName("Designation")]
         [MaxLength(100, ErrorMessage = "Designation cannot exceed 100 characters.")]
         public string? Designation { get; set; } = null!;

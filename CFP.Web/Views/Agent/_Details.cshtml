@@ -42,15 +42,20 @@
                     <label asp-for="AgentMasterModel.Dob"></label>
                     <input asp-for="AgentMasterModel.Dob" placeholder="Select dob" class="form-control  date-picker" />
                 </div>
-                <div class="col-6 mt-2">
+                <div class="col-4 mt-2">
                     <label asp-for="AgentMasterModel.Ssn"></label>
                     <input asp-for="AgentMasterModel.Ssn" class="form-control " placeholder="SSN" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="AgentMasterModel.Ssn"></span>
                 </div>
-                <div class="col-6 mt-2">
+                <div class="col-4 mt-2">
                     <label asp-for="AgentMasterModel.ContactNumber"></label>
                     <input asp-for="AgentMasterModel.ContactNumber" class="form-control " placeholder="Contact Number" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="AgentMasterModel.ContactNumber"></span>
+                </div>
+                <div class="col-4 mt-2">
+                    <label asp-for="AgentMasterModel.TwilioNumber"></label>
+                    <input asp-for="AgentMasterModel.TwilioNumber" class="form-control " placeholder="Twilio Number" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.TwilioNumber"></span>
                 </div>
                 <div class="col-6 mt-2">
                     <label asp-for="AgentMasterModel.Designation"></label>

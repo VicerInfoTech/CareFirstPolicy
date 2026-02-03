@@ -14,6 +14,7 @@ namespace CFP.Provider.IProvider
         void SaveConnection(string connectionId, SessionProviderModel sessionProviderModel);
 
         string GetConnectionId(int userId);
+        int GetAgentByTwilio(string twilioNumber);
 
         ChatMessageModel SaveMessage(int fromUserId, int toUserId, string message);
 

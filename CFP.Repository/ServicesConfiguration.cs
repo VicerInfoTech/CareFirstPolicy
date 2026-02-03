@@ -11,7 +11,7 @@ namespace CFP.Repository
         public static void AddRepositoryService(this IServiceCollection services, IConfiguration configuration)
         {
             AppCommon.ConnectionString = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<EndeavorCRMContext>(options => options.UseSqlServer(AppCommon.ConnectionString).UseLazyLoadingProxies());
+            services.AddDbContext<EndeavorCRMContext>(options => options.UseSqlServer(AppCommon.ConnectionString, sqlServerOptions => sqlServerOptions.EnableRetryOnFailure()).UseLazyLoadingProxies());
         }
     }
 }
