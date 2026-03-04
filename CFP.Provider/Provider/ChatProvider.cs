@@ -92,6 +92,35 @@ namespace CFP.Provider.Provider
                      .Select(x => x.UserMasterId)
                      .FirstOrDefault();
         }
+        public int GetUserByEmail(string email)
+        {
+            return unitOfWork.AgentMaster
+                     .GetAll(x => x.IsActive && x.Email == email)
+                     .Select(x => x.UserMasterId)
+                     .FirstOrDefault();
+        }
+        public List<AgentMasterModel> GetAgents()
+        {
+            return unitOfWork.AgentMaster
+                     .GetAll(x => x.IsActive && !string.IsNullOrEmpty(x.EmailPassword))
+                     .Select(x => new AgentMasterModel()
+                     {
+                         FirstName = x.FirstName,
+                         LastName = x.LastName,
+                         CreatedOn = x.CreatedOn,
+                         IsActive = x.IsActive,
+                         Email = x.Email,
+                         EmailPassword = x.EmailPassword,
+                         UserMasterId = x.UserMasterId,
+                         EncId = _commonProvider.Protect(x.AgentMasterId),
+                         AgentMasterId = x.AgentMasterId,
+                         RoleName = AppCommon.GetEnumDisplayName((Enumeration.Role)x.UserMaster.RoleId),
+                         ContactNumber = x.ContactNumber,
+                         Designation = x.Designation,
+                         UserAccess = x.UserMaster.UserAccess,
+
+                     }).OrderBy(x => x.FirstName).ToList();
+        }
 
         public ChatMessageModel SaveMessage(int fromUserId, int toUserId, string message)
         {

@@ -19,6 +19,7 @@ builder.Services.AddSignalR(options =>
 });
 
 builder.Services.AddProviderServices(builder.Configuration);
+builder.Services.AddHostedService<EmailReader>();
 
 #region Session
 builder.Services.AddSession(options =>

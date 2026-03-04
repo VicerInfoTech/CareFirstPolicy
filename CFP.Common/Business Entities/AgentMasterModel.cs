@@ -19,6 +19,10 @@ namespace CFP.Common.Business_Entities
         [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
         [MaxLength(50, ErrorMessage = "Email cannot exceed 50 characters.")]
         public string Email { get; set; } = null!;
+        [MaxLength(50, ErrorMessage = "Email Password cannot exceed 50 characters.")]
+        [DisplayName("Email Password")]
+        public string? EmailPassword { get; set; }
+
         [MaxLength(50, ErrorMessage = "SSN cannot exceed 50 characters.")]
         [DisplayName("SSN")]
         public string? Ssn { get; set; }

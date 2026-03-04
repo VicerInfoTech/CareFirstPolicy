@@ -22,25 +22,29 @@
 
             <div class="row">
 
-                <div class="col-6 mt-2">
+                <div class="col-4 mt-2">
                     <label asp-for="AgentMasterModel.FirstName"></label>
                     <input asp-for="AgentMasterModel.FirstName" class="form-control req-border" placeholder="First Name" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="AgentMasterModel.FirstName"></span>
                 </div>
-
-                <div class="col-6 mt-2">
+                <div class="col-4 mt-2">
                     <label asp-for="AgentMasterModel.LastName"></label>
                     <input asp-for="AgentMasterModel.LastName" class="form-control req-border" placeholder="Last Name" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="AgentMasterModel.LastName"></span>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <label asp-for="AgentMasterModel.Dob"></label>
+                    <input asp-for="AgentMasterModel.Dob" placeholder="Select dob" class="form-control  date-picker" />
                 </div>
                 <div class="col-6 mt-2">
                     <label asp-for="AgentMasterModel.Email"></label>
                     <input asp-for="AgentMasterModel.Email" class="form-control req-border" placeholder="Login Username" autocomplete="off" />
                     <span class="text-danger" asp-validation-for="AgentMasterModel.Email"></span>
                 </div>
-                <div class="col-md-6 mt-2">
-                    <label asp-for="AgentMasterModel.Dob"></label>
-                    <input asp-for="AgentMasterModel.Dob" placeholder="Select dob" class="form-control  date-picker" />
+                <div class="col-6 mt-2">
+                    <label asp-for="AgentMasterModel.EmailPassword"></label>
+                    <input asp-for="AgentMasterModel.EmailPassword" class="form-control" placeholder="Email Password" autocomplete="off" />
+                    <span class="text-danger" asp-validation-for="AgentMasterModel.EmailPassword"></span>
                 </div>
                 <div class="col-4 mt-2">
                     <label asp-for="AgentMasterModel.Ssn"></label>

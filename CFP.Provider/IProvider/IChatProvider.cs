@@ -15,7 +15,8 @@ namespace CFP.Provider.IProvider
 
         string GetConnectionId(int userId);
         int GetAgentByTwilio(string twilioNumber);
-
+        int GetUserByEmail(string email);
+        List<AgentMasterModel> GetAgents();
         ChatMessageModel SaveMessage(int fromUserId, int toUserId, string message);
 
         List<ChatMessageModel> GetMessages(int currentUserId, int targetUserId);

@@ -12,10 +12,10 @@ public partial class AgentMaster
     public string FirstName { get; set; } = null!;
 
     public string LastName { get; set; } = null!;
-
     public DateOnly? Dob { get; set; }
 
     public string Email { get; set; } = null!;
+    public string? EmailPassword { get; set; }
 
     public string? Ssn { get; set; }
 
